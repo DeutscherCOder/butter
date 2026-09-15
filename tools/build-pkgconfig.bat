@@ -1,6 +1,6 @@
 @echo off
 REM Build the project-local pkg-config.exe launcher (see pkgconfig-wrapper.c).
-REM Called by build-clutter.bat when the launcher is missing; MSVC must be on PATH.
+REM Called by build-butter.bat when the launcher is missing; MSVC must be on PATH.
 setlocal
 set "BINDIR=%~dp0bin"
 if not exist "%BINDIR%" mkdir "%BINDIR%"

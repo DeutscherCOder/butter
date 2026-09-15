@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-Security issues in the Clutter repository should be reported by email to security@cutter.re. Your email will be delivered to a small security team that will handle the report. Your email will be acknowledged within 48 hours, and you'll receive a more detailed response to your email within 72 hours indicating the next steps in handling your report.
+Security issues in the Butter repository should be reported by email to security@cutter.re. Your email will be delivered to a small security team that will handle the report. Your email will be acknowledged within 48 hours, and you'll receive a more detailed response to your email within 72 hours indicating the next steps in handling your report.
 
 For your convenience, we accept reports written in one of the languages listed on our [security.txt](https://cutter.re/.well-known/security.txt) page, but we prefer reports in English.
 
@@ -20,7 +20,7 @@ If you have not received a reply to your email within 48 hours, or have not hear
 
 **Important:** Don't disclose any information regarding the issue itself in the public chats.
 
-Please note that the Clutter Security team isn't handling security issues on the rizin repository.
+Please note that the Butter Security team isn't handling security issues on the rizin repository.
 
 ## AI generated vulnerability reports 
 

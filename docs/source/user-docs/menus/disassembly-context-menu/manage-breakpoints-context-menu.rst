@@ -3,7 +3,7 @@ Manage Breakpoints Context Menu
 
 Add or Remove a Breakpoint
 ----------------------------------------
-**Description:** Add a breakpoint at the current address. If a breakpoint already exists, Clutter will remove it.  
+**Description:** Add a breakpoint at the current address. If a breakpoint already exists, Butter will remove it.  
 
 **Steps:** Right-click on an instruction and choose ``Breakpoint -> Add/remove breakpoint``  
 

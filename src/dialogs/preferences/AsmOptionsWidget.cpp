@@ -68,7 +68,7 @@ AsmOptionsWidget::AsmOptionsWidget(PreferencesDialog *dialog)
             &AsmOptionsWidget::offsetCheckBoxToggled);
     connect(ui->relOffsetCheckBox, &QCheckBox::toggled, this,
             &AsmOptionsWidget::relOffCheckBoxToggled);
-    connect(Core(), &ClutterCore::asmOptionsChanged, this,
+    connect(Core(), &ButterCore::asmOptionsChanged, this,
             &AsmOptionsWidget::updateAsmOptionsFromVars);
 
     connect(ui->varTooltipsCheckBox, &QCheckBox::toggled, [this](bool checked) {
@@ -191,10 +191,10 @@ void AsmOptionsWidget::resetToDefault()
 
 void AsmOptionsWidget::triggerAsmOptionsChanged() const
 {
-    disconnect(Core(), &ClutterCore::asmOptionsChanged, this,
+    disconnect(Core(), &ButterCore::asmOptionsChanged, this,
                &AsmOptionsWidget::updateAsmOptionsFromVars);
     Core()->triggerAsmOptionsChanged();
-    connect(Core(), &ClutterCore::asmOptionsChanged, this,
+    connect(Core(), &ButterCore::asmOptionsChanged, this,
             &AsmOptionsWidget::updateAsmOptionsFromVars);
 }
 

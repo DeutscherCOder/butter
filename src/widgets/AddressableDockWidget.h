@@ -1,23 +1,23 @@
 #ifndef ADDRESSABLE_DOCK_WIDGET_H
 #define ADDRESSABLE_DOCK_WIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 #include <QAction>
 
-class ClutterSeekable;
+class ButterSeekable;
 
 /**
  * @brief Base class for dock widgets that support synchronization with a specific address/offset
  */
-class AddressableDockWidget : public ClutterDockWidget
+class AddressableDockWidget : public ButterDockWidget
 {
     Q_OBJECT
 public:
     AddressableDockWidget(MainWindow *parent);
     ~AddressableDockWidget() override {}
 
-    ClutterSeekable *getSeekable() const;
+    ButterSeekable *getSeekable() const;
 
     QVariantMap serializeViewProprties() override;
     void deserializeViewProperties(const QVariantMap &properties) override;
@@ -25,7 +25,7 @@ public slots:
     void updateWindowTitle();
 
 protected:
-    ClutterSeekable *seekable = nullptr;
+    ButterSeekable *seekable = nullptr;
     QAction syncAction;
     QMenu *dockMenu = nullptr;
 

@@ -1,5 +1,5 @@
 @echo off
-REM Build the Clutter crackme.
+REM Build the Butter crackme.
 REM   step 1: gen_blob.py writes blob_data.h (the encrypted payload)
 REM   step 2: cl compiles crackme.exe, statically linked, no PDB
 REM Note: gen_blob.py contains the password, so only crackme.exe is distributable.

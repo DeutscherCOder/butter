@@ -2,7 +2,7 @@
 #ifndef TEMPCONFIG_H
 #define TEMPCONFIG_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QString>
 #include <QVariant>
@@ -23,7 +23,7 @@
  * }
  * @endcode
  */
-class CLUTTER_EXPORT TempConfig
+class BUTTER_EXPORT TempConfig
 {
 public:
     TempConfig() = default;

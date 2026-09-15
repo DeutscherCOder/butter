@@ -1,8 +1,8 @@
 #ifndef GLOBALSWIDGET_H
 #define GLOBALSWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "widgets/ListDockWidget.h"
 
 #include <QAbstractListModel>
@@ -68,7 +68,7 @@ protected:
 /**
  * @brief Widget for listing and editing info about global objects
  */
-class GlobalsWidget : public ClutterDockWidget
+class GlobalsWidget : public ButterDockWidget
 {
     Q_OBJECT
 

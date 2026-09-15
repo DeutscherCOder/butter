@@ -119,7 +119,7 @@ bool FlirtProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right
 }
 
 FlirtWidget::FlirtWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::FlirtWidget),
       model(new FlirtModel(this)),
       proxyModel(new FlirtProxyModel(model, this)),
@@ -138,7 +138,7 @@ FlirtWidget::FlirtWidget(MainWindow *main)
 
     this->connect(ui->flirtTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this,
                   &FlirtWidget::onSelectedItemChanged);
-    connect(Core(), &ClutterCore::refreshAll, this, &FlirtWidget::refreshFlirt);
+    connect(Core(), &ButterCore::refreshAll, this, &FlirtWidget::refreshFlirt);
 
     this->addActions(this->blockMenu->actions());
 }

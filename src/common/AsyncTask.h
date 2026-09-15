@@ -1,7 +1,7 @@
 #ifndef ASYNCTASK_H
 #define ASYNCTASK_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QElapsedTimer>
 #include <QList>
@@ -17,7 +17,7 @@ class AsyncTaskManager;
  * @brief Wrapper class for QRunnable that provides timing and logging, intended to be used
  * with @ref AsyncTaskManager
  */
-class CLUTTER_EXPORT AsyncTask : public QObject, public QRunnable
+class BUTTER_EXPORT AsyncTask : public QObject, public QRunnable
 {
     Q_OBJECT
 

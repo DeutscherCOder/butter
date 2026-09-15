@@ -1,7 +1,7 @@
-#ifndef CLUTTER_INITIALOPTIONS_H
-#define CLUTTER_INITIALOPTIONS_H
+#ifndef BUTTER_INITIALOPTIONS_H
+#define BUTTER_INITIALOPTIONS_H
 
-#include "core/Clutter.h" // IWYU pragma: keep
+#include "core/Butter.h" // IWYU pragma: keep
 
 /**
  * @brief The CommandDescription struct is a pair of a Rizin command and its description
@@ -51,4 +51,4 @@ struct InitialOptions
     QString shellcode;
 };
 
-#endif // CLUTTER_INITIALOPTIONS_H
+#endif // BUTTER_INITIALOPTIONS_H

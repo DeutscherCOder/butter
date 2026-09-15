@@ -1,7 +1,7 @@
 #ifndef PROCESSESWIDGET_H
 #define PROCESSESWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 #include <QJsonObject>
 #include <QSortFilterProxyModel>
@@ -33,7 +33,7 @@ protected:
 /**
  * @brief Dock widget that lists system processes during debugging/emulation
  */
-class ProcessesWidget : public ClutterDockWidget
+class ProcessesWidget : public ButterDockWidget
 {
     Q_OBJECT
 

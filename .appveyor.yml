@@ -12,7 +12,7 @@ environment:
   VSVARSALLPATH: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat'
   ARCH: x64
   PYTHON: 'C:\Python312-x64'
-  PACKAGE_NAME: clutter-git-x64.Windows
+  PACKAGE_NAME: butter-git-x64.Windows
   VCPKG_ROOT: C:\Tools\vcpkg
 
 install:
@@ -40,17 +40,17 @@ build_script:
   - cmd: |
      mkdir build
      cd build
-     set PACKAGE_NAME=clutter-git-x64.Windows
+     set PACKAGE_NAME=butter-git-x64.Windows
   - cmd: "cmake
        -DCMAKE_BUILD_TYPE=Release
-       -DCLUTTER_USE_BUNDLED_RIZIN=ON
-       -DCLUTTER_ENABLE_PYTHON=ON
-       -DCLUTTER_ENABLE_PYTHON_BINDINGS=ON
-       -DCLUTTER_ENABLE_PACKAGING=ON
-       -DCLUTTER_PACKAGE_DEPENDENCIES=ON
-       -DCLUTTER_PACKAGE_RZ_GHIDRA=ON
-       -DCLUTTER_PACKAGE_JSDEC=ON
-       -DCLUTTER_ENABLE_DEPENDENCY_DOWNLOADS=ON
+       -DBUTTER_USE_BUNDLED_RIZIN=ON
+       -DBUTTER_ENABLE_PYTHON=ON
+       -DBUTTER_ENABLE_PYTHON_BINDINGS=ON
+       -DBUTTER_ENABLE_PACKAGING=ON
+       -DBUTTER_PACKAGE_DEPENDENCIES=ON
+       -DBUTTER_PACKAGE_RZ_GHIDRA=ON
+       -DBUTTER_PACKAGE_JSDEC=ON
+       -DBUTTER_ENABLE_DEPENDENCY_DOWNLOADS=ON
        -DCMAKE_PREFIX_PATH=%CUTTER_DEPS%\\pyside
        -DCPACK_PACKAGE_FILE_NAME=%PACKAGE_NAME%
        -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%\\scripts\\buildsystems\\vcpkg.cmake
@@ -68,7 +68,7 @@ artifacts:
     name: "%ARTIFACT_NAME%"
 
 #deploy:
-#  description: 'Clutter binaries'
+#  description: 'Butter binaries'
 #  provider: GitHub
 #  auth_token:
 #    secure: 2SmsqS2RaX2N5c9UwUcfBwNmMX64FfPAZFShLyxIkZXiC8vLaYCHToWxBYEuWRSk

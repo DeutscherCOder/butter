@@ -74,13 +74,13 @@ HexdumpWidget::HexdumpWidget(MainWindow *main)
     this->ui->hexTextView->addAction(&syncAction);
 
     connect(Config(), &Configuration::fontsUpdated, this, &HexdumpWidget::fontsUpdated);
-    connect(Core(), &ClutterCore::refreshAll, this, [this]() { refresh(); });
-    connect(Core(), &ClutterCore::refreshCodeViews, this, [this]() { refresh(); });
-    connect(Core(), &ClutterCore::instructionChanged, this, [this]() { refresh(); });
-    connect(Core(), &ClutterCore::stackChanged, this, [this]() { refresh(); });
-    connect(Core(), &ClutterCore::registersChanged, this, [this]() { refresh(); });
+    connect(Core(), &ButterCore::refreshAll, this, [this]() { refresh(); });
+    connect(Core(), &ButterCore::refreshCodeViews, this, [this]() { refresh(); });
+    connect(Core(), &ButterCore::instructionChanged, this, [this]() { refresh(); });
+    connect(Core(), &ButterCore::stackChanged, this, [this]() { refresh(); });
+    connect(Core(), &ButterCore::registersChanged, this, [this]() { refresh(); });
 
-    connect(seekable, &ClutterSeekable::seekableSeekChanged, this, &HexdumpWidget::onSeekChanged);
+    connect(seekable, &ButterSeekable::seekableSeekChanged, this, &HexdumpWidget::onSeekChanged);
     connect(ui->hexTextView, &HexWidget::positionChanged, this, [this](RVA addr) {
         if (!sentSeek) {
             sentSeek = true;

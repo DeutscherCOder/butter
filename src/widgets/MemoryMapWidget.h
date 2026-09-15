@@ -1,8 +1,8 @@
 #ifndef MEMORYMAPWIDGET_H
 #define MEMORYMAPWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "ListDockWidget.h"
 
 #include <QAbstractListModel>

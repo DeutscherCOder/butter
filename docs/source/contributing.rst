@@ -1,12 +1,12 @@
-Contributing to Clutter
+Contributing to Butter
 =======================
 
-So you like Clutter and want to get involved? Great! This part of the documentation will help and guide you through everything you need to know when contributing to Clutter. Welcome, we're delighted to see you!
+So you like Butter and want to get involved? Great! This part of the documentation will help and guide you through everything you need to know when contributing to Butter. Welcome, we're delighted to see you!
 
 .. tip::
    **Need help?** Our community strives to be friendly, open, and accessible for new contributors. If you have any difficulties getting involved or finding answers to you questions, please `come and ask your questions on our Telegram or IRC groups <https://cutter.re/#community>`_.
 
-   We know that set up to work on Clutter and finding issues that are a good fit for your skills can be a challenge. We're always looking for ways to improve this process: making Clutter more open, accessible, and easier to participate with. If you're having any trouble following this documentation or hit a barrier you can't get around, please contact us.
+   We know that set up to work on Butter and finding issues that are a good fit for your skills can be a challenge. We're always looking for ways to improve this process: making Butter more open, accessible, and easier to participate with. If you're having any trouble following this documentation or hit a barrier you can't get around, please contact us.
 
 .. rubric:: How do you want to help?
 

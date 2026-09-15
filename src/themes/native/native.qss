@@ -18,9 +18,9 @@ QToolTip {
 	font: 11pt "Monaco";
 }
 
-/* ClutterTreeView */
+/* ButterTreeView */
 
-ClutterTreeView::item
+ButterTreeView::item
 {
    padding-top: 1px;
    padding-bottom: 1px;

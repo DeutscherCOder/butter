@@ -3,12 +3,12 @@
 #include "common/BasicBlockHighlighter.h"
 #include "common/BasicInstructionHighlighter.h"
 #include "common/Configuration.h"
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 #include "common/DisassemblyHelper.h"
 #include "common/DisassemblyPreview.h"
 #include "common/Helpers.h"
 #include "common/TempConfig.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 #include "shortcuts/ShortcutManager.h"
 
@@ -30,10 +30,10 @@
 
 namespace DisHlp = DisassemblyHelper;
 
-DisassemblerGraphView::DisassemblerGraphView(QWidget *parent, ClutterSeekable *seekable,
+DisassemblerGraphView::DisassemblerGraphView(QWidget *parent, ButterSeekable *seekable,
                                              MainWindow *mainWindow,
                                              const QList<QAction *> &additionalMenuActions)
-    : ClutterGraphView(parent),
+    : ButterGraphView(parent),
       highlightToken(nullptr),
       blockMenu(new DisassemblyContextMenu(this, mainWindow)),
       contextMenu(new QMenu(this)),
@@ -48,24 +48,24 @@ DisassemblerGraphView::DisassemblerGraphView(QWidget *parent, ClutterSeekable *s
     connect(Config(), &Configuration::colorsUpdated, this,
             &DisassemblerGraphView::setTooltipStylesheet);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::commentsChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::functionRenamed, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::flagsChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::globalVarsChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::varsChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::instructionChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::breakpointsChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::functionsChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::asmOptionsChanged, this, &DisassemblerGraphView::refreshView);
-    connect(Core(), &ClutterCore::refreshCodeViews, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::refreshAll, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::commentsChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::functionRenamed, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::flagsChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::globalVarsChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::varsChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::instructionChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::breakpointsChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::functionsChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::asmOptionsChanged, this, &DisassemblerGraphView::refreshView);
+    connect(Core(), &ButterCore::refreshCodeViews, this, &DisassemblerGraphView::refreshView);
 
     connectSeekChanged(false);
 
     // ESC for previous
     QShortcut *shortcutEscape = Shortcuts()->makeQShortcut("General.seekPrev", this);
     shortcutEscape->setContext(Qt::WidgetShortcut);
-    connect(shortcutEscape, &QShortcut::activated, seekable, &ClutterSeekable::seekPrev);
+    connect(shortcutEscape, &QShortcut::activated, seekable, &ButterSeekable::seekPrev);
 
     // Branch shortcuts
     QShortcut *shortcutTakeTrue = Shortcuts()->makeQShortcut("Graph.takeTrue", this);
@@ -155,10 +155,10 @@ DisassemblerGraphView::DisassemblerGraphView(QWidget *parent, ClutterSeekable *s
 void DisassemblerGraphView::connectSeekChanged(bool disconn)
 {
     if (disconn) {
-        disconnect(seekable, &ClutterSeekable::seekableSeekChanged, this,
+        disconnect(seekable, &ButterSeekable::seekableSeekChanged, this,
                    &DisassemblerGraphView::onSeekChanged);
     } else {
-        connect(seekable, &ClutterSeekable::seekableSeekChanged, this,
+        connect(seekable, &ButterSeekable::seekableSeekChanged, this,
                 &DisassemblerGraphView::onSeekChanged);
     }
 }
@@ -172,7 +172,7 @@ DisassemblerGraphView::~DisassemblerGraphView()
 
 void DisassemblerGraphView::refreshView()
 {
-    ClutterGraphView::refreshView();
+    ButterGraphView::refreshView();
     loadCurrentGraph();
     breakpoints = Core()->getBreakpointsAddresses();
     emit viewRefreshed();
@@ -228,7 +228,7 @@ void DisassemblerGraphView::loadCurrentGraph()
         return;
     }
 
-    for (const auto &bbi : ClutterPVector<RzAnalysisBlock>(fcn->bbs)) {
+    for (const auto &bbi : ButterPVector<RzAnalysisBlock>(fcn->bbs)) {
         const RVA bbiFail = bbi->fail;
         const RVA bbiJump = bbi->jump;
 
@@ -256,7 +256,7 @@ void DisassemblerGraphView::loadCurrentGraph()
 
         const RzAnalysisSwitchOp *switchOp = bbi->switch_op;
         if (switchOp) {
-            for (const auto &caseOp : ClutterRzList<RzAnalysisCaseOp>(switchOp->cases)) {
+            for (const auto &caseOp : ButterRzList<RzAnalysisCaseOp>(switchOp->cases)) {
                 if (caseOp->jump == RVA_INVALID) {
                     continue;
                 }
@@ -284,7 +284,7 @@ void DisassemblerGraphView::loadCurrentGraph()
         rz_core_print_disasm(core, bbi->addr, buf.get(), (int)bbi->size, (int)bbi->size, nullptr,
                              &options);
 
-        auto vecVisitor = ClutterPVector<RzAnalysisDisasmText>(vec.get());
+        auto vecVisitor = ButterPVector<RzAnalysisDisasmText>(vec.get());
         auto iter = vecVisitor.begin();
         while (iter != vecVisitor.end()) {
             const RzAnalysisDisasmText *op = *iter;
@@ -302,7 +302,7 @@ void DisassemblerGraphView::loadCurrentGraph()
             }
 
             QTextDocument textDoc;
-            textDoc.setHtml(ClutterCore::ansiEscapeToHtml(op->text));
+            textDoc.setHtml(ButterCore::ansiEscapeToHtml(op->text));
 
             instr.plainText = textDoc.toPlainText();
 
@@ -581,7 +581,7 @@ bool DisassemblerGraphView::eventFilter(QObject *obj, QEvent *event)
             }
         }
     }
-    return ClutterGraphView::eventFilter(obj, event);
+    return ButterGraphView::eventFilter(obj, event);
 }
 
 void DisassemblerGraphView::keyPressEvent(QKeyEvent *event)
@@ -597,7 +597,7 @@ void DisassemblerGraphView::keyPressEvent(QKeyEvent *event)
         }
     }
 
-    ClutterGraphView::keyPressEvent(event);
+    ButterGraphView::keyPressEvent(event);
 }
 
 RVA DisassemblerGraphView::getAddrForMouseEvent(GraphBlock &block, QPoint *point)

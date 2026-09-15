@@ -3,7 +3,7 @@
 #include "PythonManager.h"
 // clang-format on
 
-#include "Clutter.h"
+#include "Butter.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -12,7 +12,7 @@
 
 #include <cassert>
 
-#ifdef CLUTTER_ENABLE_PYTHON_BINDINGS
+#ifdef BUTTER_ENABLE_PYTHON_BINDINGS
 #    include <pyside.h>
 #    include <shiboken.h>
 #    ifdef HAVE_PYSIDECLEANUP
@@ -64,18 +64,18 @@ void PythonManager::initPythonHome()
     }
 }
 
-#ifdef CLUTTER_ENABLE_PYTHON_BINDINGS
-extern "C" PyObject *PyInit_ClutterBindings();
+#ifdef BUTTER_ENABLE_PYTHON_BINDINGS
+extern "C" PyObject *PyInit_ButterBindings();
 #endif
 
 void PythonManager::initialize()
 {
     initPythonHome();
 
-    PyImport_AppendInittab("_clutter", &PyInit_api);
+    PyImport_AppendInittab("_butter", &PyInit_api);
     PyImport_AppendInittab("_qtres", &PyInit_qtres);
-#ifdef CLUTTER_ENABLE_PYTHON_BINDINGS
-    PyImport_AppendInittab("ClutterBindings", &PyInit_ClutterBindings);
+#ifdef BUTTER_ENABLE_PYTHON_BINDINGS
+    PyImport_AppendInittab("ButterBindings", &PyInit_ButterBindings);
 #endif
     Py_Initialize();
     // This function is deprecated does nothing starting from Python 3.9
@@ -89,7 +89,7 @@ void PythonManager::initialize()
     saveThread();
 }
 
-#ifdef CLUTTER_ENABLE_PYTHON_BINDINGS
+#ifdef BUTTER_ENABLE_PYTHON_BINDINGS
 static void pySideDestructionVisitor(SbkObject *pyObj, void *data)
 {
     void **realData = reinterpret_cast<void **>(data);
@@ -129,8 +129,8 @@ void PythonManager::shutdown()
 
     restoreThread();
 
-#ifdef CLUTTER_ENABLE_PYTHON_BINDINGS
-    // This is necessary to prevent a segfault when the ClutterCore instance is deleted after the
+#ifdef BUTTER_ENABLE_PYTHON_BINDINGS
+    // This is necessary to prevent a segfault when the ButterCore instance is deleted after the
     // Shiboken::BindingManager
     Core()->setProperty("_PySideInvalidatePtr", QVariant());
 

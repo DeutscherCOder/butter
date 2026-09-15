@@ -1,7 +1,7 @@
 #ifndef BOOLTOGGLEDELEGATE_H
 #define BOOLTOGGLEDELEGATE_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QStyledItemDelegate>
 
@@ -9,7 +9,7 @@
  * @brief Delegate that toggles boolean model values on double click instead of opening an
  * editor
  */
-class CLUTTER_EXPORT BoolToggleDelegate : public QStyledItemDelegate
+class BUTTER_EXPORT BoolToggleDelegate : public QStyledItemDelegate
 {
 public:
     BoolToggleDelegate(QObject *parent = nullptr);

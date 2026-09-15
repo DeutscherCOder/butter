@@ -1,7 +1,7 @@
 #ifndef HEAPINFODIALOG_H
 #define HEAPINFODIALOG_H
 
-#include "ClutterDescriptions.h" // IWYU pragma: keep
+#include "ButterDescriptions.h" // IWYU pragma: keep
 
 #include <QDialog>
 

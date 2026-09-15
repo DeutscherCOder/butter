@@ -116,8 +116,8 @@ ResourcesWidget::ResourcesWidget(MainWindow *main)
     // Configure widget
     this->setWindowTitle(tr("Resources"));
 
-    connect(Core(), &ClutterCore::refreshAll, this, &ResourcesWidget::refreshResources);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::refreshAll, this, &ResourcesWidget::refreshResources);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(model, ResourcesModel::COMMENT); });
     connect(ui->quickFilterView, &QuickFilterView::filterTextChanged, this,
             [this] { ui->quickFilterView->setItemCount(filterModel->rowCount()); });

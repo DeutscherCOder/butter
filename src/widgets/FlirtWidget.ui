@@ -28,9 +28,9 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="ClutterTreeView" name="flirtTreeView">
+     <widget class="ButterTreeView" name="flirtTreeView">
       <property name="styleSheet">
-       <string notr="true">ClutterTreeView::item
+       <string notr="true">ButterTreeView::item
 {
     padding-top: 1px;
     padding-bottom: 1px;
@@ -67,9 +67,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ClutterTreeView</class>
+   <class>ButterTreeView</class>
    <extends>QTreeView</extends>
-   <header>widgets/ClutterTreeView.h</header>
+   <header>widgets/ButterTreeView.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

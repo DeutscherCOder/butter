@@ -2,7 +2,7 @@ Layout
 ======
 
 The set of currently opened widgets, their placement, and some properties is grouped into layouts.
-Clutter will automatically restore the last layout state when reopening Clutter. The last debug and normal layouts are stored separately.
+Butter will automatically restore the last layout state when reopening Butter. The last debug and normal layouts are stored separately.
 You can :ref:`save<user-docs/menus/menu-bar/view-menu:Save Layout>` multiple named layouts for different use cases.
 Use :doc:`../menus/menu-bar/view-menu` to :ref:`save<user-docs/menus/menu-bar/view-menu:Save Layout>`,
 :ref:`load<user-docs/menus/menu-bar/view-menu:Layouts>` or :ref:`user-docs/menus/menu-bar/view-menu:Reset to default layout`.

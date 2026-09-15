@@ -1,7 +1,7 @@
 #ifndef OVERVIEWWIDGET_H
 #define OVERVIEWWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 class MainWindow;
 class OverviewView;
@@ -10,7 +10,7 @@ class GraphWidget;
 /**
  * @brief Dock widget that links the graph minimap to the main active graph view
  */
-class OverviewWidget : public ClutterDockWidget
+class OverviewWidget : public ButterDockWidget
 {
     Q_OBJECT
 

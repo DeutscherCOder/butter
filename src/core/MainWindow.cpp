@@ -3,8 +3,8 @@
 #include "ui_MainWindow.h"
 
 // Common Headers
-#include "ClutterApplication.h"
-#include "ClutterConfig.h"
+#include "ButterApplication.h"
+#include "ButterConfig.h"
 #include "common/AnalysisTask.h"
 #include "common/BugReporting.h"
 #include "common/Helpers.h"
@@ -12,7 +12,7 @@
 #include "common/RunScriptTask.h"
 #include "common/SvgIconEngine.h"
 #include "common/TempConfig.h"
-#include "plugins/ClutterPlugin.h"
+#include "plugins/ButterPlugin.h"
 #include "plugins/PluginManager.h"
 #include "shortcuts/ShortcutManager.h"
 #include "widgets/ProgressIndicator.h"
@@ -122,7 +122,7 @@ T *getNewInstance(MainWindow *m)
     return new T(m);
 }
 
-using namespace Clutter;
+using namespace Butter;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -154,7 +154,7 @@ void MainWindow::initUI()
     connect(ui->actionCommitChanges, &QAction::triggered, this,
             []() { Core()->commitWriteCache(); });
     ui->actionCommitChanges->setEnabled(false);
-    connect(Core(), &ClutterCore::ioCacheChanged, ui->actionCommitChanges, &QAction::setEnabled);
+    connect(Core(), &ButterCore::ioCacheChanged, ui->actionCommitChanges, &QAction::setEnabled);
 
     widgetTypeToConstructorMap.insert(GraphWidget::getWidgetType(), getNewInstance<GraphWidget>);
     widgetTypeToConstructorMap.insert(DisassemblyWidget::getWidgetType(),
@@ -194,16 +194,16 @@ void MainWindow::initUI()
     connect(ui->actionZoomOut, &QAction::triggered, this, &MainWindow::onZoomOut);
     connect(ui->actionZoomReset, &QAction::triggered, this, &MainWindow::onZoomReset);
 
-    connect(core, &ClutterCore::toggleDebugView, this, &MainWindow::toggleDebugView);
+    connect(core, &ButterCore::toggleDebugView, this, &MainWindow::toggleDebugView);
 
-    connect(core, &ClutterCore::newMessage, this->consoleDock, &ConsoleWidget::addOutput);
-    connect(core, &ClutterCore::newDebugMessage, this->consoleDock, &ConsoleWidget::addDebugOutput);
+    connect(core, &ButterCore::newMessage, this->consoleDock, &ConsoleWidget::addOutput);
+    connect(core, &ButterCore::newDebugMessage, this->consoleDock, &ConsoleWidget::addDebugOutput);
 
-    connect(core, &ClutterCore::showMemoryWidgetRequested, this,
+    connect(core, &ButterCore::showMemoryWidgetRequested, this,
             static_cast<void (MainWindow::*)()>(&MainWindow::showMemoryWidget));
-    connect(core, &ClutterCore::showAddressRequested, this, &MainWindow::showAddress);
+    connect(core, &ButterCore::showAddressRequested, this, &MainWindow::showAddress);
 
-    connect(core, &ClutterCore::showTypeRequested, typesDock, [this](const QString &typeName) {
+    connect(core, &ButterCore::showTypeRequested, typesDock, [this](const QString &typeName) {
         typesDock->toggleDockWidget(true);
         typesDock->selectTypeByName(typeName);
     });
@@ -218,7 +218,7 @@ void MainWindow::initUI()
 
     initBackForwardMenu();
 
-    connect(core, &ClutterCore::ioModeChanged, this, &MainWindow::setAvailableIOModeOptions);
+    connect(core, &ButterCore::ioModeChanged, this, &MainWindow::setAvailableIOModeOptions);
 
     auto *ioModeActionGroup = new QActionGroup(this);
 
@@ -255,7 +255,7 @@ void MainWindow::initUI()
     ui->menuWindows->setToolTipsVisible(true);
     if (plugins.empty()) {
         ui->menuPlugins->menuAction()->setToolTip(
-                tr("No plugins are installed. Check the plugins section on Clutter documentation to "
+                tr("No plugins are installed. Check the plugins section on Butter documentation to "
                    "learn more."));
         ui->menuPlugins->setEnabled(false);
     } else if (ui->menuPlugins->isEmpty()) {
@@ -422,7 +422,7 @@ void MainWindow::initDocks()
     commentsDock = new CommentsWidget(this);
     stringsDock = new StringsWidget(this);
 
-    const QList<ClutterDockWidget *> debugDocks = { stackDock = new StackWidget(this),
+    const QList<ButterDockWidget *> debugDocks = { stackDock = new StackWidget(this),
                                                    threadsDock = new ThreadsWidget(this),
                                                    processesDock = new ProcessesWidget(this),
                                                    backtraceDock = new BacktraceWidget(this),
@@ -432,7 +432,7 @@ void MainWindow::initDocks()
                                                    registerRefsDock = new RegisterRefsWidget(this),
                                                    heapDock = new HeapDockWidget(this) };
 
-    const QList<ClutterDockWidget *> infoDocks = {
+    const QList<ButterDockWidget *> infoDocks = {
         classesDock = new ClassesWidget(this),
         entrypointDock = new EntrypointWidget(this),
         exportsDock = new ExportsWidget(this),
@@ -453,7 +453,7 @@ void MainWindow::initDocks()
         globalCallGraphDock = new CallGraphWidget(this, true),
     };
 
-    auto makeActionList = [this](const QList<ClutterDockWidget *> &docks) {
+    auto makeActionList = [this](const QList<ButterDockWidget *> &docks) {
         QList<QAction *> result;
         for (auto dock : docks) {
             if (dock != nullptr) {
@@ -467,12 +467,12 @@ void MainWindow::initDocks()
         return result;
     };
 
-    const QList<ClutterDockWidget *> windowDocks = {
+    const QList<ButterDockWidget *> windowDocks = {
         dashboardDock, nullptr,     functionsDock, overviewDock, nullptr,
         searchDock,    stringsDock, typesDock,     nullptr,
     };
     ui->menuWindows->insertActions(ui->actionExtraDecompiler, makeActionList(windowDocks));
-    const QList<ClutterDockWidget *> windowDocks2 = {
+    const QList<ButterDockWidget *> windowDocks2 = {
         consoleDock,
         commentsDock,
         nullptr,
@@ -529,7 +529,7 @@ void MainWindow::addExtraDecompiler()
     addExtraWidget(extraDock);
 }
 
-void MainWindow::addExtraWidget(ClutterDockWidget *extraDock)
+void MainWindow::addExtraWidget(ButterDockWidget *extraDock)
 {
     extraDock->setTransient(true);
     dockOnMainArea(extraDock);
@@ -560,7 +560,7 @@ QMenu *MainWindow::getMenuByType(MenuType type)
     }
 }
 
-void MainWindow::addPluginDockWidget(ClutterDockWidget *dockWidget)
+void MainWindow::addPluginDockWidget(ButterDockWidget *dockWidget)
 {
     addWidget(dockWidget);
     ui->menuPlugins->addAction(dockWidget->toggleViewAction());
@@ -660,7 +660,7 @@ bool MainWindow::openProject(const QString &file)
         const char *s = rz_project_err_message(err);
         QString msg = tr("Failed to open project: %1").arg(QString::fromUtf8(s));
         RzListIter *it;
-        ClutterRzListForeach (res, it, const char, s) {
+        ButterRzListForeach (res, it, const char, s) {
             msg += "\n" + QString::fromUtf8(s);
         }
         QMessageBox::critical(this, tr("Open Project"), msg);
@@ -1234,7 +1234,7 @@ void MainWindow::updateHistoryMenu(QMenu *menu, bool redo)
 
     bool history = true;
     QList<QAction *> actions;
-    ClutterRzListForeach (list, it, RzCoreSeekItem, undo) {
+    ButterRzListForeach (list, it, RzCoreSeekItem, undo) {
         const RzFlagItem *f = rz_flag_get_at(core->flags, undo->offset, true);
         const char *fname = nullptr;
         if (f) {
@@ -1341,7 +1341,7 @@ void MainWindow::manageLayouts()
     updateLayoutsMenu();
 }
 
-void MainWindow::addWidget(ClutterDockWidget *widget)
+void MainWindow::addWidget(ButterDockWidget *widget)
 {
     dockWidgets.push_back(widget);
 }
@@ -1355,7 +1355,7 @@ void MainWindow::addMemoryDockWidget(MemoryDockWidget *widget)
     });
 }
 
-void MainWindow::removeWidget(ClutterDockWidget *widget)
+void MainWindow::removeWidget(ButterDockWidget *widget)
 {
     dockWidgets.removeAll(widget);
     pluginDocks.removeAll(widget);
@@ -1449,23 +1449,23 @@ void MainWindow::enableDebugWidgetsMenu(bool enable)
     }
 }
 
-ClutterLayout MainWindow::getViewLayout()
+ButterLayout MainWindow::getViewLayout()
 {
-    ClutterLayout layout;
+    ButterLayout layout;
     layout.geometry = saveGeometry();
     layout.state = saveState();
 
     for (auto dock : dockWidgets) {
         QVariantMap properties;
-        if (auto clutterDock = qobject_cast<ClutterDockWidget *>(dock)) {
-            properties = clutterDock->serializeViewProprties();
+        if (auto butterDock = qobject_cast<ButterDockWidget *>(dock)) {
+            properties = butterDock->serializeViewProprties();
         }
         layout.viewProperties.insert(dock->objectName(), properties);
     }
     return layout;
 }
 
-ClutterLayout MainWindow::getViewLayout(const QString &name)
+ButterLayout MainWindow::getViewLayout(const QString &name)
 {
     auto it = layouts.find(name);
     if (it != layouts.end()) {
@@ -1474,7 +1474,7 @@ ClutterLayout MainWindow::getViewLayout(const QString &name)
     return {};
 }
 
-void MainWindow::setViewLayout(const ClutterLayout &layout)
+void MainWindow::setViewLayout(const ButterLayout &layout)
 {
     const bool isDefault = layout.state.isEmpty() || layout.geometry.isEmpty();
     const bool isDebug = Core()->currentlyDebugging;
@@ -1558,7 +1558,7 @@ void MainWindow::loadLayouts(QSettings &settings)
     this->layouts.clear();
     const int size = settings.beginReadArray("layouts");
     for (int i = 0; i < size; i++) {
-        ClutterLayout layout;
+        ButterLayout layout;
         settings.setArrayIndex(i);
         const QString name = settings.value("name", "layout").toString();
         layout.geometry = settings.value("geometry").toByteArray();
@@ -1608,8 +1608,8 @@ void MainWindow::onActionDefaultTriggered()
 
 void MainWindow::onActionNewTriggered()
 {
-    // Create a new Clutter process
-    static_cast<ClutterApplication *>(qApp)->launchNewInstance();
+    // Create a new Butter process
+    static_cast<ButterApplication *>(qApp)->launchNewInstance();
 }
 
 void MainWindow::onActionSaveTriggered()

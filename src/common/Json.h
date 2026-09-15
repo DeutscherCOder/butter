@@ -1,19 +1,19 @@
 #ifndef JSON_H
 #define JSON_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QJsonValue>
 #include <QVariant>
 
 class QTreeWidgetItem;
-class ClutterJson;
+class ButterJson;
 
 /**
  * @file Json.h
  * @brief Helpers for Json objects
  */
-namespace Clutter {
+namespace Butter {
 
 inline RVA jsonValueToRVA(const QJsonValue &value, RVA defaultValue = RVA_INVALID)
 {
@@ -25,7 +25,7 @@ inline RVA jsonValueToRVA(const QJsonValue &value, RVA defaultValue = RVA_INVALI
     return ret;
 }
 
-QTreeWidgetItem *jsonTreeWidgetItem(const QString &key, const ClutterJson &json);
+QTreeWidgetItem *jsonTreeWidgetItem(const QString &key, const ButterJson &json);
 
 }
 

@@ -1,10 +1,10 @@
 User Documentation
 ==================
 
-This page contains information about the different menus in Clutter.
+This page contains information about the different menus in Butter.
 
-Clutter is an advanced reverse engineering platform powered by Rizin.
-This user's guide provides detailed information on how to use Clutter.
+Butter is an advanced reverse engineering platform powered by Rizin.
+This user's guide provides detailed information on how to use Butter.
 The documentation for users is still on its early stages and will be improved over time.
 
 

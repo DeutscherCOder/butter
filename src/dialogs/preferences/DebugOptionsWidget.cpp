@@ -34,7 +34,7 @@ DebugOptionsWidget::DebugOptionsWidget(PreferencesDialog *dialog)
     connect(ui->pluginComboBox, &QComboBox::currentTextChanged, this,
             &DebugOptionsWidget::onDebugPluginChanged);
 
-    connect(Core(), &ClutterCore::debugOptionsChanged, this, &DebugOptionsWidget::updateDebugPlugin);
+    connect(Core(), &ButterCore::debugOptionsChanged, this, &DebugOptionsWidget::updateDebugPlugin);
 }
 
 DebugOptionsWidget::~DebugOptionsWidget() {}
@@ -99,8 +99,8 @@ void DebugOptionsWidget::updateStackAddr()
 
 void DebugOptionsWidget::debugOptionsChanged() const
 {
-    disconnect(Core(), &ClutterCore::debugOptionsChanged, this,
+    disconnect(Core(), &ButterCore::debugOptionsChanged, this,
                &DebugOptionsWidget::updateDebugPlugin);
     Core()->triggerDebugOptionsChanged();
-    connect(Core(), &ClutterCore::debugOptionsChanged, this, &DebugOptionsWidget::updateDebugPlugin);
+    connect(Core(), &ButterCore::debugOptionsChanged, this, &DebugOptionsWidget::updateDebugPlugin);
 }

@@ -145,7 +145,7 @@ bool FlagsSortFilterProxyModel::lessThan(const QModelIndex &left, const QModelIn
 }
 
 FlagsWidget::FlagsWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::FlagsWidget),
       main(main),
       flagsModel(new FlagsModel(this)),
@@ -181,10 +181,10 @@ FlagsWidget::FlagsWidget(MainWindow *main)
 
     setScrollMode();
 
-    connect(Core(), &ClutterCore::flagsChanged, this, &FlagsWidget::flagsChanged);
-    connect(Core(), &ClutterCore::codeRebased, this, &FlagsWidget::flagsChanged);
-    connect(Core(), &ClutterCore::refreshAll, this, &FlagsWidget::refreshFlagspaces);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::flagsChanged, this, &FlagsWidget::flagsChanged);
+    connect(Core(), &ButterCore::codeRebased, this, &FlagsWidget::flagsChanged);
+    connect(Core(), &ButterCore::refreshAll, this, &FlagsWidget::refreshFlagspaces);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(flagsModel, FlagsModel::COMMENT); });
 
     auto menu = ui->flagsTreeView->getItemContextMenu();

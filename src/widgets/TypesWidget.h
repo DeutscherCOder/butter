@@ -1,8 +1,8 @@
 #ifndef TYPESWIDGET_H
 #define TYPESWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
@@ -71,7 +71,7 @@ protected:
 /**
  * @brief Widget for listing all types
  */
-class TypesWidget : public ClutterDockWidget
+class TypesWidget : public ButterDockWidget
 {
     Q_OBJECT
 

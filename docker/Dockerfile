@@ -4,7 +4,7 @@ LABEL maintainer "Philipp Schmied <banana@bananamafia.dev>"
 # Prevent build fails because of interactive scripts when compiling
 ENV DEBIAN_FRONTEND noninteractive
 
-# Install dependencies required for building Clutter
+# Install dependencies required for building Butter
 RUN apk add --no-cache \
     bash \
     build-base \
@@ -27,16 +27,16 @@ RUN apk add --no-cache \
     wget
 
 # Clone and build
-RUN git clone --recurse-submodules https://github.com/rizinorg/cutter.git /opt/clutter && \
-    mkdir -p /opt/clutter/build && \
-    cd /opt/clutter/build && \
+RUN git clone --recurse-submodules https://github.com/rizinorg/cutter.git /opt/butter && \
+    mkdir -p /opt/butter/build && \
+    cd /opt/butter/build && \
     cmake .. && \
     cmake --build . -j $(grep -c ^processor /proc/cpuinfo)
 
 FROM alpine:latest AS runner
 
-# Get the compiled Clutter from the builder
-COPY --from=builder /opt/clutter /opt/clutter
+# Get the compiled Butter from the builder
+COPY --from=builder /opt/butter /opt/butter
 
 # Add the dependencies we need for running
 RUN apk add --no-cache \
@@ -49,14 +49,14 @@ RUN apk add --no-cache \
     su-exec
 
 # Prepare user and files to mount configurations later on
-RUN useradd clutter && \
+RUN useradd butter && \
     mkdir /var/sharedFolder && \
-    mkdir -p /home/clutter/.config/rizin && \
-    touch /home/clutter/.rizinrc && \
-    chown -R clutter:clutter /var/sharedFolder && \
-    chown -R clutter:clutter /home/clutter/
+    mkdir -p /home/butter/.config/rizin && \
+    touch /home/butter/.rizinrc && \
+    chown -R butter:butter /var/sharedFolder && \
+    chown -R butter:butter /home/butter/
 
-WORKDIR /home/clutter
+WORKDIR /home/butter
 ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

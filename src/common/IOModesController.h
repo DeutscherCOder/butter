@@ -1,14 +1,14 @@
 #ifndef IOMODESCONTROLLER_H
 #define IOMODESCONTROLLER_H
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 #include <qwidget.h>
 
 /**
  * @brief Manages switching between Read-Only, Cache, and Write modes
  *
- * Handles the logic required when changing how Clutter interacts with the underlying file on disk
+ * Handles the logic required when changing how Butter interacts with the underlying file on disk
  */
 class IOModesController : public QObject
 

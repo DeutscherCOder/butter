@@ -1,6 +1,6 @@
 #include "common/RunScriptTask.h"
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 
 RunScriptTask::RunScriptTask() : AsyncTask() {}

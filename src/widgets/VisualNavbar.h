@@ -1,7 +1,7 @@
 #ifndef VISUALNAVBAR_H
 #define VISUALNAVBAR_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 #include "RizinCpp.h"
 
 #include <QGraphicsScene>

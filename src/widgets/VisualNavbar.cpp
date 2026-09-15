@@ -1,6 +1,6 @@
 #include "VisualNavbar.h"
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 
 #include <QComboBox>
@@ -60,12 +60,12 @@ VisualNavbar::VisualNavbar(MainWindow *main, QWidget *parent)
     addWidget(this->graphicsView);
     // addWidget(addsCombo);
 
-    connect(Core(), &ClutterCore::seekChanged, this, &VisualNavbar::onSeekChanged);
-    connect(Core(), &ClutterCore::registersChanged, this, &VisualNavbar::drawPCCursor);
-    connect(Core(), &ClutterCore::refreshAll, this, &VisualNavbar::fetchAndPaintData);
-    connect(Core(), &ClutterCore::functionsChanged, this, &VisualNavbar::fetchAndPaintData);
-    connect(Core(), &ClutterCore::flagsChanged, this, &VisualNavbar::fetchAndPaintData);
-    connect(Core(), &ClutterCore::globalVarsChanged, this, &VisualNavbar::fetchAndPaintData);
+    connect(Core(), &ButterCore::seekChanged, this, &VisualNavbar::onSeekChanged);
+    connect(Core(), &ButterCore::registersChanged, this, &VisualNavbar::drawPCCursor);
+    connect(Core(), &ButterCore::refreshAll, this, &VisualNavbar::fetchAndPaintData);
+    connect(Core(), &ButterCore::functionsChanged, this, &VisualNavbar::fetchAndPaintData);
+    connect(Core(), &ButterCore::flagsChanged, this, &VisualNavbar::fetchAndPaintData);
+    connect(Core(), &ButterCore::globalVarsChanged, this, &VisualNavbar::fetchAndPaintData);
 
     const QBrush bg = QBrush(QColor(74, 74, 74));
 
@@ -149,7 +149,7 @@ void VisualNavbar::fetchStats()
     RzIOMap *map;
     ut64 from = UT64_MAX;
     ut64 to = 0;
-    ClutterRzListForeach (list.get(), iter, RzIOMap, map) {
+    ButterRzListForeach (list.get(), iter, RzIOMap, map) {
         const ut64 f = rz_itv_begin(map->itv);
         const ut64 t = rz_itv_end(map->itv);
         if (f < from) {

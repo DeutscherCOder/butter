@@ -1,6 +1,6 @@
 # crackme
 
-A deliberately hostile Windows target, built to be cracked with Clutter's Ghidra decompiler and
+A deliberately hostile Windows target, built to be cracked with Butter's Ghidra decompiler and
 driven entirely through [`../mcp`](../mcp) by an agent.
 
 **Spoiler warning.** The password and flag are printed at the bottom of this file.
@@ -27,7 +27,7 @@ crackme\build.bat
 Regenerates `blob_data.h` from `gen_blob.py`, then compiles with VS 2026. Behaviour:
 
 ```bat
-crackme.exe "ClutterDecompilersGoBrrr_2026"   ->  Access granted. flag: ...
+crackme.exe "ButterDecompilersGoBrrr_2026"   ->  Access granted. flag: ...
 crackme.exe hunter2                           ->  Access denied.
 crackme.exe "CLUTTER{str1ngs_ar3_f0r_b3g1nn3rs}"  ->  Access denied.   (decoy)
 ```

@@ -56,11 +56,11 @@ QString RizinCmdTask::getResult()
     return QString::fromUtf8(res);
 }
 
-ClutterJson RizinCmdTask::getResultJson()
+ButterJson RizinCmdTask::getResultJson()
 {
     const char *res = rz_core_cmd_task_get_result(task);
     if (!res) {
-        return ClutterJson();
+        return ButterJson();
     }
     char *copy = static_cast<char *>(rz_mem_alloc(strlen(res) + 1));
     strcpy(copy, res);

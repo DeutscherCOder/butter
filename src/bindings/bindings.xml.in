@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<typesystem package="ClutterBindings">
+<typesystem package="ButterBindings">
     <load-typesystem name="typesystem_core.xml" generate="no" />
     <load-typesystem name="typesystem_gui.xml" generate="no" />
     <load-typesystem name="typesystem_widgets.xml" generate="no" />
 
     <primitive-type name="bool"/>
 
-    <object-type name="ClutterCore">
+    <object-type name="ButterCore">
     </object-type>
     <object-type name="Configuration" />
     <object-type name="MainWindow" >
@@ -16,10 +16,10 @@
     <object-type name="BasicBlockHighlighter" />
     <object-type name="BasicInstructionHighlighter" />
     <object-type name="AddressableItemContextMenu" />
-    <object-type name="ClutterDockWidget" />
+    <object-type name="ButterDockWidget" />
 
     <template name="plugin_meta_get">
-        Shiboken::GilState clutterGil;
+        Shiboken::GilState butterGil;
         SbkObject *wrapper = Shiboken::BindingManager::instance().retrieveWrapper(this);
         PyObject *classObject = PyObject_GetAttrString(reinterpret_cast&lt;PyObject *&gt;(wrapper), "__class__");
         if (!classObject) {
@@ -45,7 +45,7 @@
         pythonToCpp(pyResult, &amp;cppResult);
         return cppResult;
     </template>
-    <object-type name="ClutterPlugin">
+    <object-type name="ButterPlugin">
         <modify-function signature="getName()const">
             <inject-code class="shell" position="beginning">
                 <insert-template name="plugin_meta_get">

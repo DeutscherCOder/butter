@@ -1,6 +1,6 @@
 #include "RemoteDebugDialog.h"
 
-#include "ClutterCommon.h" // IWYU pragma: keep
+#include "ButterCommon.h" // IWYU pragma: keep
 #include "ui_RemoteDebugDialog.h"
 
 #include <QFileInfo>

@@ -1,6 +1,6 @@
 #include "GraphOptionsWidget.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "PreferencesDialog.h"
 #include "common/Configuration.h"
 #include "ui_GraphOptionsWidget.h"
@@ -32,7 +32,7 @@ GraphOptionsWidget::GraphOptionsWidget(PreferencesDialog *dialog)
     connect(ui->blockEntryCheckBox, &QCheckBox::stateChanged, this,
             &GraphOptionsWidget::checkGraphBlockEntryOffsetChanged);
 #endif
-    connect(Core(), &ClutterCore::graphOptionsChanged, this,
+    connect(Core(), &ButterCore::graphOptionsChanged, this,
             &GraphOptionsWidget::updateOptionsFromVars);
     const QSpinBox *const graphSpacingWidgets[] = { ui->horizontalEdgeSpacing,
                                                     ui->horizontalBlockSpacing,
@@ -72,10 +72,10 @@ void GraphOptionsWidget::updateOptionsFromVars()
 
 void GraphOptionsWidget::triggerOptionsChanged() const
 {
-    disconnect(Core(), &ClutterCore::graphOptionsChanged, this,
+    disconnect(Core(), &ButterCore::graphOptionsChanged, this,
                &GraphOptionsWidget::updateOptionsFromVars);
     Core()->triggerGraphOptionsChanged();
-    connect(Core(), &ClutterCore::graphOptionsChanged, this,
+    connect(Core(), &ButterCore::graphOptionsChanged, this,
             &GraphOptionsWidget::updateOptionsFromVars);
 }
 

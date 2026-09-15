@@ -3,23 +3,23 @@
 
 #include <QSettings>
 
-#include <core/Clutter.h>
+#include <core/Butter.h>
 
 /**
  * @file SettingsUpgrade.h
- * @brief Logic for migrating and importing Clutter settings from older versions
+ * @brief Logic for migrating and importing Butter settings from older versions
  */
 
-namespace Clutter {
+namespace Butter {
 void initializeSettings();
 /**
- * @brief Check if Clutter should offer importing settings from version that can't be directly
+ * @brief Check if Butter should offer importing settings from version that can't be directly
  * updated.
- * @return True if this is first time running Clutter and r2 based Clutter <= 1.12 settings exist.
+ * @return True if this is first time running Butter and r2 based Butter <= 1.12 settings exist.
  */
 bool shouldOfferSettingImport();
 /**
- * @brief Ask user if Clutter should import settings from pre-rizin Clutter.
+ * @brief Ask user if Butter should import settings from pre-rizin Butter.
  *
  * This function assume that QApplication isn't running yet.
  */

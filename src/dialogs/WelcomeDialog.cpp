@@ -2,7 +2,7 @@
 
 #include "AboutDialog.h"
 #include "Configuration.h"
-#include "ClutterConfig.h"
+#include "ButterConfig.h"
 #include "common/Helpers.h"
 #include "ui_WelcomeDialog.h"
 
@@ -13,7 +13,7 @@ WelcomeDialog::WelcomeDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Welc
     ui->setupUi(this);
     setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint));
     ui->logoSvgWidget->load(Config()->getLogoFile());
-    ui->versionLabel->setText("<font color='#a4a9b2'>" + tr("Version ") + CLUTTER_VERSION_FULL
+    ui->versionLabel->setText("<font color='#a4a9b2'>" + tr("Version ") + BUTTER_VERSION_FULL
                               + "</font>");
     ui->themeComboBox->setCurrentIndex(Config()->getInterfaceTheme());
 
@@ -74,7 +74,7 @@ void WelcomeDialog::onThemeComboBoxCurrentIndexChanged(int index)
 {
     Config()->setInterfaceTheme(index);
 
-    // make sure that Clutter's logo changes its color according to the selected theme
+    // make sure that Butter's logo changes its color according to the selected theme
     ui->logoSvgWidget->load(Config()->getLogoFile());
 }
 

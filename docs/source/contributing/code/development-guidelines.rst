@@ -1,15 +1,15 @@
 
-Clutter Development Guidelines
+Butter Development Guidelines
 ===============================
 
 .. note::
-   New to Clutter development? Check out our :doc:`tutorial for new developers <getting-started>`.
+   New to Butter development? Check out our :doc:`tutorial for new developers <getting-started>`.
 
 
 Common Usage
 --------------
 
-ClutterCore Class
+ButterCore Class
 ~~~~~~~~~~~~~~~~
 
 This is the main class where every link with Rizin is made. It is *unique*
@@ -25,9 +25,9 @@ Example:
 Seek the Current File
 ~~~~~~~~~~~~~~~~~~~~~
 
-To modify Rizin seek use ``ClutterCore::seek(const RVA offset)``. This
+To modify Rizin seek use ``ButterCore::seek(const RVA offset)``. This
 is important because it will emit a
-``ClutterCore::seekChanged(RVA offset)`` signal. Never ever call
+``ButterCore::seekChanged(RVA offset)`` signal. Never ever call
 ``cmd("s offset")``;
 
 Example:
@@ -38,13 +38,13 @@ Example:
 
 .. note::
 
- Clutter also supports a silent seek which doesn't trigger the ``seekChanged`` event and doesn't add new entries to the seek history.
+ Butter also supports a silent seek which doesn't trigger the ``seekChanged`` event and doesn't add new entries to the seek history.
 
 
 Creating a Widget
 ~~~~~~~~~~~~~~~~~
 
-Make sure to connect the ``ClutterCore::seekChanged(RVA offset)`` signal
+Make sure to connect the ``ButterCore::seekChanged(RVA offset)`` signal
 so your widget refreshes its output when Rizin seek is modified
 (switching to another function, etc.).
 
@@ -78,9 +78,9 @@ To run ``clang-tidy``, first configure your build to generate ``compile_commands
 
 .. code:: bash
 
-    cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCLUTTER_QT=6 -DCLUTTER_USE_BUNDLED_RIZIN=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUTTER_QT=6 -DBUTTER_USE_BUNDLED_RIZIN=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
      
-    cmake --build build --target Clutter_autogen
+    cmake --build build --target Butter_autogen
 
 Run ``clang-tidy`` on modified files relative to the latest commit
 
@@ -92,7 +92,7 @@ Similar to ``clang-format``, If your changes were done on many files across the 
 
 .. code:: bash
 
-    run-clang-tidy -p build ".*src/(?!(themes|bindings|fonts|img|translations|Clutter_autogen)).*\.(cpp|h)$"
+    run-clang-tidy -p build ".*src/(?!(themes|bindings|fonts|img|translations|Butter_autogen)).*\.(cpp|h)$"
 
 ``clang-tidy`` can also attempt to fix style violations using the ``-fix`` flag. However these may not always be perfect. Make sure to verify the fixes before opening a pull request:
 
@@ -103,14 +103,14 @@ Similar to ``clang-format``, If your changes were done on many files across the 
 Python scripts
 ~~~~~~~~~~~~~~
 
-If you don't want to run manual commands, clutter also provides scripts for running ``clang-format`` and ``clang-tidy`` in the ``scripts`` directory
+If you don't want to run manual commands, butter also provides scripts for running ``clang-format`` and ``clang-tidy`` in the ``scripts`` directory
 
 .. code:: bash
 
     python scripts/clang-format.py -h
     usage: clang-format.py [-h] [-C CLANG_FORMAT] [-c] [-v] [-f FILE] [-d DIFF]
 
-    Clang format the clutter project
+    Clang format the butter project
 
     options:
       -h, --help            show this help message and exit
@@ -168,9 +168,9 @@ Only first letter of an acronym is uppercase
 
 .. code:: cpp
 
-   ClutterJsonWigdet clutterJSONWidget;    // Wrong
+   ButterJsonWigdet butterJSONWidget;    // Wrong
 
-   ClutterJsonWigdet clutterJsonWigdet;    // Correct
+   ButterJsonWigdet butterJsonWigdet;    // Correct
 
 Variable names don't use leading/trailing underscores, including prefixes like m\_
 
@@ -255,9 +255,9 @@ Only first letter of an acronym is uppercase
 
 .. code:: cpp
 
-   class ClutterJSONWidget    // Wrong
+   class ButterJSONWidget    // Wrong
 
-   class ClutterJsonWidget    // Correct
+   class ButterJsonWidget    // Correct
 
 
 Member variables follow the same naming conventions defined in `variables`_ that means no leading/trailing underscores or m\_ prefixes
@@ -283,7 +283,7 @@ Prefer the use of C++ smart pointers (``unique_ptr``, ``shared_ptr``...)
 Braces
 ~~~~~~
 
-In contrast to the official guidelines of Qt, in Clutter we always use curly braces in conditional statements, even if the body of a conditional statement contains only one line.
+In contrast to the official guidelines of Qt, in Butter we always use curly braces in conditional statements, even if the body of a conditional statement contains only one line.
 
 .. code:: cpp
 
@@ -477,21 +477,21 @@ You can find the class documentation in the `API Reference <https://cutter.re/do
 Updating the Git Submodules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Git submodules play a major part in Clutter. This, because Clutter is powered
+Git submodules play a major part in Butter. This, because Butter is powered
 by Rizin, its parent project, and it tries to stay up-to-date with its
 recent version, which allows us to implement new features, and enjoy bug
 fixes and performance improvements on Rizin. Often, we need to update
 the Rizin submodule or the others, to push their most recent
-version to Clutter.
+version to Butter.
 
-You can view the list of all the submodules from the clutter root folder with:
+You can view the list of all the submodules from the butter root folder with:
 
 .. code:: sh
 
    git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
 
 To update all the submodules at once, run these commands from the
-clutter root folder:
+butter root folder:
 
 .. code:: sh
 

@@ -1,17 +1,17 @@
-# clutter-mcp
+# butter-mcp
 
 A [Model Context Protocol](https://modelcontextprotocol.io) server that gives any AI client
-the full power of the Clutter / rizin backend: analyse a binary, decompile with the bundled
+the full power of the Butter / rizin backend: analyse a binary, decompile with the bundled
 Ghidra decompiler, disassemble, follow xrefs, inspect sections / imports / exports /
 symbols / relocations / strings, search bytes and code, read and write memory, apply types,
 scan with YARA, drive the Windows debugger, diff two binaries, and reach anything else
 through a raw rizin escape hatch.
 
 Standard library only — nothing to `pip install`. It drives the `rizin.exe` that already
-ships next to Clutter, so no GUI, no plugin and no project file are required.
+ships next to Butter, so no GUI, no plugin and no project file are required.
 
 ```
-    AI client  --JSON-RPC (stdio or HTTP)-->  clutter_mcp.py  --pipes-->  rizin.exe
+    AI client  --JSON-RPC (stdio or HTTP)-->  butter_mcp.py  --pipes-->  rizin.exe
 ```
 
 Full setup instructions for every client are in [`../SETUP.md`](../SETUP.md).
@@ -36,13 +36,13 @@ Full setup instructions for every client are in [`../SETUP.md`](../SETUP.md).
 ## Transports
 
 ```bash
-python mcp/clutter_mcp.py                                    # stdio (default)
-python mcp/clutter_mcp.py --file target.exe --analysis deep   # pre-open a binary
-python mcp/clutter_mcp.py --http 127.0.0.1:8765               # streamable HTTP
+python mcp/butter_mcp.py                                    # stdio (default)
+python mcp/butter_mcp.py --file target.exe --analysis deep   # pre-open a binary
+python mcp/butter_mcp.py --http 127.0.0.1:8765               # streamable HTTP
 ```
 
 HTTP: `POST /mcp` takes one JSON-RPC request (batches are supported), `GET /health`
-reports server state. Environment: `CLUTTER_RIZIN` (path to rizin), `CLUTTER_MCP_LOG=0`
+reports server state. Environment: `BUTTER_RIZIN` (path to rizin), `BUTTER_MCP_LOG=0`
 to silence stderr logging.
 
 ## Protocol surface
@@ -53,8 +53,8 @@ to silence stderr logging.
 * `prompts/list`, `prompts/get` — `triage`, `find_check`, `explain_function`,
   `audit_memory_safety`.
 * `resources/list`, `resources/read`, `resources/templates/list` —
-  `clutter://session`, `clutter://info`, `clutter://functions`,
-  `clutter://decompiled/{function}`, `clutter://disassembly/{function}`.
+  `butter://session`, `butter://info`, `butter://functions`,
+  `butter://decompiled/{function}`, `butter://disassembly/{function}`.
 * `ping`, `logging/setLevel`, `completion/complete`, notification handling.
 
 ## Tools (74)

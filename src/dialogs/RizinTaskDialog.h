@@ -2,7 +2,7 @@
 #define RZTASKDIALOG_H
 
 #include "common/RizinTask.h"
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QDialog>
 #include <QElapsedTimer>
@@ -18,7 +18,7 @@ class RizinTaskDialog;
 /**
  * @brief A modal dialog that shows the progress of background @ref RizinTask
  */
-class CLUTTER_EXPORT RizinTaskDialog : public QDialog
+class BUTTER_EXPORT RizinTaskDialog : public QDialog
 {
     Q_OBJECT
 

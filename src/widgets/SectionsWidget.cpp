@@ -224,14 +224,14 @@ void SectionsWidget::initAddrMapDocks()
 
 void SectionsWidget::initConnects()
 {
-    connect(Core(), &ClutterCore::refreshAll, this, &SectionsWidget::refreshSections);
-    connect(Core(), &ClutterCore::codeRebased, this, &SectionsWidget::refreshSections);
+    connect(Core(), &ButterCore::refreshAll, this, &SectionsWidget::refreshSections);
+    connect(Core(), &ButterCore::codeRebased, this, &SectionsWidget::refreshSections);
     connect(this, &QDockWidget::visibilityChanged, this, [=, this](bool visibility) {
         if (visibility) {
             refreshSections();
         }
     });
-    connect(Core(), &ClutterCore::seekChanged, this, &SectionsWidget::refreshDocks);
+    connect(Core(), &ButterCore::seekChanged, this, &SectionsWidget::refreshDocks);
     connect(Config(), &Configuration::colorsUpdated, this, &SectionsWidget::refreshSections);
     connect(toggleButton, &QToolButton::clicked, this, [=, this] {
         toggleButton->hide();
@@ -243,7 +243,7 @@ void SectionsWidget::initConnects()
             updateToggle();
         }
     });
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(sectionsModel, SectionsModel::CommentColumn); });
 }
 
@@ -296,7 +296,7 @@ void SectionsWidget::drawIndicatorOnAddrDocks()
 
 void SectionsWidget::resizeEvent(QResizeEvent *event)
 {
-    ClutterDockWidget::resizeEvent(event);
+    ButterDockWidget::resizeEvent(event);
     refreshDocks();
 }
 

@@ -1,8 +1,8 @@
 #ifndef REGISTERREFSWIDGET_H
 #define REGISTERREFSWIDGET_H
 
-#include "ClutterDockWidget.h"
-#include "core/Clutter.h"
+#include "ButterDockWidget.h"
+#include "core/Butter.h"
 #include "menus/AddressableItemContextMenu.h"
 
 #include <QAbstractListModel>
@@ -73,7 +73,7 @@ protected:
  * @brief Widget that lists register values, updates them as the debugger runs, and allows users to
  * "seek" (navigate) to referenced memory
  */
-class RegisterRefsWidget : public ClutterDockWidget
+class RegisterRefsWidget : public ButterDockWidget
 {
     Q_OBJECT
 

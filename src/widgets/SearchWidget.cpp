@@ -239,7 +239,7 @@ bool SearchSortFilterProxyModel::lessThan(const QModelIndex &left, const QModelI
 }
 
 SearchWidget::SearchWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::SearchWidget),
       searchModel(new SearchModel(this)),
       searchProxyModel(new SearchSortFilterProxyModel(searchModel, this))
@@ -255,9 +255,9 @@ SearchWidget::SearchWidget(MainWindow *main)
 
     setScrollMode();
 
-    connect(Core(), &ClutterCore::toggleDebugView, this, &SearchWidget::updateSearchBoundaries);
-    connect(Core(), &ClutterCore::refreshAll, this, &SearchWidget::refreshSearchspaces);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::toggleDebugView, this, &SearchWidget::updateSearchBoundaries);
+    connect(Core(), &ButterCore::refreshAll, this, &SearchWidget::refreshSearchspaces);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(searchModel, SearchModel::COMMENT); });
 
     connect(ui->filterLineEdit, &QLineEdit::returnPressed, this, &SearchWidget::runSearch);

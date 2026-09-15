@@ -17,4 +17,4 @@ public:
     ~PluginsOptionsWidget();
 };
 
-#endif // CLUTTER_PLUGINSOPTIONSWIDGET_H
+#endif // BUTTER_PLUGINSOPTIONSWIDGET_H

@@ -1,7 +1,7 @@
 #ifndef HEAPDOCKWIDGET_H
 #define HEAPDOCKWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 #include <QDockWidget>
 
@@ -14,7 +14,7 @@ class HeapDockWidget;
 /**
  * @brief A container widget that serves as the primary interface for heap analysis
  */
-class HeapDockWidget : public ClutterDockWidget
+class HeapDockWidget : public ButterDockWidget
 {
     Q_OBJECT
 

@@ -74,7 +74,7 @@ void BacktraceModel::setBacktraces(const QList<BacktraceDescription> &backtraces
 }
 
 BacktraceWidget::BacktraceWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::BacktraceWidget),
       backtraceModel(new BacktraceModel(this)),
       backtraceView(new QTreeView(this))
@@ -90,8 +90,8 @@ BacktraceWidget::BacktraceWidget(MainWindow *main)
 
     refreshDeferrer = createRefreshDeferrer([this]() { updateContents(); });
 
-    connect(Core(), &ClutterCore::refreshAll, this, &BacktraceWidget::updateContents);
-    connect(Core(), &ClutterCore::registersChanged, this, &BacktraceWidget::updateContents);
+    connect(Core(), &ButterCore::refreshAll, this, &BacktraceWidget::updateContents);
+    connect(Core(), &ButterCore::registersChanged, this, &BacktraceWidget::updateContents);
     connect(Config(), &Configuration::fontsUpdated, this, &BacktraceWidget::fontsUpdatedSlot);
 
     connect(Config(), &Configuration::functionsOptionsChanged, this,

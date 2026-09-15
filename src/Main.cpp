@@ -1,5 +1,5 @@
-#include "ClutterApplication.h"
-#include "ClutterConfig.h"
+#include "ButterApplication.h"
+#include "ButterConfig.h"
 #include "common/SettingsUpgrade.h"
 #include "common/UpdateWorker.h"
 #include "core/MainWindow.h" // IWYU pragma: keep
@@ -63,15 +63,15 @@ int main(int argc, char *argv[])
 #ifndef Q_OS_MACOS // don't set on macOS so that it doesn't affect config path there
     QCoreApplication::setOrganizationDomain("rizin.re");
 #endif
-    QCoreApplication::setApplicationName("clutter");
+    QCoreApplication::setApplicationName("butter");
 
     // Importing settings after setting rename, needs separate handling in addition to regular
     // version to version upgrade.
-    if (Clutter::shouldOfferSettingImport()) {
-        Clutter::showSettingImportDialog(argc, argv);
+    if (Butter::shouldOfferSettingImport()) {
+        Butter::showSettingImportDialog(argc, argv);
     }
 
-    Clutter::initializeSettings();
+    Butter::initializeSettings();
 
     QCoreApplication::setAttribute(
             Qt::AA_ShareOpenGLContexts); // needed for QtWebEngine inside Plugins
@@ -83,12 +83,12 @@ int main(int argc, char *argv[])
 #    endif
 #endif
 
-    const ClutterApplication a(argc, argv);
+    const ButterApplication a(argc, argv);
 
-    Clutter::migrateThemes();
+    Butter::migrateThemes();
 
     if (Config()->getAutoUpdateEnabled()) {
-#if CLUTTER_UPDATE_WORKER_AVAILABLE
+#if BUTTER_UPDATE_WORKER_AVAILABLE
         auto *updateWorker = new UpdateWorker;
         QObject::connect(updateWorker, &UpdateWorker::checkComplete,
                          [=](const QVersionNumber &version, const QString &error) {

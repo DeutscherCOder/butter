@@ -1,7 +1,7 @@
 #include "PythonAPI.h"
 
-#include "ClutterConfig.h"
-#include "core/Clutter.h"
+#include "ButterConfig.h"
+#include "core/Butter.h"
 
 #include <QFile>
 
@@ -9,7 +9,7 @@ PyObject *api_version(PyObject *self, PyObject *null)
 {
     Q_UNUSED(self)
     Q_UNUSED(null)
-    return PyUnicode_FromString(CLUTTER_VERSION_FULL);
+    return PyUnicode_FromString(BUTTER_VERSION_FULL);
 }
 
 PyObject *api_cmd(PyObject *self, PyObject *args)
@@ -49,20 +49,20 @@ PyObject *api_message(PyObject *self, PyObject *args, PyObject *kwargs)
     Py_RETURN_NONE;
 }
 
-PyMethodDef ClutterMethods[] = {
-    { "version", api_version, METH_NOARGS, "Returns Clutter current version" },
-    { "cmd", api_cmd, METH_VARARGS, "Execute a command inside Clutter" },
-    { "refresh", api_refresh, METH_NOARGS, "Refresh Clutter widgets" },
+PyMethodDef ButterMethods[] = {
+    { "version", api_version, METH_NOARGS, "Returns Butter current version" },
+    { "cmd", api_cmd, METH_VARARGS, "Execute a command inside Butter" },
+    { "refresh", api_refresh, METH_NOARGS, "Refresh Butter widgets" },
     { "message", (PyCFunction)(void *)/* don't remove this double cast! */ api_message,
       METH_VARARGS | METH_KEYWORDS, "Print message" },
     { NULL, NULL, 0, NULL }
 };
 
-PyModuleDef ClutterModule = {
-    PyModuleDef_HEAD_INIT, "_clutter", NULL, -1, ClutterMethods, NULL, NULL, NULL, NULL
+PyModuleDef ButterModule = {
+    PyModuleDef_HEAD_INIT, "_butter", NULL, -1, ButterMethods, NULL, NULL, NULL, NULL
 };
 
 PyObject *PyInit_api()
 {
-    return PyModule_Create(&ClutterModule);
+    return PyModule_Create(&ButterModule);
 }

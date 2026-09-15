@@ -2,7 +2,7 @@
 #define BUGREPORTING_H
 
 /**
- * @brief Opens issue on Clutter's github page
+ * @brief Opens issue on Butter's github page
  * with current file and system information.
  */
 void openIssue();

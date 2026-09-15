@@ -15,10 +15,10 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-RIZIN="$ROOT/clutter-dist/rizin.exe"
+RIZIN="$ROOT/butter-dist/rizin.exe"
 PROBE="$ROOT/tools/testprobe/probe.exe"
 
-[ -f "$RIZIN" ] || { echo "[!] not found: $RIZIN   (run build-clutter.bat install first)"; exit 1; }
+[ -f "$RIZIN" ] || { echo "[!] not found: $RIZIN   (run build-butter.bat install first)"; exit 1; }
 if [ ! -f "$PROBE" ]; then
     echo "[*] building probe binary ..."
     cmd //c "$(cygpath -w "$ROOT/tools/compile-probe.bat")" >/dev/null 2>&1

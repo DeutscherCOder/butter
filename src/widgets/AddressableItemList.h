@@ -1,10 +1,10 @@
 #ifndef ADDRESSABLE_ITEM_LIST_H
 #define ADDRESSABLE_ITEM_LIST_H
 
-#include "ClutterDockWidget.h"
-#include "ClutterTreeView.h"
+#include "ButterDockWidget.h"
+#include "ButterTreeView.h"
 #include "common/AddressableItemModel.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "menus/AddressableItemContextMenu.h"
 
 #include <QAbstractItemModel>
@@ -18,7 +18,7 @@ class MainWindow;
  * @brief A generic template class for list like widgets whose items correspond to specific memory
  * addresses
  */
-template<class BaseListWidget = ClutterTreeView>
+template<class BaseListWidget = ButterTreeView>
 class AddressableItemList : public BaseListWidget
 {
     // To hide the "hides overloaded virtual function" warning

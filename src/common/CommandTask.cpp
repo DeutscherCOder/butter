@@ -1,6 +1,6 @@
 #include "CommandTask.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "TempConfig.h"
 
 CommandTask::CommandTask(const QString &cmd, ColorMode colorMode) : cmd(cmd), colorMode(colorMode)

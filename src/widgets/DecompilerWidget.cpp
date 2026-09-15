@@ -1,7 +1,7 @@
 #include "DecompilerWidget.h"
 
 #include "common/Configuration.h"
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 #include "common/Decompiler.h"
 #include "common/DecompilerHighlighter.h"
 #include "common/Helpers.h"
@@ -46,7 +46,7 @@ DecompilerWidget::DecompilerWidget(MainWindow *main)
 
     connect(Config(), &Configuration::fontsUpdated, this, &DecompilerWidget::fontsUpdatedSlot);
     connect(Config(), &Configuration::colorsUpdated, this, &DecompilerWidget::colorsUpdatedSlot);
-    connect(Core(), &ClutterCore::registersChanged, this, &DecompilerWidget::highlightPC);
+    connect(Core(), &ButterCore::registersChanged, this, &DecompilerWidget::highlightPC);
     connect(mCtxMenu, &DecompilerContextMenu::copy, this, &DecompilerWidget::copy);
 
     auto decompilers = Core()->getDecompilers();
@@ -71,12 +71,12 @@ DecompilerWidget::DecompilerWidget(MainWindow *main)
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this,
             &DecompilerWidget::decompilerSelected);
     connectCursorPositionChanged(true);
-    connect(seekable, &ClutterSeekable::seekableSeekChanged, this, &DecompilerWidget::seekChanged);
+    connect(seekable, &ButterSeekable::seekableSeekChanged, this, &DecompilerWidget::seekChanged);
     ui->textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->textEdit, &QWidget::customContextMenuRequested, this,
             &DecompilerWidget::showDecompilerContextMenu);
 
-    connect(Core(), &ClutterCore::breakpointsChanged, this, &DecompilerWidget::updateBreakpoints);
+    connect(Core(), &ButterCore::breakpointsChanged, this, &DecompilerWidget::updateBreakpoints);
     mCtxMenu->addSeparator();
     mCtxMenu->addAction(&syncAction);
     addActions(mCtxMenu->actions());
@@ -84,21 +84,21 @@ DecompilerWidget::DecompilerWidget(MainWindow *main)
     ui->progressLabel->setVisible(false);
     doRefresh();
 
-    connect(Core(), &ClutterCore::refreshAll, this, &DecompilerWidget::doRefresh);
-    connect(Core(), &ClutterCore::functionRenamed, this, &DecompilerWidget::doRefresh);
-    connect(Core(), &ClutterCore::varsChanged, this, &DecompilerWidget::doRefresh);
-    connect(Core(), &ClutterCore::functionsChanged, this, &DecompilerWidget::doRefresh);
-    connect(Core(), &ClutterCore::flagsChanged, this, &DecompilerWidget::doRefresh);
-    connect(Core(), &ClutterCore::globalVarsChanged, this, &DecompilerWidget::doRefresh);
-    connect(Core(), &ClutterCore::commentsChanged, this, &DecompilerWidget::refreshIfChanged);
-    connect(Core(), &ClutterCore::instructionChanged, this, &DecompilerWidget::refreshIfChanged);
-    connect(Core(), &ClutterCore::refreshCodeViews, this, &DecompilerWidget::doRefresh);
+    connect(Core(), &ButterCore::refreshAll, this, &DecompilerWidget::doRefresh);
+    connect(Core(), &ButterCore::functionRenamed, this, &DecompilerWidget::doRefresh);
+    connect(Core(), &ButterCore::varsChanged, this, &DecompilerWidget::doRefresh);
+    connect(Core(), &ButterCore::functionsChanged, this, &DecompilerWidget::doRefresh);
+    connect(Core(), &ButterCore::flagsChanged, this, &DecompilerWidget::doRefresh);
+    connect(Core(), &ButterCore::globalVarsChanged, this, &DecompilerWidget::doRefresh);
+    connect(Core(), &ButterCore::commentsChanged, this, &DecompilerWidget::refreshIfChanged);
+    connect(Core(), &ButterCore::instructionChanged, this, &DecompilerWidget::refreshIfChanged);
+    connect(Core(), &ButterCore::refreshCodeViews, this, &DecompilerWidget::doRefresh);
 
     // Esc to seek backward
     QAction *seekPrevAction = Shortcuts()->makeAction("General.seekPrev", this);
     seekPrevAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     addAction(seekPrevAction);
-    connect(seekPrevAction, &QAction::triggered, seekable, &ClutterSeekable::seekPrev);
+    connect(seekPrevAction, &QAction::triggered, seekable, &ButterSeekable::seekPrev);
 }
 
 DecompilerWidget::~DecompilerWidget() = default;
@@ -118,7 +118,7 @@ ut64 DecompilerWidget::findReference(size_t pos)
     size_t closestPos = SIZE_MAX;
     ut64 closestOffset = RVA_INVALID;
     RzCodeAnnotation *annotation = nullptr;
-    ClutterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
+    ButterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
     {
         if (!(annotation->type == RZ_CODE_ANNOTATION_TYPE_GLOBAL_VARIABLE)
             || annotation->start > pos || annotation->end <= pos) {
@@ -138,7 +138,7 @@ ut64 DecompilerWidget::offsetForPosition(size_t pos)
     size_t closestPos = SIZE_MAX;
     ut64 closestOffset = mCtxMenu->getFirstOffsetInLine();
     RzCodeAnnotation *annotation;
-    ClutterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
+    ButterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
     {
         if (!(annotation->type == RZ_CODE_ANNOTATION_TYPE_OFFSET) || annotation->start > pos
             || annotation->end <= pos) {
@@ -159,7 +159,7 @@ size_t DecompilerWidget::positionForOffset(ut64 offset)
     ut64 closestOffset = UT64_MAX;
     RzCodeAnnotation *annotation = nullptr;
 
-    ClutterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
+    ButterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
     {
         if (annotation->type != RZ_CODE_ANNOTATION_TYPE_OFFSET
             || annotation->offset.offset > offset) {
@@ -209,7 +209,7 @@ void DecompilerWidget::gatherBreakpointInfo(RzAnnotatedCode &codeDecompiled, siz
 {
     RVA firstOffset = RVA_MAX;
     RzCodeAnnotation *annotation;
-    ClutterRzVectorForeach(&codeDecompiled.annotations, annotation, RzCodeAnnotation)
+    ButterRzVectorForeach(&codeDecompiled.annotations, annotation, RzCodeAnnotation)
     {
         if (annotation->type != RZ_CODE_ANNOTATION_TYPE_OFFSET) {
             continue;
@@ -326,7 +326,7 @@ void DecompilerWidget::decompilationFinished(RzAnnotatedCode *codeDecompiled)
         lowestOffsetInCode = RVA_MAX;
         highestOffsetInCode = 0;
         RzCodeAnnotation *annotation;
-        ClutterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
+        ButterRzVectorForeach(&code->annotations, annotation, RzCodeAnnotation)
         {
             if (annotation->type == RZ_CODE_ANNOTATION_TYPE_OFFSET) {
                 if (lowestOffsetInCode > annotation->offset.offset) {
@@ -349,7 +349,7 @@ void DecompilerWidget::setAnnotationsAtCursor(size_t pos)
 {
     RzCodeAnnotation *annotationAtPos = nullptr;
     RzCodeAnnotation *annotation;
-    ClutterRzVectorForeach(&this->code->annotations, annotation, RzCodeAnnotation)
+    ButterRzVectorForeach(&this->code->annotations, annotation, RzCodeAnnotation)
     {
         if (annotation->type == RZ_CODE_ANNOTATION_TYPE_OFFSET
             || annotation->type == RZ_CODE_ANNOTATION_TYPE_SYNTAX_HIGHLIGHT
@@ -400,7 +400,7 @@ void DecompilerWidget::cursorPositionChanged()
     updateSelection();
 }
 
-void DecompilerWidget::seekChanged(RVA /* addr */, ClutterCore::SeekHistoryType type)
+void DecompilerWidget::seekChanged(RVA /* addr */, ButterCore::SeekHistoryType type)
 {
     if (seekFromCursor) {
         return;
@@ -410,16 +410,16 @@ void DecompilerWidget::seekChanged(RVA /* addr */, ClutterCore::SeekHistoryType 
         scrollHistory[historyPos] = { ui->textEdit->horizontalScrollBar()->sliderPosition(),
                                       ui->textEdit->verticalScrollBar()->sliderPosition() };
     }
-    if (type == ClutterCore::SeekHistoryType::New) {
+    if (type == ButterCore::SeekHistoryType::New) {
         // Erase previous history past this point.
         if (scrollHistory.size() > historyPos + 1) {
             scrollHistory.erase(scrollHistory.begin() + historyPos + 1, scrollHistory.end());
         }
         scrollHistory.push_back({ 0, 0 });
         historyPos = scrollHistory.size() - 1;
-    } else if (type == ClutterCore::SeekHistoryType::Undo) {
+    } else if (type == ButterCore::SeekHistoryType::Undo) {
         --historyPos;
-    } else if (type == ClutterCore::SeekHistoryType::Redo) {
+    } else if (type == ButterCore::SeekHistoryType::Redo) {
         ++historyPos;
     }
     const RVA fcnAddr = Core()->getFunctionStart(seekable->getOffset());
@@ -624,7 +624,7 @@ static QString remapAnnotationOffsetsToQString(RzAnnotatedCode &code)
     };
 
     RzCodeAnnotation *annotation;
-    ClutterRzVectorForeach(&code.annotations, annotation, RzCodeAnnotation)
+    ButterRzVectorForeach(&code.annotations, annotation, RzCodeAnnotation)
     {
         annotation->start = mapPos(annotation->start);
         annotation->end = mapPos(annotation->end);

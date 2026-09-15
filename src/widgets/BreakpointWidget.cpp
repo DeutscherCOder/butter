@@ -183,7 +183,7 @@ BreakpointProxyModel::BreakpointProxyModel(BreakpointModel *sourceModel, QObject
 }
 
 BreakpointWidget::BreakpointWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::BreakpointWidget),
       breakpointModel(new BreakpointModel(this)),
       breakpointProxyModel(new BreakpointProxyModel(breakpointModel, this)),
@@ -217,18 +217,18 @@ BreakpointWidget::BreakpointWidget(MainWindow *main)
     contextMenu->addAction(actionToggleBreakpoint);
     contextMenu->addAction(actionDelBreakpoint);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &BreakpointWidget::refreshBreakpoint);
-    connect(Core(), &ClutterCore::breakpointsChanged, this, &BreakpointWidget::refreshBreakpoint);
-    connect(Core(), &ClutterCore::codeRebased, this, &BreakpointWidget::refreshBreakpoint);
-    connect(Core(), &ClutterCore::refreshCodeViews, this, &BreakpointWidget::refreshBreakpoint);
-    connect(Core(), &ClutterCore::commentsChanged, this, [this]() {
+    connect(Core(), &ButterCore::refreshAll, this, &BreakpointWidget::refreshBreakpoint);
+    connect(Core(), &ButterCore::breakpointsChanged, this, &BreakpointWidget::refreshBreakpoint);
+    connect(Core(), &ButterCore::codeRebased, this, &BreakpointWidget::refreshBreakpoint);
+    connect(Core(), &ButterCore::refreshCodeViews, this, &BreakpointWidget::refreshBreakpoint);
+    connect(Core(), &ButterCore::commentsChanged, this, [this]() {
         qhelpers::emitColumnChanged(breakpointModel, BreakpointModel::CommentColumn);
     });
     connect(ui->addBreakpoint, &QAbstractButton::clicked, this,
             &BreakpointWidget::addBreakpointDialog);
     connect(ui->delBreakpoint, &QAbstractButton::clicked, this, &BreakpointWidget::delBreakpoint);
     connect(ui->delAllBreakpoints, &QAbstractButton::clicked, Core(),
-            &ClutterCore::delAllBreakpoints);
+            &ButterCore::delAllBreakpoints);
 }
 
 BreakpointWidget::~BreakpointWidget() = default;

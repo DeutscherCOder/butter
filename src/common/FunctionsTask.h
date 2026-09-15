@@ -2,7 +2,7 @@
 #define FUNCTIONSTASK_H
 
 #include "common/AsyncTask.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 /**
  * @brief Async task for fetching functions through rizin

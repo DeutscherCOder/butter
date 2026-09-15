@@ -2,7 +2,7 @@
 
 #include "SearchBarWidget.h"
 #include "common/Helpers.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "shortcuts/ShortcutManager.h"
 #include "ui_ConsoleWidget.h"
 
@@ -25,12 +25,12 @@
 #    define fileno _fileno
 #    define fdopen _fdopen
 #    define PIPE_SIZE 65536 // Match Linux size
-#    define PIPE_NAME "\\\\.\\pipe\\clutteroutput-%1"
+#    define PIPE_NAME "\\\\.\\pipe\\butteroutput-%1"
 #else
 #    include <unistd.h>
 #    define PIPE_READ (0)
 #    define PIPE_WRITE (1)
-#    define STDIN_PIPE_NAME "%1/clutter-stdin-%2"
+#    define STDIN_PIPE_NAME "%1/butter-stdin-%2"
 #endif
 
 enum InputTarget : ut8 { RizinConsole = 0, Debugee = 1 };
@@ -136,7 +136,7 @@ ConsoleWidget::ConsoleWidget(MainWindow *main)
     connect(ui->inputCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &ConsoleWidget::onIndexChange);
 
-    connect(Core(), &ClutterCore::debugTaskStateChanged, this, [=, this]() {
+    connect(Core(), &ButterCore::debugTaskStateChanged, this, [=, this]() {
         if (Core()->isRedirectableDebugee()) {
             ui->inputCombo->setVisible(true);
         } else {
@@ -271,7 +271,7 @@ void ConsoleWidget::executeCommand(const QString &command)
     commandTask = std::make_shared<CommandTask>(command, CommandTask::ColorMode::MODE_16M);
     connect(commandTask.get(), &CommandTask::finished, this,
             [this, cmdLine, command, oldOffset](const QString &result) {
-                ui->outputTextEdit->appendHtml(ClutterCore::ansiEscapeToHtml(result));
+                ui->outputTextEdit->appendHtml(ButterCore::ansiEscapeToHtml(result));
                 scrollOutputToEnd();
                 historyAdd(command);
                 commandTask.reset();
@@ -476,7 +476,7 @@ void ConsoleWidget::processQueuedOutput()
         // Get the last segment that wasn't overwritten by carriage return
         output = output.trimmed();
         output = output.remove(0, output.lastIndexOf('\r')).trimmed();
-        ui->outputTextEdit->appendHtml(ClutterCore::ansiEscapeToHtml(output));
+        ui->outputTextEdit->appendHtml(ButterCore::ansiEscapeToHtml(output));
         scrollOutputToEnd();
     }
 }
@@ -490,7 +490,7 @@ void ConsoleWidget::redirectOutput()
 {
     // Make sure that we are running in a valid console with initialized output handles
     if (0 > fileno(stderr) && 0 > fileno(stdout)) {
-        addOutput("Run clutter in a console to enable rizin output redirection into this widget.");
+        addOutput("Run butter in a console to enable rizin output redirection into this widget.");
         return;
     }
 

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include <ClutterDescriptions.h>
+#include <ButterDescriptions.h>
 #include <memory>
 
 namespace Ui {

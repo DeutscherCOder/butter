@@ -1,8 +1,8 @@
 #ifndef IMPORTSWIDGET_H
 #define IMPORTSWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "common/AddressableItemModel.h"
 #include "widgets/ListDockWidget.h"
 

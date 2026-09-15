@@ -1,10 +1,10 @@
 #include "Json.h"
 
-#include "ClutterJson.h"
+#include "ButterJson.h"
 
 #include <QTreeWidgetItem>
 
-QTreeWidgetItem *Clutter::jsonTreeWidgetItem(const QString &key, const ClutterJson &json)
+QTreeWidgetItem *Butter::jsonTreeWidgetItem(const QString &key, const ButterJson &json)
 {
     QString val;
     switch (json.type()) {

@@ -1,7 +1,7 @@
 #ifndef SYNTAXHIGHLIGHTER_H
 #define SYNTAXHIGHLIGHTER_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QRegularExpression>
 #include <QSyntaxHighlighter>
@@ -9,7 +9,7 @@
 #include <QTextDocument>
 #include <QVector>
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
 
 #    include <KSyntaxHighlighting/SyntaxHighlighter>
 
@@ -29,7 +29,7 @@ private slots:
 /**
  * @brief SyntaxHighlighter to be used when KSyntaxHighlighting is not available
  */
-class CLUTTER_EXPORT FallbackSyntaxHighlighter : public QSyntaxHighlighter
+class BUTTER_EXPORT FallbackSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 

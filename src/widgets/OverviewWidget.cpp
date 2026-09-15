@@ -6,7 +6,7 @@
 #include "shortcuts/ShortcutManager.h"
 
 OverviewWidget::OverviewWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       graphView(new OverviewView(this)),
       targetGraphWidget(nullptr),
       graphDataRefreshDeferrer(createRefreshDeferrer([this]() { updateGraphData(); }))
@@ -40,13 +40,13 @@ void OverviewWidget::resizeEvent(QResizeEvent *event)
 
 void OverviewWidget::showEvent(QShowEvent *event)
 {
-    ClutterDockWidget::showEvent(event);
+    ButterDockWidget::showEvent(event);
     setUserOpened(true);
 }
 
 void OverviewWidget::closeEvent(QCloseEvent *event)
 {
-    ClutterDockWidget::closeEvent(event);
+    ButterDockWidget::closeEvent(event);
     setUserOpened(false);
 }
 

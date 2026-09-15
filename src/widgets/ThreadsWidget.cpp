@@ -1,6 +1,6 @@
 #include "ThreadsWidget.h"
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 #include "Helpers.h"
 #include "QuickFilterView.h"
 #include "core/MainWindow.h"
@@ -104,7 +104,7 @@ QVariant ThreadModel::headerData(int section, Qt::Orientation, int role) const
 }
 
 ThreadsWidget::ThreadsWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::ThreadsWidget),
       modelThreads(new ThreadModel(this)),
       modelFilter(new QSortFilterProxyModel(this)),
@@ -149,12 +149,12 @@ ThreadsWidget::ThreadsWidget(MainWindow *main)
 
     connect(ui->quickFilterView, &QuickFilterView::filterTextChanged, modelFilter,
             &QSortFilterProxyModel::setFilterWildcard);
-    connect(Core(), &ClutterCore::refreshAll, this, &ThreadsWidget::updateContents);
-    connect(Core(), &ClutterCore::registersChanged, this, &ThreadsWidget::updateContents);
-    connect(Core(), &ClutterCore::debugTaskStateChanged, this, &ThreadsWidget::updateContents);
+    connect(Core(), &ButterCore::refreshAll, this, &ThreadsWidget::updateContents);
+    connect(Core(), &ButterCore::registersChanged, this, &ThreadsWidget::updateContents);
+    connect(Core(), &ButterCore::debugTaskStateChanged, this, &ThreadsWidget::updateContents);
     // Seek doesn't necessarily change when switching threads/processes
-    connect(Core(), &ClutterCore::switchedThread, this, &ThreadsWidget::updateContents);
-    connect(Core(), &ClutterCore::switchedProcess, this, &ThreadsWidget::updateContents);
+    connect(Core(), &ButterCore::switchedThread, this, &ThreadsWidget::updateContents);
+    connect(Core(), &ButterCore::switchedProcess, this, &ThreadsWidget::updateContents);
     connect(Config(), &Configuration::fontsUpdated, this, &ThreadsWidget::fontsUpdatedSlot);
     connect(ui->viewThreads, &QTableView::activated, this, &ThreadsWidget::onActivated);
     connect(ui->viewThreads, &QWidget::customContextMenuRequested, this,

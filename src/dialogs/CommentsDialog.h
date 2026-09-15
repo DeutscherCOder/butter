@@ -1,7 +1,7 @@
 #ifndef COMMENTSDIALOG_H
 #define COMMENTSDIALOG_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QDialog>
 

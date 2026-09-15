@@ -3,9 +3,9 @@
 
 #include "common/AsyncTask.h"
 #include "common/InitialOptions.h"
-// #include "core/Clutter.h"
+// #include "core/Butter.h"
 
-class ClutterCore;
+class ButterCore;
 class MainWindow;
 class InitialOptionsDialog;
 

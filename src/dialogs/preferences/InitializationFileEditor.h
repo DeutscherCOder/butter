@@ -13,7 +13,7 @@ class InitializationFileEditor;
 }
 
 /**
- * @brief An editor for Clutter initialization script
+ * @brief An editor for Butter initialization script
  */
 class InitializationFileEditor : public QDialog
 {
@@ -22,8 +22,8 @@ class InitializationFileEditor : public QDialog
 public:
     explicit InitializationFileEditor(PreferencesDialog *dialog);
     ~InitializationFileEditor();
-    void saveClutterRC();
-    void executeClutterRC();
+    void saveButterRC();
+    void executeButterRC();
 
 private:
     std::unique_ptr<Ui::InitializationFileEditor> ui;

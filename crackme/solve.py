@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Crack the Clutter crackme -- entirely through the clutter-mcp server.
+"""Crack the Butter crackme -- entirely through the butter-mcp server.
 
-This is the AI's seat: it talks to `mcp/clutter_mcp.py` over JSON-RPC on stdio
+This is the AI's seat: it talks to `mcp/butter_mcp.py` over JSON-RPC on stdio
 exactly like an agent would, and never touches the source of the challenge or
 the plaintext password. Everything below is recovered from the binary.
 

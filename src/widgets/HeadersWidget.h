@@ -1,7 +1,7 @@
 #ifndef HEADERSWIDGET_H
 #define HEADERSWIDGET_H
 
-#include "ClutterDescriptions.h"
+#include "ButterDescriptions.h"
 #include "ListDockWidget.h"
 
 #include <QAbstractListModel>

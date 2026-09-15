@@ -1,9 +1,9 @@
 #ifndef CLASSESWIDGET_H
 #define CLASSESWIDGET_H
 
-#include "ClutterCommon.h"
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterCommon.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "widgets/ListDockWidget.h"
 
 #include <QAbstractListModel>
@@ -168,7 +168,7 @@ private:
     QVariant data(const QModelIndex &index, int role) const override;
 
 public:
-    explicit AnalysisClassesModel(ClutterDockWidget *parent);
+    explicit AnalysisClassesModel(ButterDockWidget *parent);
 
 public slots:
     void refreshAll();

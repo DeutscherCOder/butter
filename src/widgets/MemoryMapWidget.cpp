@@ -131,9 +131,9 @@ MemoryMapWidget::MemoryMapWidget(MainWindow *main)
     setModels(memoryProxyModel);
     ui->treeView->sortByColumn(MemoryMapModel::AddrStartColumn, Qt::AscendingOrder);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &MemoryMapWidget::refreshMemoryMap);
-    connect(Core(), &ClutterCore::registersChanged, this, &MemoryMapWidget::refreshMemoryMap);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::refreshAll, this, &MemoryMapWidget::refreshMemoryMap);
+    connect(Core(), &ButterCore::registersChanged, this, &MemoryMapWidget::refreshMemoryMap);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(memoryModel, MemoryMapModel::CommentColumn); });
     connect(ui->quickFilterView, &QuickFilterView::filterTextChanged, this,
             [this] { ui->quickFilterView->setItemCount(memoryProxyModel->rowCount()); });

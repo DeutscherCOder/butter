@@ -1,6 +1,6 @@
 #include "TypesVariablesDialog.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "ui_TypesVariablesDialog.h"
 
 QString toString(VariableScope scope)

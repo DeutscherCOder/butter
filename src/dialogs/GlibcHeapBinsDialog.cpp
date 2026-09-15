@@ -1,6 +1,6 @@
 #include "GlibcHeapBinsDialog.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "GlibcHeapInfoDialog.h"
 #include "ui_GlibcHeapBinsDialog.h"
 
@@ -50,7 +50,7 @@ void GlibcHeapBinsDialog::setChainInfo(int index)
     RzHeapChunkListItem *item;
     const RzList *chunks = binsModel->getChunks(index);
     QString chainInfo;
-    ClutterRzListForeach (chunks, iter, RzHeapChunkListItem, item) {
+    ButterRzListForeach (chunks, iter, RzHeapChunkListItem, item) {
         chainInfo += " → " + rzAddressString(item->addr);
     }
 

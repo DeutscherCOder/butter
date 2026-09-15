@@ -1,7 +1,7 @@
 #ifndef VERSIONINFODIALOG_H
 #define VERSIONINFODIALOG_H
 
-#include "ClutterCommon.h" // IWYU pragma: keep
+#include "ButterCommon.h" // IWYU pragma: keep
 
 #include <QDialog>
 #include <QTreeWidget>

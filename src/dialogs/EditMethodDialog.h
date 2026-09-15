@@ -1,7 +1,7 @@
 #ifndef EDITMETHODDIALOG_H
 #define EDITMETHODDIALOG_H
 
-#include "ClutterDescriptions.h"
+#include "ButterDescriptions.h"
 
 #include <QDialog>
 #include <QLabel>

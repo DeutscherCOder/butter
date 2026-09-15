@@ -1,0 +1,22 @@
+@PACKAGE_INIT@
+
+set(Butter_RIZIN_BUNDLED @BUTTER_USE_BUNDLED_RIZIN@)
+
+include(CMakeFindDependencyMacro)
+find_dependency(@QT_PREFIX@ COMPONENTS @QT_COMPONENTS@)
+find_dependency(Rizin COMPONENTS Core)
+
+# Make a best guess for a user location from where plugins can be loaded.
+# This can be used in Butter plugins like
+# set(CUTTER_INSTALL_PLUGDIR "${Butter_USER_PLUGINDIR}" CACHE STRING "Directory to install Butter plugin into")
+# see https://doc.qt.io/qt-5/qstandardpaths.html under AppDataLocation
+if(APPLE)
+    set(Butter_USER_PLUGINDIR "$ENV{HOME}/Library/Application Support/rizin/butter/plugins/native")
+elseif(WIN32)
+    file(TO_CMAKE_PATH "$ENV{APPDATA}" Butter_USER_PLUGINDIR)
+    set(Butter_USER_PLUGINDIR "${Butter_USER_PLUGINDIR}/rizin/butter/plugins/native")
+else()
+    set(Butter_USER_PLUGINDIR "$ENV{HOME}/.local/share/rizin/butter/plugins/native")
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/ButterTargets.cmake")

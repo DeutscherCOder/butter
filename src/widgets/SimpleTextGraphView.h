@@ -3,10 +3,10 @@
 
 // Based on the DisassemblerGraphView from x64dbg
 
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 #include "common/RichTextPainter.h"
 #include "menus/AddressableItemContextMenu.h"
-#include "widgets/ClutterGraphView.h"
+#include "widgets/ButterGraphView.h"
 
 #include <QLabel>
 #include <QPainter>
@@ -16,7 +16,7 @@
 /**
  * @brief Graphview with nodes containing simple plaintext labels.
  */
-class SimpleTextGraphView : public ClutterGraphView
+class SimpleTextGraphView : public ButterGraphView
 {
     Q_OBJECT
 public:

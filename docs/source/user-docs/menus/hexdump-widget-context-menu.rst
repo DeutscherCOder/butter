@@ -8,7 +8,7 @@ Hexdump Widget Context Menu
 
 Bytes Per Row
 ----------------------------------------
-**Description:** Select how many bytes should be displayed by Clutter in each row in the Hexdump widget.
+**Description:** Select how many bytes should be displayed by Butter in each row in the Hexdump widget.
 
 Available options are:   
  - 1 byte

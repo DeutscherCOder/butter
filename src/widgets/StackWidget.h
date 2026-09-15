@@ -1,8 +1,8 @@
 #ifndef STACKWIDGET_H
 #define STACKWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "menus/AddressableItemContextMenu.h"
 
 #include <QJsonObject>
@@ -62,7 +62,7 @@ Q_DECLARE_METATYPE(StackModel::Item)
 /**
  * @brief Widget listing stack information during debugging/emulation
  */
-class StackWidget : public ClutterDockWidget
+class StackWidget : public ButterDockWidget
 {
     Q_OBJECT
 

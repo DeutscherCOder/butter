@@ -1,7 +1,7 @@
 #ifndef HEXDUMPRANGEDIALOG_H
 #define HEXDUMPRANGEDIALOG_H
 
-#include "core/ClutterCommon.h" // IWYU pragma: keep
+#include "core/ButterCommon.h" // IWYU pragma: keep
 
 #include <QDialog>
 

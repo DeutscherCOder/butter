@@ -50,7 +50,7 @@ void DecompilerHighlighter::highlightBlock(const QString &)
     const size_t end = block.position() + block.length();
 
     auto annotations = fromOwned(rz_annotated_code_annotations_range(code, start, end));
-    for (const auto *annotation : ClutterPVector<RzCodeAnnotation>(annotations.get())) {
+    for (const auto *annotation : ButterPVector<RzCodeAnnotation>(annotations.get())) {
 
         if (annotation->type != RZ_CODE_ANNOTATION_TYPE_SYNTAX_HIGHLIGHT) {
             continue;

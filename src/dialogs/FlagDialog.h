@@ -1,7 +1,7 @@
 #ifndef FLAGDIALOG_H
 #define FLAGDIALOG_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QDialog>
 

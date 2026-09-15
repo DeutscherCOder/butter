@@ -1,8 +1,8 @@
 #ifndef EXPORTSWIDGET_H
 #define EXPORTSWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "widgets/ListDockWidget.h"
 
 #include <QAbstractListModel>

@@ -1,9 +1,9 @@
 Initialization Script
 ===================================
 
-On the launch of Clutter, it loads ``.clutterrc`` files from various locations if they are present. The directories from where ``.clutterrc`` files are loaded are all directories of type ``QStandardPaths::AppConfigLocation``. These locations vary according to OS. You can visit `here <https://doc.qt.io/qt-5/qstandardpaths.html>`__ to see all the locations.
+On the launch of Butter, it loads ``.butterrc`` files from various locations if they are present. The directories from where ``.butterrc`` files are loaded are all directories of type ``QStandardPaths::AppConfigLocation``. These locations vary according to OS. You can visit `here <https://doc.qt.io/qt-5/qstandardpaths.html>`__ to see all the locations.
 
-If multiple ``.clutterrc`` scripts are present in different directories, all of them will be loaded. In case of conflicting or contradictory commands, the corresponding command in the script loaded last will override all the previous commands. Clutter has a GUI editor for Initialization Script whose description is given below. The script from the editor will be the last loaded initialization script and hence will override all the previous scripts in the event of conflicting commands.
+If multiple ``.butterrc`` scripts are present in different directories, all of them will be loaded. In case of conflicting or contradictory commands, the corresponding command in the script loaded last will override all the previous commands. Butter has a GUI editor for Initialization Script whose description is given below. The script from the editor will be the last loaded initialization script and hence will override all the previous scripts in the event of conflicting commands.
 
 Initialization Script Editor
 -----------------------------------
@@ -12,6 +12,6 @@ Initialization Script Editor
     :alt: Image of Initialization Script Editor
 
 
-**Description:** You can add new commands and modify existing commands here. To save the script, click on the ``Save`` button. If you want to see the changes you have made without restarting Clutter, you can use the ``Execute`` button. The hyperlink that shows the location of the script will open the directory containing the script on click.
+**Description:** You can add new commands and modify existing commands here. To save the script, click on the ``Save`` button. If you want to see the changes you have made without restarting Butter, you can use the ``Execute`` button. The hyperlink that shows the location of the script will open the directory containing the script on click.
 
 **Steps to open:** ``Edit -> Preferences -> Initialization Script``

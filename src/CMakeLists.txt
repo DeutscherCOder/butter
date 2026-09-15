@@ -1,10 +1,10 @@
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/ClutterConfig.h.in"
-               "${CMAKE_CURRENT_BINARY_DIR}/ClutterConfig.h")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/ButterConfig.h.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/ButterConfig.h")
 
 set(SOURCES
     Main.cpp
-    core/Clutter.cpp
-    core/ClutterJson.cpp
+    core/Butter.cpp
+    core/ButterJson.cpp
     core/RizinCpp.cpp
     core/Basefind.cpp
     dialogs/EditStringDialog.cpp
@@ -70,9 +70,9 @@ set(SOURCES
     widgets/TypesWidget.cpp
     widgets/HeadersWidget.cpp
     widgets/SearchWidget.cpp
-    ClutterApplication.cpp
+    ButterApplication.cpp
     dialogs/RizinPluginsDialog.cpp
-    widgets/ClutterDockWidget.cpp
+    widgets/ButterDockWidget.cpp
     widgets/GraphWidget.cpp
     widgets/OverviewWidget.cpp
     dialogs/VersionInfoDialog.cpp
@@ -100,10 +100,10 @@ set(SOURCES
     dialogs/SetToDataDialog.cpp
     dialogs/EditVariablesDialog.cpp
     dialogs/EditFunctionDialog.cpp
-    widgets/ClutterTreeView.cpp
+    widgets/ButterTreeView.cpp
     widgets/ComboQuickFilterView.cpp
     dialogs/HexdumpRangeDialog.cpp
-    common/ClutterSeekable.cpp
+    common/ButterSeekable.cpp
     common/RefreshDeferrer.cpp
     dialogs/WelcomeDialog.cpp
     common/RunScriptTask.cpp
@@ -135,10 +135,10 @@ set(SOURCES
     common/IOModesController.cpp
     common/SettingsUpgrade.cpp
     dialogs/LayoutManager.cpp
-    common/ClutterLayout.cpp
+    common/ButterLayout.cpp
     widgets/GraphHorizontalAdapter.cpp
     common/ResourcePaths.cpp
-    widgets/ClutterGraphView.cpp
+    widgets/ButterGraphView.cpp
     widgets/SimpleTextGraphView.cpp
     widgets/RizinGraphWidget.cpp
     widgets/CallGraph.cpp
@@ -165,7 +165,7 @@ set(SOURCES
     common/DisassemblyHelper.cpp
     widgets/SearchBarWidget.cpp
     widgets/SearchableDockWidget.cpp
-    common/ClutterSearchable.cpp
+    common/ButterSearchable.cpp
     widgets/SearchableTextEdit.cpp
     dialogs/preferences/SymbolsOptionsWidget.cpp
     widgets/ItemCountLineEdit.cpp
@@ -177,10 +177,10 @@ set(SOURCES
     dialogs/StringListDialog.cpp
 )
 set(HEADER_FILES
-    core/Clutter.h
-    core/ClutterCommon.h
-    core/ClutterDescriptions.h
-    core/ClutterJson.h
+    core/Butter.h
+    core/ButterCommon.h
+    core/ButterDescriptions.h
+    core/ButterJson.h
     core/RizinCpp.h
     core/Basefind.h
     dialogs/EditStringDialog.h
@@ -242,13 +242,13 @@ set(HEADER_FILES
     widgets/QuickFilterView.h
     widgets/ClassesWidget.h
     widgets/ResourcesWidget.h
-    ClutterApplication.h
+    ButterApplication.h
     widgets/VTablesWidget.h
     widgets/TypesWidget.h
     widgets/HeadersWidget.h
     widgets/SearchWidget.h
     dialogs/RizinPluginsDialog.h
-    widgets/ClutterDockWidget.h
+    widgets/ButterDockWidget.h
     widgets/GraphWidget.h
     widgets/OverviewWidget.h
     dialogs/VersionInfoDialog.h
@@ -265,7 +265,7 @@ set(HEADER_FILES
     common/FunctionsTask.h
     common/CommandTask.h
     widgets/ProgressIndicator.h
-    plugins/ClutterPlugin.h
+    plugins/ButterPlugin.h
     common/RizinTask.h
     dialogs/RizinTaskDialog.h
     widgets/DebugActions.h
@@ -280,10 +280,10 @@ set(HEADER_FILES
     common/InitialOptions.h
     dialogs/EditVariablesDialog.h
     dialogs/EditFunctionDialog.h
-    widgets/ClutterTreeView.h
+    widgets/ButterTreeView.h
     widgets/ComboQuickFilterView.h
     dialogs/HexdumpRangeDialog.h
-    common/ClutterSeekable.h
+    common/ButterSeekable.h
     common/RefreshDeferrer.h
     dialogs/WelcomeDialog.h
     common/RunScriptTask.h
@@ -318,12 +318,12 @@ set(HEADER_FILES
     common/IOModesController.h
     common/SettingsUpgrade.h
     dialogs/LayoutManager.h
-    common/ClutterLayout.h
+    common/ButterLayout.h
     common/BinaryTrees.h
     common/LinkedListPool.h
     widgets/GraphHorizontalAdapter.h
     common/ResourcePaths.h
-    widgets/ClutterGraphView.h
+    widgets/ButterGraphView.h
     widgets/SimpleTextGraphView.h
     widgets/RizinGraphWidget.h
     widgets/CallGraph.h
@@ -350,7 +350,7 @@ set(HEADER_FILES
     common/DisassemblyHelper.h
     widgets/SearchBarWidget.h
     widgets/SearchableDockWidget.h
-    common/ClutterSearchable.h
+    common/ButterSearchable.h
     widgets/SearchableTextEdit.h
     dialogs/preferences/SymbolsOptionsWidget.h
     widgets/ItemCountLineEdit.h
@@ -412,7 +412,7 @@ set(UI_FILES
     widgets/RegisterRefsWidget.ui
     dialogs/SetToDataDialog.ui
     dialogs/EditVariablesDialog.ui
-    widgets/ClutterTreeView.ui
+    widgets/ButterTreeView.ui
     widgets/ComboQuickFilterView.ui
     dialogs/HexdumpRangeDialog.ui
     dialogs/WelcomeDialog.ui
@@ -452,22 +452,22 @@ set(QRC_FILES
     themes/lightstyle/light.qrc
 )
 
-set(CLUTTER_INCLUDE_DIRECTORIES core widgets common plugins menus .)
+set(BUTTER_INCLUDE_DIRECTORIES core widgets common plugins menus .)
 
-if (CLUTTER_ENABLE_PYTHON)
+if (BUTTER_ENABLE_PYTHON)
     list(APPEND SOURCES common/QtResImporter.cpp common/PythonManager.cpp common/PythonAPI.cpp)
     list(APPEND HEADER_FILES common/QtResImporter.h common/PythonManager.h common/PythonAPI.h)
 endif()
 
-if(CLUTTER_ENABLE_PYTHON_BINDINGS)
-    if (CLUTTER_QT EQUAL 6)
+if(BUTTER_ENABLE_PYTHON_BINDINGS)
+    if (BUTTER_QT EQUAL 6)
         set(PYSIDE_NAME PySide6)
         set(SHIBOKEN_COMMAND Shiboken6::shiboken6)
-        set (CLUTTER_PYSIDE_LIBS Shiboken6::libshiboken PySide6::pyside6)
-    elseif(CLUTTER_QT EQUAL 5)
+        set (BUTTER_PYSIDE_LIBS Shiboken6::libshiboken PySide6::pyside6)
+    elseif(BUTTER_QT EQUAL 5)
         set(PYSIDE_NAME PySide2)
         set(SHIBOKEN_COMMAND Shiboken2::shiboken2)
-        set (CLUTTER_PYSIDE_LIBS Shiboken2::libshiboken PySide2::pyside2)
+        set (BUTTER_PYSIDE_LIBS Shiboken2::libshiboken PySide2::pyside2)
     endif()
 
     set(BINDINGS_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bindings")
@@ -479,7 +479,7 @@ if(CLUTTER_ENABLE_PYTHON_BINDINGS)
 
     set_property(SOURCE ${BINDINGS_SOURCE} PROPERTY SKIP_AUTOGEN ON)
 
-    include_directories("${BINDINGS_BUILD_DIR}/ClutterBindings")
+    include_directories("${BINDINGS_BUILD_DIR}/ButterBindings")
 
     set(SHIBOKEN_OPTIONS)
     if (WIN32)
@@ -502,7 +502,7 @@ if (TARGET Graphviz::GVC)
 endif()
 
 if (WIN32)
-    set(PLATFORM_RESOURCES "img/clutter.rc")
+    set(PLATFORM_RESOURCES "img/butter.rc")
     set(OPTIONS WIN32)
 else()
     set(PLATFORM_RESOURCES "")
@@ -515,48 +515,48 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
 endif()
 
 # Make a source group for Visual Studio
-set(CLUTTER_SOURCES ${OPTIONS} ${UI_FILES} ${QRC_FILES} ${PLATFORM_RESOURCES} ${SOURCES} ${HEADER_FILES})
-source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${CLUTTER_SOURCES})
+set(BUTTER_SOURCES ${OPTIONS} ${UI_FILES} ${QRC_FILES} ${PLATFORM_RESOURCES} ${SOURCES} ${HEADER_FILES})
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${BUTTER_SOURCES})
 
-add_executable(Clutter ${CLUTTER_SOURCES} ${BINDINGS_SOURCE})
-set_target_properties(Clutter PROPERTIES
-        OUTPUT_NAME clutter
+add_executable(Butter ${BUTTER_SOURCES} ${BINDINGS_SOURCE})
+set_target_properties(Butter PROPERTIES
+        OUTPUT_NAME butter
         RUNTIME_OUTPUT_DIRECTORY ..
         PDB_OUTPUT_DIRECTORY ..
         ENABLE_EXPORTS ON
         CXX_VISIBILITY_PRESET hidden)
-target_compile_definitions(Clutter PRIVATE CLUTTER_SOURCE_BUILD)
+target_compile_definitions(Butter PRIVATE BUTTER_SOURCE_BUILD)
 
-# Set Clutter as the startup project in Visual Studio
-set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Clutter)
+# Set Butter as the startup project in Visual Studio
+set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Butter)
 
-foreach(_dir ${CLUTTER_INCLUDE_DIRECTORIES})
-    target_include_directories(Clutter PUBLIC
+foreach(_dir ${BUTTER_INCLUDE_DIRECTORIES})
+    target_include_directories(Butter PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${_dir}>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/clutter/${_dir}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/butter/${_dir}>
     )
 endforeach()
 
 if (TARGET Graphviz::GVC)
-    target_link_libraries(Clutter PRIVATE Graphviz::GVC)
-    target_compile_definitions(Clutter PRIVATE CLUTTER_ENABLE_GRAPHVIZ)
+    target_link_libraries(Butter PRIVATE Graphviz::GVC)
+    target_compile_definitions(Butter PRIVATE BUTTER_ENABLE_GRAPHVIZ)
 endif()
 
-target_link_libraries(Clutter PUBLIC ${QT_PREFIX}::Core ${QT_PREFIX}::Widgets ${QT_PREFIX}::Gui PRIVATE  ${QT_PREFIX}::Svg ${QT_PREFIX}::Network)
-if (CLUTTER_QT EQUAL 6)
-    target_link_libraries(Clutter PUBLIC Qt6::Core5Compat Qt6::SvgWidgets)
-    target_link_libraries(Clutter PRIVATE Qt6::OpenGLWidgets)
+target_link_libraries(Butter PUBLIC ${QT_PREFIX}::Core ${QT_PREFIX}::Widgets ${QT_PREFIX}::Gui PRIVATE  ${QT_PREFIX}::Svg ${QT_PREFIX}::Network)
+if (BUTTER_QT EQUAL 6)
+    target_link_libraries(Butter PUBLIC Qt6::Core5Compat Qt6::SvgWidgets)
+    target_link_libraries(Butter PRIVATE Qt6::OpenGLWidgets)
 endif()
 
-target_link_libraries(Clutter PUBLIC ${RIZIN_TARGET})
-if(CLUTTER_ENABLE_PYTHON)
-    target_link_libraries(Clutter PRIVATE Python3::Python)
+target_link_libraries(Butter PUBLIC ${RIZIN_TARGET})
+if(BUTTER_ENABLE_PYTHON)
+    target_link_libraries(Butter PRIVATE Python3::Python)
 
-    if(CLUTTER_ENABLE_PYTHON_BINDINGS)
-        target_link_libraries(Clutter PRIVATE ${CLUTTER_PYSIDE_LIBS})
+    if(BUTTER_ENABLE_PYTHON_BINDINGS)
+        target_link_libraries(Butter PRIVATE ${BUTTER_PYSIDE_LIBS})
 
-        get_target_property(RAW_BINDINGS_INCLUDE_DIRS Clutter INCLUDE_DIRECTORIES)
-        if(NOT CLUTTER_USE_BUNDLED_RIZIN)
+        get_target_property(RAW_BINDINGS_INCLUDE_DIRS Butter INCLUDE_DIRECTORIES)
+        if(NOT BUTTER_USE_BUNDLED_RIZIN)
             get_target_property(RAW_RIZIN_INCLUDE_DIRS ${RIZIN_TARGET} INTERFACE_INCLUDE_DIRECTORIES)
             list(APPEND RAW_BINDINGS_INCLUDE_DIRS "${RAW_RIZIN_INCLUDE_DIRS}")
         endif()
@@ -576,7 +576,7 @@ if(CLUTTER_ENABLE_PYTHON)
                 list(APPEND BINDINGS_INCLUDE_DIRS "${_qt5Core_install_prefix}/include/QtCore")
                 list(APPEND BINDINGS_INCLUDE_DIRS "${_qt5Core_install_prefix}/include/QtGui")
                 list(APPEND BINDINGS_INCLUDE_DIRS "${_qt5Core_install_prefix}/include/QtWidgets")
-            elseif(CLUTTER_QT EQUAL 6)
+            elseif(BUTTER_QT EQUAL 6)
                 string(APPEND BINDINGS_INCLUDE_DIR_LINES "framework-include-path=${QT6_INSTALL_PREFIX}/${QT6_INSTALL_LIBS}\n")
             endif()
         endif()
@@ -595,126 +595,126 @@ if(CLUTTER_ENABLE_PYTHON)
     endif()
 endif()
 
-if(TARGET KF${CLUTTER_QT}::SyntaxHighlighting)
-    target_link_libraries(Clutter PRIVATE KF${CLUTTER_QT}::SyntaxHighlighting)
-    target_compile_definitions(Clutter PRIVATE CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING)
+if(TARGET KF${BUTTER_QT}::SyntaxHighlighting)
+    target_link_libraries(Butter PRIVATE KF${BUTTER_QT}::SyntaxHighlighting)
+    target_compile_definitions(Butter PRIVATE BUTTER_ENABLE_KSYNTAXHIGHLIGHTING)
 endif()
 
-if (CLUTTER_APPIMAGE_BUILD)
-    target_compile_definitions(Clutter PRIVATE APPIMAGE)
+if (BUTTER_APPIMAGE_BUILD)
+    target_compile_definitions(Butter PRIVATE APPIMAGE)
 endif()
 
-if (CLUTTER_PACKAGE_JSDEC)
-	target_compile_definitions(Clutter PRIVATE CLUTTER_BUNDLE_JSDEC)
+if (BUTTER_PACKAGE_JSDEC)
+	target_compile_definitions(Butter PRIVATE BUTTER_BUNDLE_JSDEC)
 endif()
 
-if(APPLE AND CLUTTER_ENABLE_PACKAGING AND CLUTTER_USE_BUNDLED_RIZIN)
-	target_compile_definitions(Clutter PRIVATE MACOS_RZ_BUNDLED)
+if(APPLE AND BUTTER_ENABLE_PACKAGING AND BUTTER_USE_BUNDLED_RIZIN)
+	target_compile_definitions(Butter PRIVATE MACOS_RZ_BUNDLED)
 endif()
 
-if(CLUTTER_ENABLE_PACKAGING)
-    target_compile_definitions(Clutter PRIVATE CLUTTER_ENABLE_PACKAGING)
+if(BUTTER_ENABLE_PACKAGING)
+    target_compile_definitions(Butter PRIVATE BUTTER_ENABLE_PACKAGING)
 endif()
 
-if(CLUTTER_ENABLE_TRANSLATIONS)
+if(BUTTER_ENABLE_TRANSLATIONS)
     include(Translations)
 endif()
 
 # Install files
-install(TARGETS Clutter
-        EXPORT ClutterTargets
+install(TARGETS Butter
+        EXPORT ButterTargets
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
         BUNDLE DESTINATION "." # needs to be tested
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel)
-install(EXPORT ClutterTargets
-    NAMESPACE Clutter::
-    DESTINATION "${CLUTTER_INSTALL_CONFIGDIR}"
+install(EXPORT ButterTargets
+    NAMESPACE Butter::
+    DESTINATION "${BUTTER_INSTALL_CONFIGDIR}"
     COMPONENT Devel)
 include(CMakePackageConfigHelpers)
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/ClutterConfig.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/ClutterConfig.cmake"
-    INSTALL_DESTINATION "${CLUTTER_INSTALL_CONFIGDIR}"
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/ButterConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/ButterConfig.cmake"
+    INSTALL_DESTINATION "${BUTTER_INSTALL_CONFIGDIR}"
     NO_SET_AND_CHECK_MACRO
     NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/ClutterConfigVersion.cmake"
-    VERSION "${CLUTTER_VERSION_FULL}"
+    "${CMAKE_CURRENT_BINARY_DIR}/ButterConfigVersion.cmake"
+    VERSION "${BUTTER_VERSION_FULL}"
     COMPATIBILITY AnyNewerVersion)
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/ClutterConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/ClutterConfigVersion.cmake"
-    DESTINATION ${CLUTTER_INSTALL_CONFIGDIR}
+    "${CMAKE_CURRENT_BINARY_DIR}/ButterConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ButterConfigVersion.cmake"
+    DESTINATION ${BUTTER_INSTALL_CONFIGDIR}
     COMPONENT Devel)
 foreach(_file ${HEADER_FILES})
     # Can't use target PUBLIC_HEADER option for installing due to multiple directories
     get_filename_component(_header_dir "${_file}" DIRECTORY)
-    install (FILES "${_file}" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/clutter/${_header_dir}" COMPONENT Devel)
+    install (FILES "${_file}" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/butter/${_header_dir}" COMPONENT Devel)
 endforeach()
 
 # ---------------------------------------------------------------------------
-# Compatibility facade for out-of-tree plugins written against upstream Cutter.
+# Compatibility facade for out-of-tree plugins written against upstream Butter.
 #
 # Plugin sources and their CMakeLists live outside this repository, so the pre-
-# rebrand names stay resolvable: a Cutter*.h is installed next to every
-# Clutter*.h, `include <Cutter.h>` pulls in the aliases from CutterCompat.h, and
-# a forwarding CMake package keeps find_package(Cutter) / Cutter::Cutter
+# rebrand names stay resolvable: a Butter*.h is installed next to every
+# Butter*.h, `include <Butter.h>` pulls in the aliases from ButterCompat.h, and
+# a forwarding CMake package keeps find_package(Butter) / Butter::Butter
 # working. Only names are aliased - the types, the ABI and the Qt interface IID
-# are the Clutter ones. See the "Rebrand and compatibility" section of README.md.
+# are the Butter ones. See the "Rebrand and compatibility" section of README.md.
 # ---------------------------------------------------------------------------
 set(COMPAT_DIR "${CMAKE_CURRENT_BINARY_DIR}/compat")
 file(MAKE_DIRECTORY "${COMPAT_DIR}")
 foreach(_file ${HEADER_FILES})
     get_filename_component(_name "${_file}" NAME)
     get_filename_component(_dir "${_file}" DIRECTORY)
-    if(_name MATCHES "^Clutter")
-        string(REPLACE "Clutter" "Cutter" _compat_name "${_name}")
+    if(_name MATCHES "^Butter")
+        string(REPLACE "Butter" "Butter" _compat_name "${_name}")
         string(TOUPPER "${_compat_name}" _compat_guard)
         string(REGEX REPLACE "[^A-Z0-9_]" "_" _compat_guard "${_compat_guard}")
-        # Hand-written shims (CutterCompat.h lives alongside them) take precedence.
+        # Hand-written shims (ButterCompat.h lives alongside them) take precedence.
         if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/compat/${_dir}/${_compat_name}")
             set(_compat_file "${CMAKE_CURRENT_SOURCE_DIR}/compat/${_dir}/${_compat_name}")
         else()
             file(MAKE_DIRECTORY "${COMPAT_DIR}/${_dir}")
             set(_compat_file "${COMPAT_DIR}/${_dir}/${_compat_name}")
             file(WRITE "${_compat_file}"
-"// Generated compatibility shim for plugins written against upstream Cutter.\n"
-"// The real header is Clutter, this just makes the old include path resolve.\n"
+"// Generated compatibility shim for plugins written against upstream Butter.\n"
+"// The real header is Butter, this just makes the old include path resolve.\n"
 "#ifndef ${_compat_guard}\n"
 "#define ${_compat_guard}\n\n"
 "#include \"${_name}\"\n"
-"#include <CutterCompat.h>\n\n"
+"#include <ButterCompat.h>\n\n"
 "#endif // ${_compat_guard}\n")
         endif()
         install(FILES "${_compat_file}"
-                DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/clutter/${_dir}" COMPONENT Devel)
-        list(APPEND COMPAT_SHIM_DESTS "${CMAKE_INSTALL_INCLUDEDIR}/clutter/${_dir}/${_compat_name}")
+                DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/butter/${_dir}" COMPONENT Devel)
+        list(APPEND COMPAT_SHIM_DESTS "${CMAKE_INSTALL_INCLUDEDIR}/butter/${_dir}/${_compat_name}")
     endif()
 endforeach()
 
-# Everything else under src/compat (CutterCompat.h and any future shim) is
+# Everything else under src/compat (ButterCompat.h and any future shim) is
 # installed verbatim, skipping what the loop above already placed.
 file(GLOB_RECURSE COMPAT_SOURCES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/compat"
      "${CMAKE_CURRENT_SOURCE_DIR}/compat/*.h")
 foreach(_file ${COMPAT_SOURCES})
     get_filename_component(_dir "${_file}" DIRECTORY)
-    if(NOT "${CMAKE_INSTALL_INCLUDEDIR}/clutter/${_file}" IN_LIST COMPAT_SHIM_DESTS)
+    if(NOT "${CMAKE_INSTALL_INCLUDEDIR}/butter/${_file}" IN_LIST COMPAT_SHIM_DESTS)
         install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/compat/${_file}"
-                DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/clutter/${_dir}" COMPONENT Devel)
+                DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/butter/${_dir}" COMPONENT Devel)
     endif()
 endforeach()
 
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/CutterCompat.cmake"
-        DESTINATION "${CLUTTER_COMPAT_CMAKE_CONFIGDIR}" RENAME CutterConfig.cmake
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/ButterCompat.cmake"
+        DESTINATION "${BUTTER_COMPAT_CMAKE_CONFIGDIR}" RENAME ButterConfig.cmake
         COMPONENT Devel)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ClutterConfigVersion.cmake"
-        DESTINATION "${CLUTTER_COMPAT_CMAKE_CONFIGDIR}" RENAME CutterConfigVersion.cmake
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ButterConfigVersion.cmake"
+        DESTINATION "${BUTTER_COMPAT_CMAKE_CONFIGDIR}" RENAME ButterConfigVersion.cmake
         COMPONENT Devel)
 
 if(UNIX AND NOT APPLE)
-    install(FILES "img/clutter.svg"
+    install(FILES "img/butter.svg"
         DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps")
-    install(FILES "re.rizin.clutter.desktop"
+    install(FILES "re.rizin.butter.desktop"
         DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/applications")
-    install(FILES "re.rizin.clutter.appdata.xml"
+    install(FILES "re.rizin.butter.appdata.xml"
         DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/metainfo")
 endif()

@@ -1,6 +1,6 @@
 #!/bin/sh
 #########
-#### Push new translation files to clutter-translations
+#### Push new translation files to butter-translations
 #### so Crowdin can fetch them
 
 log() {
@@ -16,10 +16,10 @@ git submodule update translations
 cd translations
 git pull origin master
 
-# Generate Crowdin single translation file from clutter_fr.ts
+# Generate Crowdin single translation file from butter_fr.ts
 log "Generating single translation file"
 find . -iname "*.ts" | xargs lupdate .. -ts
-cp ./fr/clutter_fr_FR.ts ./Translations.ts
+cp ./fr/butter_fr_FR.ts ./Translations.ts
 
 # Push it so Crowdin can find new strings, and later push updated translations
 log "Committing..."

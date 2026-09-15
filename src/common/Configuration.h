@@ -4,12 +4,12 @@
 #include <QFont>
 #include <QSettings>
 
-#include <core/Clutter.h>
+#include <core/Butter.h>
 
 #define Config() (Configuration::instance())
 #define ConfigColor(x) Config()->getColor(x)
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
 namespace KSyntaxHighlighting {
 class Repository;
 class Theme;
@@ -25,7 +25,7 @@ enum ColorFlags : ut8 {
     DualColor = LightFlag | DarkFlag,
 };
 
-struct ClutterInterfaceTheme
+struct ButterInterfaceTheme
 {
     QString name;
     ColorFlags flag;
@@ -45,7 +45,7 @@ struct RecentFileEntry
 /**
  * @brief Singleton class to save and load all of the configuration values
  */
-class CLUTTER_EXPORT Configuration : public QObject
+class BUTTER_EXPORT Configuration : public QObject
 {
     Q_OBJECT
 private:
@@ -53,7 +53,7 @@ private:
     QSettings s;
     static Configuration *ptr;
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
     KSyntaxHighlighting::Repository *kSyntaxHighlightingRepository;
 #endif
     bool outputRedirectEnabled = true;
@@ -71,9 +71,9 @@ private:
     void applySavedAsmOptions();
 
 public:
-    static const QList<ClutterInterfaceTheme> &clutterInterfaceThemesList();
+    static const QList<ButterInterfaceTheme> &butterInterfaceThemesList();
     static const QHash<QString, ColorFlags> relevantThemes;
-    static const QHash<QString, QHash<ColorFlags, QColor>> clutterOptionColors;
+    static const QHash<QString, QHash<ColorFlags, QColor>> butterOptionColors;
 
     // Functions
     static Configuration *instance();
@@ -96,7 +96,7 @@ public:
         QLocale locale;
     };
     /**
-     * @brief this function will gather and return available translation for Clutter
+     * @brief this function will gather and return available translation for Butter
      * @return a list of locales and their names
      */
     std::vector<LangInfo> getAvailableTranslations();
@@ -122,14 +122,14 @@ public:
     // Colors
     bool windowColorIsDark();
     static bool nativeWindowIsDark();
-    void setLastThemeOf(const ClutterInterfaceTheme &currInterfaceTheme, const QString &theme);
-    QString getLastThemeOf(const ClutterInterfaceTheme &currInterfaceTheme) const;
+    void setLastThemeOf(const ButterInterfaceTheme &currInterfaceTheme, const QString &theme);
+    QString getLastThemeOf(const ButterInterfaceTheme &currInterfaceTheme) const;
     void setInterfaceTheme(int theme);
     int getInterfaceTheme() { return s.value("ColorPalette", 0).toInt(); }
 
-    const ClutterInterfaceTheme *getCurrentTheme();
+    const ButterInterfaceTheme *getCurrentTheme();
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
     KSyntaxHighlighting::Repository *getKSyntaxHighlightingRepository();
     KSyntaxHighlighting::Theme getKSyntaxHighlightingTheme();
 #endif
@@ -147,7 +147,7 @@ public:
     // Asm Options
     void resetToDefaultAsmOptions();
 
-    QString getColorTheme() const { return s.value("theme", "clutter").toString(); }
+    QString getColorTheme() const { return s.value("theme", "butter").toString(); }
     void setColorTheme(const QString &theme);
     /**
      * @brief Change current color theme if it doesn't much native theme's darkness.
@@ -156,7 +156,7 @@ public:
     int colorThemeDarkness(const QString &colorTheme) const;
 
     /**
-     * @brief Configuration::setColor sets the local Clutter configuration color
+     * @brief Configuration::setColor sets the local Butter configuration color
      * @param name Color Name
      * @param color The color you want to set
      */
@@ -178,7 +178,7 @@ public:
     bool isFirstExecution();
 
     /**
-     * @return id of the last selected decompiler (see ClutterCore::getDecompilerById)
+     * @return id of the last selected decompiler (see ButterCore::getDecompilerById)
      */
     QString getSelectedDecompiler();
     void setSelectedDecompiler(const QString &id);
@@ -234,8 +234,8 @@ public:
     void setGraphBlockEntryOffset(bool enabled);
 
     /**
-     * @brief Enable or disable Clutter output redirection.
-     * Output redirection state can only be changed early during Clutter initialization.
+     * @brief Enable or disable Butter output redirection.
+     * Output redirection state can only be changed early during Butter initialization.
      * Changing it later will have no effect
      * @param enabled set this to false for disabling output redirection
      */
@@ -412,7 +412,7 @@ signals:
     void itemCountOptionsChanged();
     void quickFilterOptionsChanged();
     void functionsOptionsChanged();
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
     void kSyntaxHighlightingThemeChanged();
 #endif
 };

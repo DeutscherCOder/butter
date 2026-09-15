@@ -1,7 +1,7 @@
 #ifndef SEGMENTSWIDGET_H
 #define SEGMENTSWIDGET_H
 
-#include "ClutterDescriptions.h"
+#include "ButterDescriptions.h"
 #include "widgets/ListDockWidget.h"
 
 #include <QAbstractListModel>

@@ -39,7 +39,7 @@
        </sizepolicy>
       </property>
       <property name="styleSheet">
-       <string notr="true">ClutterTreeView::item
+       <string notr="true">ButterTreeView::item
 {
     padding-top: 1px;
     padding-bottom: 1px;

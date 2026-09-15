@@ -10,7 +10,7 @@
 
 #include <utility>
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
 #    include <KSyntaxHighlighting/Definition>
 #    include <KSyntaxHighlighting/Repository>
 #    include <KSyntaxHighlighting/Theme>
@@ -38,12 +38,12 @@ const QHash<QString, ColorFlags> Configuration::relevantThemes = {
     { "dark", DualColor },      { "durian", DualColor }, { "tango", DualColor },
     { "white2", DualColor },
 
-    { "clutter", LightFlag },    { "matrix", LightFlag }, { "white", LightFlag },
+    { "butter", LightFlag },    { "matrix", LightFlag }, { "white", LightFlag },
 };
-static const QString defaultLightColorTheme = "clutter";
+static const QString defaultLightColorTheme = "butter";
 static const QString defaultDarkColorTheme = "ayu";
 
-const QHash<QString, QHash<ColorFlags, QColor>> Configuration::clutterOptionColors = {
+const QHash<QString, QHash<ColorFlags, QColor>> Configuration::butterOptionColors = {
     { "gui.cflow",
       { { DarkFlag, QColor(0xff, 0xff, 0xff) }, { LightFlag, QColor(0x00, 0x00, 0x00) } } },
     { "gui.dataoffset",
@@ -167,7 +167,7 @@ Configuration::Configuration() : QObject(), nativePalette(qApp->palette())
                 tr("Settings are not writable! Make sure you have a write access to \"%1\".")
                         .arg(s.fileName()));
     }
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
     kSyntaxHighlightingRepository = nullptr;
 #endif
 }
@@ -186,7 +186,7 @@ void Configuration::loadInitial()
     setColorTheme(getColorTheme());
     applySavedAsmOptions();
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
     kSyntaxHighlightingRepository = new KSyntaxHighlighting::Repository();
 #endif
 }
@@ -221,7 +221,7 @@ int Configuration::getNewFileLastClicked()
 void Configuration::resetAll()
 {
     // Don't reset all rizin vars, that currently breaks a bunch of stuff.
-    // settingsFile.remove()+loadInitials() should reset all settings configurable using Clutter GUI.
+    // settingsFile.remove()+loadInitials() should reset all settings configurable using Butter GUI.
 
     Core()->setSettings();
     // Delete the file so no extra configuration is in it.
@@ -244,7 +244,7 @@ void Configuration::setAutoUpdateEnabled(bool au)
 }
 
 /**
- * @brief get the current Locale set in Clutter's user configuration
+ * @brief get the current Locale set in Butter's user configuration
  * @return a QLocale object describes user's current locale
  */
 QLocale Configuration::getCurrLocale() const
@@ -253,7 +253,7 @@ QLocale Configuration::getCurrLocale() const
 }
 
 /**
- * @brief sets Clutter's locale
+ * @brief sets Butter's locale
  * @param l - a QLocale object describes the locate to configure
  */
 void Configuration::setLocale(const QLocale &l)
@@ -262,7 +262,7 @@ void Configuration::setLocale(const QLocale &l)
 }
 
 /**
- * @brief set Clutter's interface language by a given locale name
+ * @brief set Butter's interface language by a given locale name
  * @param language - a string represents the name of a locale language
  * @return true on success
  */
@@ -330,7 +330,7 @@ void Configuration::loadNativeStylesheet()
 }
 
 /**
- * @brief Loads the Light theme of Clutter and modify special theme colors
+ * @brief Loads the Light theme of Butter and modify special theme colors
  */
 void Configuration::loadLightStylesheet()
 {
@@ -429,19 +429,19 @@ void Configuration::setZoomFactor(qreal zoom)
     emit fontsUpdated();
 }
 
-QString Configuration::getLastThemeOf(const ClutterInterfaceTheme &currInterfaceTheme) const
+QString Configuration::getLastThemeOf(const ButterInterfaceTheme &currInterfaceTheme) const
 {
     return s.value("lastThemeOf." + currInterfaceTheme.name, Config()->getColorTheme()).toString();
 }
 
 void Configuration::setInterfaceTheme(int theme)
 {
-    if (theme >= clutterInterfaceThemesList().size() || theme < 0) {
+    if (theme >= butterInterfaceThemesList().size() || theme < 0) {
         theme = 0;
     }
     s.setValue("ColorPalette", theme);
 
-    const ClutterInterfaceTheme interfaceTheme = clutterInterfaceThemesList()[theme];
+    const ButterInterfaceTheme interfaceTheme = butterInterfaceThemesList()[theme];
 
     if (interfaceTheme.name == "Native") {
         loadNativeStylesheet();
@@ -455,7 +455,7 @@ void Configuration::setInterfaceTheme(int theme)
         loadNativeStylesheet();
     }
 
-    for (auto it = clutterOptionColors.cbegin(); it != clutterOptionColors.cend(); it++) {
+    for (auto it = butterOptionColors.cbegin(); it != butterOptionColors.cend(); it++) {
         setColor(it.key(), it.value()[interfaceTheme.flag]);
     }
 
@@ -463,22 +463,22 @@ void Configuration::setInterfaceTheme(int theme)
 
     emit interfaceThemeChanged();
     emit colorsUpdated();
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
     emit kSyntaxHighlightingThemeChanged();
 #endif
 }
 
-const ClutterInterfaceTheme *Configuration::getCurrentTheme()
+const ButterInterfaceTheme *Configuration::getCurrentTheme()
 {
     int i = getInterfaceTheme();
-    if (i < 0 || i >= clutterInterfaceThemesList().size()) {
+    if (i < 0 || i >= butterInterfaceThemesList().size()) {
         i = 0;
         setInterfaceTheme(i);
     }
-    return &clutterInterfaceThemesList()[i];
+    return &butterInterfaceThemesList()[i];
 }
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
 KSyntaxHighlighting::Repository *Configuration::getKSyntaxHighlightingRepository()
 {
     return kSyntaxHighlightingRepository;
@@ -498,7 +498,7 @@ KSyntaxHighlighting::Theme Configuration::getKSyntaxHighlightingTheme()
 
 QSyntaxHighlighter *Configuration::createSyntaxHighlighter(QTextDocument *document)
 {
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
     auto syntaxHighlighter = new SyntaxHighlighter(document);
     auto repo = getKSyntaxHighlightingRepository();
     if (repo) {
@@ -512,8 +512,8 @@ QSyntaxHighlighter *Configuration::createSyntaxHighlighter(QTextDocument *docume
 
 QString Configuration::getLogoFile()
 {
-    return windowColorIsDark() ? QString(":/img/clutter_white_plain.svg")
-                               : QString(":/img/clutter_plain.svg");
+    return windowColorIsDark() ? QString(":/img/butter_white_plain.svg")
+                               : QString(":/img/butter_plain.svg");
 }
 
 void Configuration::setColor(const QString &name, const QColor &color)
@@ -521,7 +521,7 @@ void Configuration::setColor(const QString &name, const QColor &color)
     s.setValue("colors." + name, color);
 }
 
-void Configuration::setLastThemeOf(const ClutterInterfaceTheme &currInterfaceTheme,
+void Configuration::setLastThemeOf(const ButterInterfaceTheme &currInterfaceTheme,
                                    const QString &theme)
 {
     s.setValue("lastThemeOf." + currInterfaceTheme.name, theme);
@@ -589,9 +589,9 @@ void Configuration::applySavedAsmOptions()
     }
 }
 
-const QList<ClutterInterfaceTheme> &Configuration::clutterInterfaceThemesList()
+const QList<ButterInterfaceTheme> &Configuration::butterInterfaceThemesList()
 {
-    static const QList<ClutterInterfaceTheme> list = {
+    static const QList<ButterInterfaceTheme> list = {
         { "Native", Configuration::nativeWindowIsDark() ? DarkFlag : LightFlag },
         { "Dark", DarkFlag },
         { "Midnight", DarkFlag },
@@ -653,7 +653,7 @@ void Configuration::setConfig(const QString &key, const QVariant &value)
 
 std::vector<Configuration::LangInfo> Configuration::getAvailableTranslations()
 {
-    const auto &trDirs = Clutter::getTranslationsDirectories();
+    const auto &trDirs = Butter::getTranslationsDirectories();
 
     QSet<QString> fileNamesSet;
     for (const auto &trDir : trDirs) {
@@ -662,7 +662,7 @@ std::vector<Configuration::LangInfo> Configuration::getAvailableTranslations()
             continue;
         }
         const QStringList &currTrFileNames =
-                dir.entryList(QStringList("clutter_*.qm"), QDir::Files, QDir::Name);
+                dir.entryList(QStringList("butter_*.qm"), QDir::Files, QDir::Name);
         for (const auto &trFile : currTrFileNames) {
             fileNamesSet << trFile;
         }
@@ -685,7 +685,7 @@ std::vector<Configuration::LangInfo> Configuration::getAvailableTranslations()
 
     for (auto &i : fileNames) {
         auto name = QFileInfo(i).baseName();
-        const QString localeName = name.mid(sizeof("clutter_") - 1);
+        const QString localeName = name.mid(sizeof("butter_") - 1);
         const QLocale locale(localeName);
         if (locale.language() == QLocale::C) {
             continue;
@@ -716,7 +716,7 @@ std::vector<Configuration::LangInfo> Configuration::getAvailableTranslations()
 }
 
 /**
- * @brief check if this is the first time Clutter's is executed on this computer
+ * @brief check if this is the first time Butter's is executed on this computer
  * @return true if this is first execution; otherwise returns false.
  */
 bool Configuration::isFirstExecution()

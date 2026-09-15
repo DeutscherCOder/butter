@@ -1,6 +1,6 @@
 #include "EditMethodDialog.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "RizinCpp.h"
 #include "ui_EditMethodDialog.h"
 

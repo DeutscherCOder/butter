@@ -30,7 +30,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TAG="${1:-Ghidra_12.1.3_build}"
 
 UP="$ROOT/.tools/ghidra-upstream"
-FORK="$ROOT/build-clutter/dist/rz-ghidra-prefix/src/rz-ghidra/ghidra/ghidra"
+FORK="$ROOT/build-butter/dist/rz-ghidra-prefix/src/rz-ghidra/ghidra/ghidra"
 PATCH="$ROOT/tools/rizin-ghidra.diff"
 REL="Ghidra/Features/Decompiler/src/decompile/cpp"
 
@@ -39,7 +39,7 @@ REL="Ghidra/Features/Decompiler/src/decompile/cpp"
 #   git -C $FORK log --format='%h %an %s' -12 origin/rizin
 UPSTREAM_BASE_COMMIT="7e89d94e34"
 
-[ -d "$FORK/.git" ] || { echo "[!] rz-ghidra's ghidra submodule not found at $FORK"; echo "    Build Clutter once (build-clutter.bat) so it is cloned."; exit 1; }
+[ -d "$FORK/.git" ] || { echo "[!] rz-ghidra's ghidra submodule not found at $FORK"; echo "    Build Butter once (build-butter.bat) so it is cloned."; exit 1; }
 [ -f "$PATCH" ]     || { echo "[!] missing rizin patch set: $PATCH"; exit 1; }
 command -v git >/dev/null || { echo "[!] git not found"; exit 1; }
 

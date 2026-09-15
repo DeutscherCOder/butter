@@ -105,7 +105,7 @@ ForEachMacros:
   - Q_FOREVER
   - QBENCHMARK
   - QBENCHMARK_ONCE
-  - ClutterRzListForeach
+  - ButterRzListForeach
 IfMacros:
   - KJ_IF_MAYBE
 IncludeBlocks:   Regroup

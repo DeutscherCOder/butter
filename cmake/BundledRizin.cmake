@@ -14,11 +14,11 @@ else()
     set(MESON_OPTIONS "--prefix=${RIZIN_INSTALL_DIR}" --libdir=lib)
 endif()
 
-if (CLUTTER_ENABLE_PACKAGING)
+if (BUTTER_ENABLE_PACKAGING)
     list(APPEND MESON_OPTIONS "-Dportable=true")
 endif()
 
-if (CLUTTER_ENABLE_SIGDB)
+if (BUTTER_ENABLE_SIGDB)
     list(APPEND MESON_OPTIONS "-Dinstall_sigdb=true")
 endif()
 
@@ -68,7 +68,7 @@ target_include_directories(Rizin INTERFACE
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/librz>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/librz/sdb>")
 
-install(TARGETS Rizin EXPORT ClutterTargets)
+install(TARGETS Rizin EXPORT ButterTargets)
 if (WIN32)
     foreach(_lib ${RZ_LIBS} ${RZ_EXTRA_LIBS})
         install(FILES "${RIZIN_INSTALL_DIR}/${_lib}-${Rizin_VERSION}.dll" DESTINATION "${CMAKE_INSTALL_BINDIR}")

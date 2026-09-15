@@ -2,7 +2,7 @@
 #define MEMORYDOCKWIDGET_H
 
 #include "AddressableDockWidget.h"
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QAction>
 
@@ -19,7 +19,7 @@ enum class MemoryWidgetType : ut8 {
 /**
  * @brief A base window that keeps memory-related views focused and synced
  */
-class CLUTTER_EXPORT MemoryDockWidget : public AddressableDockWidget
+class BUTTER_EXPORT MemoryDockWidget : public AddressableDockWidget
 {
     Q_OBJECT
 public:

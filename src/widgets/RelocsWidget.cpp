@@ -138,9 +138,9 @@ RelocsWidget::RelocsWidget(MainWindow *main)
     setModels(relocsProxyModel);
     ui->treeView->sortByColumn(RelocsModel::NameColumn, Qt::AscendingOrder);
 
-    connect(Core(), &ClutterCore::codeRebased, this, &RelocsWidget::refreshRelocs);
-    connect(Core(), &ClutterCore::refreshAll, this, &RelocsWidget::refreshRelocs);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::codeRebased, this, &RelocsWidget::refreshRelocs);
+    connect(Core(), &ButterCore::refreshAll, this, &RelocsWidget::refreshRelocs);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(relocsModel, RelocsModel::CommentColumn); });
 }
 

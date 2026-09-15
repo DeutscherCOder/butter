@@ -3,7 +3,7 @@
 #include "BaseFindSearchDialog.h"
 #include "ui_BaseFindDialog.h"
 
-#include <core/Clutter.h>
+#include <core/Butter.h>
 #include <rz_th.h>
 
 BaseFindDialog::BaseFindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::BaseFindDialog)

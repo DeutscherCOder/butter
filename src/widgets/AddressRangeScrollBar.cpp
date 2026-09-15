@@ -1,6 +1,6 @@
 #include "AddressRangeScrollBar.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 
 #include <QWheelEvent>
 
@@ -9,7 +9,7 @@
 
 AddressRangeScrollBar::AddressRangeScrollBar(QWidget *parent) : QScrollBar(parent)
 {
-    connect(Core(), &ClutterCore::refreshAll, this, &AddressRangeScrollBar::refreshRange);
+    connect(Core(), &ButterCore::refreshAll, this, &AddressRangeScrollBar::refreshRange);
     connect(this, &AddressRangeScrollBar::actionTriggered, this, [this](int action) {
         switch (action) {
         // Due to the way the QScrollBar::actionTriggered signal works,
@@ -76,7 +76,7 @@ void AddressRangeScrollBar::refreshRange()
             emit hideScrollBar();
             return;
         }
-        const ClutterPVector<RzIOMap> maps { mapsPtr };
+        const ButterPVector<RzIOMap> maps { mapsPtr };
         for (const RzIOMap *const map : maps) {
             // Skip the ESIL memory stack region
             if (Core()->currentlyEmulating && std::strncmp(rz_str_get(map->name), "mem.", 4) == 0) {

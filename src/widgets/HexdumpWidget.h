@@ -4,7 +4,7 @@
 #include "Dashboard.h"
 #include "HexWidget.h"
 #include "MemoryDockWidget.h"
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 
 #include <QAction>
 #include <QDebug>

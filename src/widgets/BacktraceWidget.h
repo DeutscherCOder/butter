@@ -1,8 +1,8 @@
 #ifndef BACKTRACEWIDGET_H
 #define BACKTRACEWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 
 #include <QJsonObject>
 #include <QStandardItem>
@@ -35,7 +35,7 @@ private:
     QList<BacktraceDescription> backtraces;
 };
 
-class BacktraceWidget : public ClutterDockWidget
+class BacktraceWidget : public ButterDockWidget
 {
     Q_OBJECT
 

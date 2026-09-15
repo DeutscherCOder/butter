@@ -54,19 +54,19 @@ static inline auto fromOwned(RZ_OWN RzList *data) -> UniquePtrCP<decltype(data),
 }
 
 // Rizin list iteration macros
-// deprecated, prefer using ClutterPVector and ClutterRzList instead
-#define ClutterRzListForeach(list, it, type, x)                                                     \
+// deprecated, prefer using ButterPVector and ButterRzList instead
+#define ButterRzListForeach(list, it, type, x)                                                     \
     if (list)                                                                                      \
         for (it = list->head; it && ((x = static_cast<type *>(it->val))); it = it->next)
 
-#define ClutterRzVectorForeach(vec, it, type)                                                       \
+#define ButterRzVectorForeach(vec, it, type)                                                       \
     if ((vec) && (vec)->a)                                                                         \
         for (it = static_cast<type *>((vec)->a); reinterpret_cast<char *>(it)                      \
              != static_cast<char *>((vec)->a) + ((vec)->len * (vec)->elem_size);                   \
              it = reinterpret_cast<type *>(reinterpret_cast<char *>(it) + (vec)->elem_size))
 
 template<typename T>
-class ClutterPVector
+class ButterPVector
 {
 private:
     const RzPVector *const vec;
@@ -103,13 +103,13 @@ public:
         T *operator*() { return *p; }
     };
 
-    ClutterPVector(const RzPVector *vec) : vec(vec) {}
+    ButterPVector(const RzPVector *vec) : vec(vec) {}
     Iterator begin() const { return Iterator(reinterpret_cast<T **>(vec->v.a)); }
     Iterator end() const { return Iterator(reinterpret_cast<T **>(vec->v.a) + vec->v.len); }
 };
 
 template<typename T>
-class ClutterRzList
+class ButterRzList
 {
 private:
     const RzList *const list;
@@ -155,7 +155,7 @@ public:
         }
     };
 
-    explicit ClutterRzList(const RzList *l) : list(l) {}
+    explicit ButterRzList(const RzList *l) : list(l) {}
     Iterator begin() const
     {
         if (!list) {
@@ -167,12 +167,12 @@ public:
 };
 
 template<typename T>
-class ClutterRzIter
+class ButterRzIter
 {
     UniquePtrC<RzIterator, &rz_iterator_free> rzIter;
 
 public:
-    ClutterRzIter(RzIterator *rzIter) : rzIter(rzIter)
+    ButterRzIter(RzIterator *rzIter) : rzIter(rzIter)
     {
         // immediately attempt advancing by 1, otherwise it's hard to distinguish whether current
         // element is null due to not having called next, or due to having run out of elements
@@ -181,7 +181,7 @@ public:
         }
     }
 
-    ClutterRzIter<T> &operator++()
+    ButterRzIter<T> &operator++()
     {
         rz_iterator_next(rzIter.get());
         return *this;
@@ -192,9 +192,9 @@ public:
     T *operator->() { return reinterpret_cast<T *>(rzIter->cur); }
 };
 
-#define ClutterHtDef(xx, XX, K, VB)                                                                 \
+#define ButterHtDef(xx, XX, K, VB)                                                                 \
     template<typename V>                                                                           \
-    class ClutterHt##XX                                                                             \
+    class ButterHt##XX                                                                             \
     {                                                                                              \
     private:                                                                                       \
         Ht##XX *const ht;                                                                          \
@@ -205,7 +205,7 @@ public:
         }                                                                                          \
                                                                                                    \
     public:                                                                                        \
-        ClutterHt##XX(Ht##XX *ht) : ht(ht) {};                                                      \
+        ButterHt##XX(Ht##XX *ht) : ht(ht) {};                                                      \
         template<typename F>                                                                       \
         void ForEach(F f)                                                                          \
         {                                                                                          \
@@ -217,7 +217,7 @@ public:
         }                                                                                          \
     };
 
-ClutterHtDef(sp, SP, const char *, void *);
+ButterHtDef(sp, SP, const char *, void *);
 
 QSet<QString> convertRzSetS(const RzSetS *set);
 

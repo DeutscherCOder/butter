@@ -91,6 +91,6 @@ Show VTables
 
 Show Signatures
 ----------------------------------------
-**Description:** Clutter supports the creation and the utilization of signatures. This widget lists all the signatures available to clutter.  
+**Description:** Butter supports the creation and the utilization of signatures. This widget lists all the signatures available to butter.  
 
 **Steps:** Windows -> Info... -> Signatures

@@ -1,7 +1,7 @@
 #ifndef DECOMPILER_HIGHLIGHTER_H
 #define DECOMPILER_HIGHLIGHTER_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
@@ -14,7 +14,7 @@
  * @brief SyntaxHighlighter based on annotations from decompiled code.
  * Can be only used in combination with DecompilerWidget.
  */
-class CLUTTER_EXPORT DecompilerHighlighter : public QSyntaxHighlighter
+class BUTTER_EXPORT DecompilerHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 

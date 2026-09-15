@@ -1,7 +1,7 @@
 #ifndef REGISTERSWIDGET_H
 #define REGISTERSWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 #include "menus/AddressableItemContextMenu.h"
 
 #include <QGridLayout>
@@ -20,7 +20,7 @@ class RegistersWidget;
 /**
  * @brief Dock widget that displays CPU registers in an editable grid for debugging/emulating
  */
-class RegistersWidget : public ClutterDockWidget
+class RegistersWidget : public ButterDockWidget
 {
     Q_OBJECT
 

@@ -1,7 +1,7 @@
 #include "AttachProcDialog.h"
 
 #include "common/Helpers.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 #include "ui_AttachProcDialog.h"
 

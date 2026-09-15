@@ -2,8 +2,8 @@
 #define THREADSWIDGET_H
 
 #include "AddressableItemContextMenu.h"
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 
 #include <QSortFilterProxyModel>
 
@@ -56,7 +56,7 @@ public:
 /**
  * @brief Widget listing info about threads during debugging/emulating
  */
-class ThreadsWidget : public ClutterDockWidget
+class ThreadsWidget : public ButterDockWidget
 {
     Q_OBJECT
 public:

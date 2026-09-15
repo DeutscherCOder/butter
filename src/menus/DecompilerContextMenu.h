@@ -1,7 +1,7 @@
 #ifndef DECOMPILERCONTEXTMENU_H
 #define DECOMPILERCONTEXTMENU_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QKeySequence>
 #include <QMenu>

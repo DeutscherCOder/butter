@@ -3,7 +3,7 @@
 
 #include "Decompiler.h"
 #include "MemoryDockWidget.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 #include <QTextEdit>
 
@@ -57,7 +57,7 @@ private slots:
      *     - Seek changed to an offset contained in the decompiled function.
      *     - Auto-refresh is disabled.
      */
-    void seekChanged(RVA /* addr */, ClutterCore::SeekHistoryType type);
+    void seekChanged(RVA /* addr */, ButterCore::SeekHistoryType type);
     void decompilationFinished(RzAnnotatedCode *code);
 
 private:
@@ -164,7 +164,7 @@ private:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
     /**
-     * @brief a wrapper around ClutterSeekable::seekToReference to seek to an object which is
+     * @brief a wrapper around ButterSeekable::seekToReference to seek to an object which is
      * referenced from the address under cursor
      */
     void seekToReference();

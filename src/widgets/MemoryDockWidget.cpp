@@ -1,7 +1,7 @@
 #include "MemoryDockWidget.h"
 
 #include "MainWindow.h"
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 
 #include <QAction>
 #include <QContextMenuEvent>
@@ -35,5 +35,5 @@ bool MemoryDockWidget::eventFilter(QObject *object, QEvent *event)
     if (mainWindow && event->type() == QEvent::FocusIn) {
         mainWindow->setCurrentMemoryWidget(this);
     }
-    return ClutterDockWidget::eventFilter(object, event);
+    return ButterDockWidget::eventFilter(object, event);
 }

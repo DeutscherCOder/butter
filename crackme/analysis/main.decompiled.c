@@ -202,7 +202,7 @@ undefined8 main(int argc, char **argv)
         } while (uVar18 < 7);
         bVar1 = false;
     }
-    arg1_00 = "Access granted. flag: CLUTTER{h4rdc0d3d_ch3ck}\n";
+    arg1_00 = "Access granted. flag: BUTTER{h4rdc0d3d_ch3ck}\n";
     if (!bVar1) {
         arg1_00 = "Access denied.\n";
     }

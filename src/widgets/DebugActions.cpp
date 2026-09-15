@@ -137,13 +137,13 @@ DebugActions::DebugActions(QToolBar *toolBar, MainWindow *main)
     toggleConnectionActions = { actionAttach, actionStartRemote };
     reverseActions = { actionStepBack, actionContinueBack };
 
-    connect(Core(), &ClutterCore::debugProcessFinished, this, [=](int pid) {
+    connect(Core(), &ButterCore::debugProcessFinished, this, [=](int pid) {
         QMessageBox msgBox(main);
         msgBox.setText(tr("Debugged process exited (") + QString::number(pid) + ")");
         msgBox.exec();
     });
 
-    connect(Core(), &ClutterCore::debugTaskStateChanged, this, [=, this]() {
+    connect(Core(), &ButterCore::debugTaskStateChanged, this, [=, this]() {
         const bool disableToolbar = Core()->isDebugTaskInProgress();
         if (Core()->currentlyDebugging) {
             for (auto a : std::as_const(toggleActions)) {
@@ -168,7 +168,7 @@ DebugActions::DebugActions(QToolBar *toolBar, MainWindow *main)
         }
     });
 
-    connect(actionStop, &QAction::triggered, Core(), &ClutterCore::stopDebug);
+    connect(actionStop, &QAction::triggered, Core(), &ButterCore::stopDebug);
     connect(actionStop, &QAction::triggered, [=, this]() {
         actionStart->setVisible(true);
         actionStartEmul->setVisible(true);
@@ -184,15 +184,15 @@ DebugActions::DebugActions(QToolBar *toolBar, MainWindow *main)
         setAllActionsVisible(false);
     });
 
-    connect(actionStep, &QAction::triggered, Core(), &ClutterCore::stepDebug);
-    connect(actionStepBack, &QAction::triggered, Core(), &ClutterCore::stepBackDebug);
+    connect(actionStep, &QAction::triggered, Core(), &ButterCore::stepDebug);
+    connect(actionStepBack, &QAction::triggered, Core(), &ButterCore::stepBackDebug);
 
     connect(actionStart, &QAction::triggered, this, &DebugActions::startDebug);
 
     connect(actionAttach, &QAction::triggered, this, &DebugActions::attachProcessDialog);
     connect(actionStartRemote, &QAction::triggered, this, &DebugActions::attachRemoteDialog);
-    connect(Core(), &ClutterCore::attachedRemote, this, &DebugActions::onAttachedRemoteDebugger);
-    connect(actionStartEmul, &QAction::triggered, Core(), &ClutterCore::startEmulation);
+    connect(Core(), &ButterCore::attachedRemote, this, &DebugActions::onAttachedRemoteDebugger);
+    connect(actionStartEmul, &QAction::triggered, Core(), &ButterCore::startEmulation);
     connect(actionStartEmul, &QAction::triggered, [=, this]() {
         setAllActionsVisible(true);
         actionStart->setVisible(false);
@@ -209,13 +209,13 @@ DebugActions::DebugActions(QToolBar *toolBar, MainWindow *main)
             a->setVisible(false);
         }
     });
-    connect(actionStepOver, &QAction::triggered, Core(), &ClutterCore::stepOverDebug);
-    connect(actionStepOut, &QAction::triggered, Core(), &ClutterCore::stepOutDebug);
+    connect(actionStepOver, &QAction::triggered, Core(), &ButterCore::stepOverDebug);
+    connect(actionStepOut, &QAction::triggered, Core(), &ButterCore::stepOutDebug);
     connect(actionContinueUntilMain, &QAction::triggered, this, &DebugActions::continueUntilMain);
-    connect(actionContinueUntilCall, &QAction::triggered, Core(), &ClutterCore::continueUntilCall);
+    connect(actionContinueUntilCall, &QAction::triggered, Core(), &ButterCore::continueUntilCall);
     connect(actionContinueUntilSyscall, &QAction::triggered, Core(),
-            &ClutterCore::continueUntilSyscall);
-    connect(actionContinueBack, &QAction::triggered, Core(), &ClutterCore::continueBackDebug);
+            &ButterCore::continueUntilSyscall);
+    connect(actionContinueBack, &QAction::triggered, Core(), &ButterCore::continueBackDebug);
     connect(actionContinue, &QAction::triggered, Core(), [=]() {
         // Switch between continue and suspend depending on the debugger's state
         if (Core()->isDebugTaskInProgress()) {

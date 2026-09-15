@@ -12,7 +12,7 @@
 #define DEBUGGED_PID (-1)
 
 ProcessesWidget::ProcessesWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::ProcessesWidget),
       modelProcesses(new QStandardItemModel(1, 4, this)),
       modelFilter(new ProcessesFilterModel(this)),
@@ -53,11 +53,11 @@ ProcessesWidget::ProcessesWidget(MainWindow *main)
 
     connect(ui->quickFilterView, &QuickFilterView::filterTextChanged, modelFilter,
             &ProcessesFilterModel::setFilterWildcard);
-    connect(Core(), &ClutterCore::refreshAll, this, &ProcessesWidget::updateContents);
-    connect(Core(), &ClutterCore::registersChanged, this, &ProcessesWidget::updateContents);
-    connect(Core(), &ClutterCore::debugTaskStateChanged, this, &ProcessesWidget::updateContents);
+    connect(Core(), &ButterCore::refreshAll, this, &ProcessesWidget::updateContents);
+    connect(Core(), &ButterCore::registersChanged, this, &ProcessesWidget::updateContents);
+    connect(Core(), &ButterCore::debugTaskStateChanged, this, &ProcessesWidget::updateContents);
     // Seek doesn't necessarily change when switching processes
-    connect(Core(), &ClutterCore::switchedProcess, this, &ProcessesWidget::updateContents);
+    connect(Core(), &ButterCore::switchedProcess, this, &ProcessesWidget::updateContents);
     connect(Config(), &Configuration::fontsUpdated, this, &ProcessesWidget::fontsUpdatedSlot);
     connect(ui->viewProcesses, &QTableView::activated, this, &ProcessesWidget::onActivated);
 }

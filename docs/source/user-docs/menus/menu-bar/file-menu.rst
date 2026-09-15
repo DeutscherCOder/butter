@@ -1,9 +1,9 @@
 File Menu
 ==============================
 
-New Instance of Clutter
+New Instance of Butter
 ----------------------------------------
-**Description:** Open a new instance of Clutter to start a new session. This option will open a new window of Clutter without exiting the current session.  
+**Description:** Open a new instance of Butter to start a new session. This option will open a new window of Butter without exiting the current session.  
 
 **Steps:** File -> New Window  
 
@@ -11,8 +11,8 @@ New Instance of Clutter
 
 Map a New File
 ----------------------------------------
-**Description:** Clutter allows you to map the contents of other files into the same I/O space used to contain the loaded binary. The new contents can be placed at random or specific offsets.
-Specifically, Clutter is able to open files and map portions of them at random or specific places in memory. It is the perfect basic tooling to reproduce an environment like a core file, a debug session, or a framework by also loading and mapping all the libraries and files the binary depends on.  
+**Description:** Butter allows you to map the contents of other files into the same I/O space used to contain the loaded binary. The new contents can be placed at random or specific offsets.
+Specifically, Butter is able to open files and map portions of them at random or specific places in memory. It is the perfect basic tooling to reproduce an environment like a core file, a debug session, or a framework by also loading and mapping all the libraries and files the binary depends on.  
 
 **Steps:** File -> Map File  
 
@@ -20,27 +20,27 @@ Specifically, Clutter is able to open files and map portions of them at random o
 
 Import a PDB File
 ----------------------------------------
-**Description:** Clutter allows you to load additional debugging information by loading external PDB files. Unlike other platforms, Clutter does not rely on Windows API to parse a PDB files, thus they can be loaded on any other supported platform like Linux or macOS.    
+**Description:** Butter allows you to load additional debugging information by loading external PDB files. Unlike other platforms, Butter does not rely on Windows API to parse a PDB files, thus they can be loaded on any other supported platform like Linux or macOS.    
 
 **Steps:** File -> Import PDB  
 
 Enable Write Mode
 -----------------------
-**Description:** This option will enable Write mode and allow you to patch and edit the binary on disk. **Please note** that when Write mode is enabled, each change you make to the binary in Clutter will be applied to the original file on disk. In order not to take unnecessary risks, consider using Cache mode instead.
+**Description:** This option will enable Write mode and allow you to patch and edit the binary on disk. **Please note** that when Write mode is enabled, each change you make to the binary in Butter will be applied to the original file on disk. In order not to take unnecessary risks, consider using Cache mode instead.
 
 **Steps:** File -> Set mode -> Write mode
 
 
 Enable Cache Mode
 -----------------------
-**Description:** This option will enable Cache mode and allow you to patch and edit the binary **without** applying the changes to the file on disk. Unlike in Write mode, in Cache mode, the changes you make to the binary in Clutter will not be applied to the original file on disk unless you specifically committing them using the "Commit changes" menu item. This is safer than using Write mode because there is no risk to lose important data.
+**Description:** This option will enable Cache mode and allow you to patch and edit the binary **without** applying the changes to the file on disk. Unlike in Write mode, in Cache mode, the changes you make to the binary in Butter will not be applied to the original file on disk unless you specifically committing them using the "Commit changes" menu item. This is safer than using Write mode because there is no risk to lose important data.
 
 **Steps:** File -> Set mode -> Cache mode
 
 
 Enable Read-Only Mode
 ------------------------
-**Description:** This option is available when files are opened in Write or Cache modes. When Read-Only mode is enabled, no patches and editions to the file are allowed. This is the default mode for files in Clutter, unless specified otherwise by the user, by either enabling Write or Cache mode.
+**Description:** This option is available when files are opened in Write or Cache modes. When Read-Only mode is enabled, no patches and editions to the file are allowed. This is the default mode for files in Butter, unless specified otherwise by the user, by either enabling Write or Cache mode.
 
 **Steps:** File -> Set mode -> Read-Only mode
 
@@ -77,7 +77,7 @@ Export to Code
 
 Run a Rizin Script
 ----------------------------------------
-**Description:** Clutter allows you to execute Rizin scripts to automate task or transfer information. Rizin scripts are files that contain list of Rizin commands. The scripts can be created manually by you, or automatically generated by Rizin commands (which typically end with a star character. e.g. ``afl*``).   
+**Description:** Butter allows you to execute Rizin scripts to automate task or transfer information. Rizin scripts are files that contain list of Rizin commands. The scripts can be created manually by you, or automatically generated by Rizin commands (which typically end with a star character. e.g. ``afl*``).   
 
 Such a script can look like this:
 
@@ -89,9 +89,9 @@ Such a script can look like this:
 
 **Steps:** File -> Run Rizin script  
 
-Quit Clutter
+Quit Butter
 ----------------------------------------
-**Description:** Quit and exit your current session of Clutter. On exit, you'll be asked whether you want to save your session in order to avoid losing data.   
+**Description:** Quit and exit your current session of Butter. On exit, you'll be asked whether you want to save your session in order to avoid losing data.   
 
 **Steps:** File -> Quit  
 

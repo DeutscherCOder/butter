@@ -35,7 +35,7 @@ void HeapBinsGraphView::loadCurrentGraph()
             || QString(heapBin->type) == QString("Tcache");
 
     // store info about the chunks in a vector for easy access
-    ClutterRzListForeach (heapBin->chunks, iter, RzHeapChunkListItem, item) {
+    ButterRzListForeach (heapBin->chunks, iter, RzHeapChunkListItem, item) {
         GraphHeapChunk graphHeapChunk;
         graphHeapChunk.addr = item->addr;
         RzHeapChunkSimple *chunkInfo = Core()->getHeapChunk(item->addr);
@@ -193,7 +193,7 @@ void HeapBinsGraphView::addBlock(GraphLayout::GraphBlock block, const QString &t
     double width = 0;
 
     // split text into different lines
-    auto lines = text.split("\n", CLUTTER_QT_SKIP_EMPTY_PARTS);
+    auto lines = text.split("\n", BUTTER_QT_SKIP_EMPTY_PARTS);
 
     // width of the block is the maximum width of a line
     for (const QString &line : std::as_const(lines)) {

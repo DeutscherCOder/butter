@@ -1,7 +1,7 @@
 #ifndef RZ_GRAPH_WIDGET_H
 #define RZ_GRAPH_WIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 #include "common/RefreshDeferrer.h"
 #include "widgets/SimpleTextGraphView.h"
 
@@ -53,7 +53,7 @@ private:
 /**
  * @brief Dock widget providing a menu to select and display graphs using Rizin commands
  */
-class RizinGraphWidget : public ClutterDockWidget
+class RizinGraphWidget : public ButterDockWidget
 {
     Q_OBJECT
 

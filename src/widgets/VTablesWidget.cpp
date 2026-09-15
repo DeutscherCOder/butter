@@ -130,7 +130,7 @@ bool VTableSortFilterProxyModel::filterAcceptsRow(int source_row,
 }
 
 VTablesWidget::VTablesWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::VTablesWidget),
       model(new VTableModel(this)),
       proxy(new VTableSortFilterProxyModel(model, this)),
@@ -161,8 +161,8 @@ VTablesWidget::VTablesWidget(MainWindow *main)
     connect(ui->quickFilterView, &QuickFilterView::filterTextChanged, this,
             [this] { ui->quickFilterView->setItemCount(proxy->rowCount()); });
 
-    connect(Core(), &ClutterCore::codeRebased, this, &VTablesWidget::refreshVTables);
-    connect(Core(), &ClutterCore::refreshAll, this, &VTablesWidget::refreshVTables);
+    connect(Core(), &ButterCore::codeRebased, this, &VTablesWidget::refreshVTables);
+    connect(Core(), &ButterCore::refreshAll, this, &VTablesWidget::refreshVTables);
 
     connect(ui->vTableTreeView, &QTreeView::doubleClicked, this,
             &VTablesWidget::onVTableTreeViewDoubleClicked);

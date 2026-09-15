@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME=${1:-Clutter}
+NAME=${1:-Butter}
 
 set -xe
 cd $(dirname "${BASH_SOURCE[0]}")/..

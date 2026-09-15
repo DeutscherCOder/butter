@@ -11,7 +11,7 @@
 
 #include <rz_util/rz_path.h>
 
-const QStringList ColorThemeWorker::clutterSpecificOptions = {
+const QStringList ColorThemeWorker::butterSpecificOptions = {
     "wordHighlight",
     "lineHighlight",
     "searchCurrent",
@@ -106,7 +106,7 @@ QString ColorThemeWorker::save(const Theme &theme, const QString &themeName) con
 
     for (auto it = theme.constBegin(); it != theme.constEnd(); it++) {
         const QColor &color = it.value();
-        if (clutterSpecificOptions.contains(it.key())) {
+        if (butterSpecificOptions.contains(it.key())) {
             fOut.write(QString("#~%1 rgb:%2\n")
                                .arg(it.key(), color.name(QColor::HexArgb).remove('#'))
                                .toUtf8());
@@ -154,8 +154,8 @@ ColorThemeWorker::Theme ColorThemeWorker::getTheme(const QString &themeName) con
         colorFlags = Config()->windowColorIsDark() ? DarkFlag : LightFlag;
     }
 
-    for (auto &it : clutterSpecificOptions) {
-        theme.insert(it, QColor(Configuration::clutterOptionColors[it][colorFlags]));
+    for (auto &it : butterSpecificOptions) {
+        theme.insert(it, QColor(Configuration::butterOptionColors[it][colorFlags]));
     }
 
     if (isCustomTheme(themeName)) {
@@ -164,10 +164,10 @@ ColorThemeWorker::Theme ColorThemeWorker::getTheme(const QString &themeName) con
             return {};
         }
         QStringList sl;
-        for (auto &line : QString(src.readAll()).split('\n', CLUTTER_QT_SKIP_EMPTY_PARTS)) {
+        for (auto &line : QString(src.readAll()).split('\n', BUTTER_QT_SKIP_EMPTY_PARTS)) {
             sl = line.replace("#~", "ec ")
                          .replace("rgb:", "#")
-                         .split(' ', CLUTTER_QT_SKIP_EMPTY_PARTS);
+                         .split(' ', BUTTER_QT_SKIP_EMPTY_PARTS);
             if (sl.size() != 3 || sl[0][0] == '#') {
                 continue;
             }
@@ -218,7 +218,7 @@ QString ColorThemeWorker::importTheme(const QString &file) const
                   "Please make sure you have access to it and try again.")
                 .arg(file);
     } else if (!isTheme) {
-        return tr("File <b>%1</b> is not a Clutter color theme").arg(file);
+        return tr("File <b>%1</b> is not a Butter color theme").arg(file);
     }
 
     const QString name = src.fileName();
@@ -266,14 +266,14 @@ bool ColorThemeWorker::isFileTheme(const QString &filePath, bool *ok) const
 
     const QString colors = "black|red|white|green|magenta|yellow|cyan|blue|gray|none";
     const QString options =
-            (Core()->getThemeKeys() << clutterSpecificOptions).join('|').replace(".", "\\.");
+            (Core()->getThemeKeys() << butterSpecificOptions).join('|').replace(".", "\\.");
 
     const QString pattern =
             QString("((ec\\s+(%1)\\s+(((rgb:|#)[0-9a-fA-F]{3,8})|(%2))))\\s*").arg(options, colors);
     // The below construct mimics the behaviour of QRegexP::exactMatch(), which was here before
     const QRegularExpression regexp("\\A(?:" + pattern + ")\\z");
 
-    for (auto &line : QString(f.readAll()).split('\n', CLUTTER_QT_SKIP_EMPTY_PARTS)) {
+    for (auto &line : QString(f.readAll()).split('\n', BUTTER_QT_SKIP_EMPTY_PARTS)) {
         line.replace("#~", "ec ");
         if (!line.isEmpty() && !regexp.match(line).hasMatch()) {
             *ok = true;

@@ -11,7 +11,7 @@ class MainWindow;
 /**
  * @brief Context menu for @ref DisassemblyWidget and @ref DisassemblerGraphView
  */
-class CLUTTER_EXPORT DisassemblyContextMenu : public QMenu
+class BUTTER_EXPORT DisassemblyContextMenu : public QMenu
 {
     Q_OBJECT
 
@@ -72,7 +72,7 @@ private slots:
 
     /**
      * @brief Executed on selecting an offset from the structureOffsetMenu
-     * Uses the applyStructureOffset() function of ClutterCore to apply the
+     * Uses the applyStructureOffset() function of ButterCore to apply the
      * structure offset
      * @param action The action which trigered the event
      */

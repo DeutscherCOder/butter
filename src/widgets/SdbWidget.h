@@ -1,7 +1,7 @@
 #ifndef SDBWIDGET_H
 #define SDBWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 #include <memory>
 
@@ -15,7 +15,7 @@ class SdbWidget;
 /**
  * @brief SDB browser showing entries as key-value pairs
  */
-class SdbWidget : public ClutterDockWidget
+class SdbWidget : public ButterDockWidget
 {
     Q_OBJECT
 

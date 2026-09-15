@@ -9,11 +9,11 @@ if (-not (Test-Path -Path 'jsdec' -PathType Container)) {
 cd jsdec
 $jsdecdir = (Get-Item .).FullName
 
-# Clutter keeps a small compatibility patch for jsdec so it builds against the
-# rebranded headers (CutterCore lives in <Cutter.h> now). See
+# Butter keeps a small compatibility patch for jsdec so it builds against the
+# rebranded headers (ButterCore lives in <Butter.h> now). See
 # dist/patch_jsdec.cmake. The patch is idempotent, so re-runs are safe.
 & cmake -DSRC="$jsdecdir" -P "$PSScriptRoot\patch_jsdec.cmake"
-if ($LASTEXITCODE -ne 0) { throw "jsdec: Clutter patch step failed" }
+if ($LASTEXITCODE -ne 0) { throw "jsdec: Butter patch step failed" }
 
 & meson.exe setup --buildtype=release -Dbuild_type=cutter "$jsdecdir\build_lib"
 ninja -C "$jsdecdir\build_lib"

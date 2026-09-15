@@ -1,6 +1,6 @@
 #include "EditInstructionDialog.h"
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "ui_EditInstructionDialog.h"
 
 #include <QCheckBox>
@@ -65,11 +65,11 @@ void EditInstructionDialog::updatePreview(const QString &input)
         ui->instructionLabel->setText("");
         return;
     } else if (editMode == EDIT_BYTES) {
-        const QByteArray data = ClutterCore::hexStringToBytes(input);
+        const QByteArray data = ButterCore::hexStringToBytes(input);
         result = Core()->disassemble(data).replace('\n', "; ");
     } else if (editMode == EDIT_TEXT) {
         const QByteArray data = Core()->assemble(input);
-        result = ClutterCore::bytesToHexString(data).trimmed();
+        result = ButterCore::bytesToHexString(data).trimmed();
     }
 
     if (result.isEmpty() || result.contains("invalid")) {

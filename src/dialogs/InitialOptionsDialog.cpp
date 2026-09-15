@@ -1,10 +1,10 @@
 #include "InitialOptionsDialog.h"
 
-#include "ClutterApplication.h"
+#include "ButterApplication.h"
 #include "common/AnalysisTask.h"
 #include "common/AsyncTask.h"
 #include "common/Helpers.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 #include "dialogs/AsyncTaskDialog.h"
 #include "dialogs/NewFileDialog.h"
@@ -369,7 +369,7 @@ void InitialOptionsDialog::setupAndStartAnalysis()
 
     options.filename = main->getFilename();
     if (!options.filename.isEmpty()) {
-        main->setWindowTitle("Clutter – " + options.filename);
+        main->setWindowTitle("Butter – " + options.filename);
     }
     options.shellcode = this->shellcode;
 
@@ -449,7 +449,7 @@ void InitialOptionsDialog::setupAndStartAnalysis()
 
     done(0);
 
-    static_cast<ClutterApplication *>(qApp)->setInitialOptions(options);
+    static_cast<ButterApplication *>(qApp)->setInitialOptions(options);
 }
 
 void InitialOptionsDialog::onOkButtonClicked()

@@ -1,7 +1,7 @@
 #ifndef EDITVARIABLESDIALOG_H
 #define EDITVARIABLESDIALOG_H
 
-#include "ClutterDescriptions.h"
+#include "ButterDescriptions.h"
 
 #include <QDialog>
 

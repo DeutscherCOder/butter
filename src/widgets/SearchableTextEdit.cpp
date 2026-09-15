@@ -1,7 +1,7 @@
 #include "SearchableTextEdit.h"
 
 #include "Configuration.h"
-#include "ClutterSearchable.h"
+#include "ButterSearchable.h"
 
 #include <QRegularExpression>
 

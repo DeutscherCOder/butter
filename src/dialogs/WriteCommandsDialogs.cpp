@@ -1,6 +1,6 @@
 #include "WriteCommandsDialogs.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "ui_Base64EnDecodedWriteDialog.h"
 #include "ui_DuplicateFromOffsetDialog.h"
 #include "ui_IncrementDecrementDialog.h"

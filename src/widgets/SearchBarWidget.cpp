@@ -1,6 +1,6 @@
 #include "SearchBarWidget.h"
 
-#include "ClutterSearchable.h"
+#include "ButterSearchable.h"
 #include "shortcuts/ShortcutManager.h"
 #include "ui_SearchBarWidget.h"
 

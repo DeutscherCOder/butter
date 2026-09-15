@@ -1,7 +1,7 @@
 
 #include "SyntaxHighlighter.h"
 
-#ifdef CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING
+#ifdef BUTTER_ENABLE_KSYNTAXHIGHLIGHTING
 
 #    include "Configuration.h"
 

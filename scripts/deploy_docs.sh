@@ -2,8 +2,8 @@
 
 cd $(dirname "${BASH_SOURCE[0]}")/..
 
-clutter_timestamp=$(git show -s --format=%ct)
-clutter_commit="$(git show -s --format="%H %s")"
+butter_timestamp=$(git show -s --format=%ct)
+butter_commit="$(git show -s --format="%H %s")"
 
 echo "Cloning current cutter.re"
 
@@ -18,13 +18,13 @@ echo "Committing new changes"
 
 cd cutter.re || exit 1
 docs_timestamp=$(git show -s --format=%ct)
-if [ $docs_timestamp -ge $clutter_timestamp ]; then
-	echo "Last commit on cutter.re is newer than this commit on clutter. Skipping."
+if [ $docs_timestamp -ge $butter_timestamp ]; then
+	echo "Last commit on cutter.re is newer than this commit on butter. Skipping."
 	exit 0
 fi
 
 git add . || exit 1
 git diff --cached --quiet && echo "No changes." && exit 0
-printf "Update docs from rizinorg/cutter\n\nOriginal Commit:\n$clutter_commit" | git commit -F -
+printf "Update docs from rizinorg/cutter\n\nOriginal Commit:\n$butter_commit" | git commit -F -
 git push origin master || exit 1
 

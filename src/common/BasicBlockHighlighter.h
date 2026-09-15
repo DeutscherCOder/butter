@@ -3,7 +3,7 @@
 
 class BasicBlockHighlighter;
 
-#include "Clutter.h"
+#include "Butter.h"
 
 #include <map>
 

@@ -2,7 +2,7 @@
 
 #include "common/ColorThemeWorker.h"
 #include "common/Configuration.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 ColorThemeComboBox::ColorThemeComboBox(QWidget *parent) : QComboBox(parent), showOnlyCustom(false)
 {
@@ -22,7 +22,7 @@ void ColorThemeComboBox::updateFromConfig(bool interfaceThemeChanged)
     clear();
     for (const QString &theme : themes) {
         if (ThemeWorker().isCustomTheme(theme) || !Configuration::relevantThemes[theme]
-            || (Configuration::clutterInterfaceThemesList()[curInterfaceThemeIndex].flag
+            || (Configuration::butterInterfaceThemesList()[curInterfaceThemeIndex].flag
                 & Configuration::relevantThemes[theme])) {
             addItem(theme);
         }
@@ -30,7 +30,7 @@ void ColorThemeComboBox::updateFromConfig(bool interfaceThemeChanged)
 
     QString curTheme = interfaceThemeChanged
             ? Config()->getLastThemeOf(
-                      Configuration::clutterInterfaceThemesList()[curInterfaceThemeIndex])
+                      Configuration::butterInterfaceThemesList()[curInterfaceThemeIndex])
             : Config()->getColorTheme();
     const int index = findText(curTheme);
 
@@ -55,12 +55,12 @@ void ColorThemeComboBox::onCurrentIndexChanged(int index)
     const QString theme = itemText(index);
 
     int curQtThemeIndex = Config()->getInterfaceTheme();
-    if (curQtThemeIndex >= Configuration::clutterInterfaceThemesList().size()) {
+    if (curQtThemeIndex >= Configuration::butterInterfaceThemesList().size()) {
         curQtThemeIndex = 0;
         Config()->setInterfaceTheme(curQtThemeIndex);
     }
 
-    Config()->setLastThemeOf(Configuration::clutterInterfaceThemesList()[curQtThemeIndex], theme);
+    Config()->setLastThemeOf(Configuration::butterInterfaceThemesList()[curQtThemeIndex], theme);
     Config()->setColorTheme(theme);
 }
 

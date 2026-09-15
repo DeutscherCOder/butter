@@ -1,6 +1,6 @@
 #include "Dashboard.h"
 
-#include "ClutterTreeView.h"
+#include "ButterTreeView.h"
 #include "common/Helpers.h"
 #include "common/Json.h"
 #include "core/MainWindow.h"
@@ -19,11 +19,11 @@
 #include <QStringList>
 #include <QTreeWidget>
 
-Dashboard::Dashboard(MainWindow *main) : ClutterDockWidget(main), ui(new Ui::Dashboard)
+Dashboard::Dashboard(MainWindow *main) : ButterDockWidget(main), ui(new Ui::Dashboard)
 {
     ui->setupUi(this);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &Dashboard::updateContents);
+    connect(Core(), &ButterCore::refreshAll, this, &Dashboard::updateContents);
 
     connect(ui->certificateButton, &QPushButton::clicked, this,
             &Dashboard::onCertificateButtonClicked);
@@ -100,7 +100,7 @@ void Dashboard::updateContents()
 
     // Add hashes as a pair of Hash Name : Hash Value.
     if (hashes != nullptr) {
-        for (const auto &hash : ClutterPVector<RzBinFileHash>(hashes)) {
+        for (const auto &hash : ButterPVector<RzBinFileHash>(hashes)) {
             // Create a bold QString with the hash name uppercased
             const QString label = QString("<b>%1:</b>").arg(QString(hash->type).toUpper());
 
@@ -143,7 +143,7 @@ void Dashboard::updateContents()
     if (libs) {
         QString libText;
         bool first = true;
-        for (const auto &lib : ClutterPVector<char>(libs)) {
+        for (const auto &lib : ButterPVector<char>(libs)) {
             if (!first) {
                 libText.append("\n");
             }
@@ -165,9 +165,9 @@ void Dashboard::onCertificateButtonClicked()
     QDialog dialog(this);
     auto view = new QTreeWidget(&dialog);
     view->setHeaderLabels({ tr("Key"), tr("Value") });
-    view->addTopLevelItem(Clutter::jsonTreeWidgetItem(QString("<%1>").arg(tr("root")),
+    view->addTopLevelItem(Butter::jsonTreeWidgetItem(QString("<%1>").arg(tr("root")),
                                                      Core()->getSignatureInfo()));
-    ClutterTreeView::applyClutterStyle(view);
+    ButterTreeView::applyButterStyle(view);
     view->expandAll();
     view->resize(900, 600);
     QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);

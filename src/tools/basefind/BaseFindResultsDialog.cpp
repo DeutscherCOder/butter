@@ -5,8 +5,8 @@
 #include <QClipboard>
 #include <QMessageBox>
 
-#include <ClutterApplication.h>
-#include <core/Clutter.h>
+#include <ButterApplication.h>
+#include <core/Butter.h>
 #include <utility>
 
 BaseFindResultsModel::BaseFindResultsModel(QList<BasefindResultDescription> list, QObject *parent)
@@ -84,8 +84,8 @@ BaseFindResultsDialog::BaseFindResultsDialog(QList<BasefindResultDescription> re
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     actionCopyCandidate = new QAction(tr("Copy %1"), this);
-    actionSetLoadAddr = new QAction(tr("Reopen Clutter with base address as %1"), this);
-    actionSetMapAddr = new QAction(tr("Reopen Clutter with map address as %1"), this);
+    actionSetLoadAddr = new QAction(tr("Reopen Butter with base address as %1"), this);
+    actionSetMapAddr = new QAction(tr("Reopen Butter with map address as %1"), this);
 
     connect(ui->tableView, &QWidget::customContextMenuRequested, this,
             &BaseFindResultsDialog::showItemContextMenu);
@@ -112,8 +112,8 @@ void BaseFindResultsDialog::showItemContextMenu(const QPoint &pt)
         candidate = entry.candidate;
         auto addr = QString::asprintf("%#010llx", static_cast<unsigned long long>(candidate));
         actionCopyCandidate->setText(tr("Copy %1").arg(addr));
-        actionSetLoadAddr->setText(tr("Reopen Clutter with base address as %1").arg(addr));
-        actionSetMapAddr->setText(tr("Reopen Clutter with map address as %1").arg(addr));
+        actionSetLoadAddr->setText(tr("Reopen Butter with base address as %1").arg(addr));
+        actionSetMapAddr->setText(tr("Reopen Butter with map address as %1").arg(addr));
         blockMenu->exec(this->mapToGlobal(pt));
     }
 }
@@ -126,38 +126,38 @@ void BaseFindResultsDialog::onActionCopyLine() const
 
 void BaseFindResultsDialog::onActionSetLoadAddr() const
 {
-    auto clutter = static_cast<ClutterApplication *>(qApp);
-    auto options = clutter->getInitialOptions();
+    auto butter = static_cast<ButterApplication *>(qApp);
+    auto options = butter->getInitialOptions();
     auto oldValue = options.binLoadAddr;
 
     // override options to generate correct args
     options.binLoadAddr = candidate;
-    clutter->setInitialOptions(options);
-    auto args = clutter->getArgs();
+    butter->setInitialOptions(options);
+    auto args = butter->getArgs();
 
     // revert back options
     options.binLoadAddr = oldValue;
-    clutter->setInitialOptions(options);
+    butter->setInitialOptions(options);
 
-    clutter->launchNewInstance(args);
+    butter->launchNewInstance(args);
 }
 
 void BaseFindResultsDialog::onActionSetMapAddr() const
 {
-    auto clutter = static_cast<ClutterApplication *>(qApp);
-    auto options = clutter->getInitialOptions();
+    auto butter = static_cast<ButterApplication *>(qApp);
+    auto options = butter->getInitialOptions();
     auto oldValue = options.mapAddr;
 
     // override options to generate correct args
     options.mapAddr = candidate;
-    clutter->setInitialOptions(options);
-    auto args = clutter->getArgs();
+    butter->setInitialOptions(options);
+    auto args = butter->getArgs();
 
     // revert back options
     options.mapAddr = oldValue;
-    clutter->setInitialOptions(options);
+    butter->setInitialOptions(options);
 
-    clutter->launchNewInstance(args);
+    butter->launchNewInstance(args);
 }
 
 BaseFindResultsDialog::~BaseFindResultsDialog() {}

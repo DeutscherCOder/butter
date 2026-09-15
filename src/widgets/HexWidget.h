@@ -1,7 +1,7 @@
 #ifndef HEXWIDGET_H
 #define HEXWIDGET_H
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "common/IOModesController.h"
 #include "dialogs/HexdumpRangeDialog.h"
 

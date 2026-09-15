@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Minimal MCP client, used to prove clutter_mcp.py works end to end.
+"""Minimal MCP client, used to prove butter_mcp.py works end to end.
 
 Speaks the same JSON-RPC-over-stdio protocol an AI client does, so it exercises
 exactly the path an agent takes.
@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SERVER = os.path.join(HERE, "clutter_mcp.py")
+SERVER = os.path.join(HERE, "butter_mcp.py")
 REPO = os.path.dirname(HERE)
 
 
@@ -79,7 +79,7 @@ def main():
     init = c.send("initialize", {
         "protocolVersion": "2025-06-18",
         "capabilities": {},
-        "clientInfo": {"name": "clutter-test-client", "version": "1.0"},
+        "clientInfo": {"name": "butter-test-client", "version": "1.0"},
     })
     show("initialize", init)
     c.send("notifications/initialized", notify=True)
@@ -91,7 +91,7 @@ def main():
     show("open", c.call("open", {"path": target}))
     show("analyze", c.call("analyze", {"level": "deep"}))
     show("functions", c.call("functions", {"filter": "", "limit": 8}))
-    show("strings(filter=CLUTTER)", c.call("strings", {"filter": "CLUTTER", "min_len": 6}))
+    show("strings(filter=BUTTER)", c.call("strings", {"filter": "BUTTER", "min_len": 6}))
     show("search(hidden magic 'CKR1')", c.call("search", {"pattern": "CKR1"}))
 
     funcs = c.call("functions", {"filter": "main", "limit": 5}).get("functions", [])

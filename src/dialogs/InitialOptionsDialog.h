@@ -12,7 +12,7 @@ namespace Ui {
 class InitialOptionsDialog;
 }
 
-class ClutterCore;
+class ButterCore;
 class MainWindow;
 class InitialOptionsDialog : public QDialog
 {

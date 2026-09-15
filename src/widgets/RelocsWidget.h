@@ -1,8 +1,8 @@
 #ifndef RELOCSWIDGET_H
 #define RELOCSWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "widgets/ListDockWidget.h"
 
 #include <QAbstractTableModel>

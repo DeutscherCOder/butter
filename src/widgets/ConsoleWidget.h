@@ -1,7 +1,7 @@
 #ifndef CONSOLEWIDGET_H
 #define CONSOLEWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 #include "SearchableDockWidget.h"
 #include "common/CommandTask.h"
 #include "core/MainWindow.h"

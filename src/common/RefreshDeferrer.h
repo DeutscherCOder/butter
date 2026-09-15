@@ -4,7 +4,7 @@
 
 #include <QObject>
 
-class ClutterDockWidget;
+class ButterDockWidget;
 class RefreshDeferrer;
 
 using RefreshDeferrerParams = void *;
@@ -96,7 +96,7 @@ protected:
  * visible. It contains an optional RefreshDeferrerAccumulator, which can be used to accumulate
  * incoming events while refreshing is deferred.
  *
- * Example (don't write it like this in practice, use the convenience methods in ClutterDockWidget):
+ * Example (don't write it like this in practice, use the convenience methods in ButterDockWidget):
  * ```
  * // in the constructor of a widget
  * this->refreshDeferrer = new RefreshDeferrer(new ReplacingRefreshDeferrerAccumulator(false),
@@ -127,7 +127,7 @@ class RefreshDeferrer : public QObject
     Q_OBJECT
 
 private:
-    ClutterDockWidget *dockWidget = nullptr;
+    ButterDockWidget *dockWidget = nullptr;
     RefreshDeferrerAccumulator *acc;
     bool dirty = false;
 
@@ -139,7 +139,7 @@ public:
     ~RefreshDeferrer() override;
 
     bool attemptRefresh(RefreshDeferrerParams params);
-    void registerFor(ClutterDockWidget *dockWidget);
+    void registerFor(ButterDockWidget *dockWidget);
 
 signals:
     void refreshNow(const RefreshDeferrerParamsResult paramsResult);

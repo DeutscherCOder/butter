@@ -1,7 +1,7 @@
 #ifndef BASICINSTRUCTIONHIGHLIGHTER_H
 #define BASICINSTRUCTIONHIGHLIGHTER_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QColor>
 

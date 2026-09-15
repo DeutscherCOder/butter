@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Butter
+GenericName=Reverse Engineering Platform
+Comment=Reverse Engineering Platform powered by rizin
+Exec=butter
+Icon=butter
+Categories=Development;

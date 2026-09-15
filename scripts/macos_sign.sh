@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Script to be run manually on a maintainer's machine to re-sign
-# and notarize Clutter dmgs created by the CI with Developer ID.
+# and notarize Butter dmgs created by the CI with Developer ID.
 #
 # https://developer.apple.com/forums/thread/701514
 
@@ -12,14 +12,14 @@ usage() {
 	echo "macos_sign.sh [command] ..."
 	echo ""
 	echo "Commands:"
-	echo "  sign_bundle [Clutter.app]	 Sign the given bundle in-place"
-	echo "  notarize_bundle [Clutter.app] Notarize the given bundle after it has been signed and staple the ticket"
-	echo "  resign_dmg [Clutter.dmg]	  Sign and notarize the Clutter.app in the given dmg into a new dmg"
+	echo "  sign_bundle [Butter.app]	 Sign the given bundle in-place"
+	echo "  notarize_bundle [Butter.app] Notarize the given bundle after it has been signed and staple the ticket"
+	echo "  resign_dmg [Butter.dmg]	  Sign and notarize the Butter.app in the given dmg into a new dmg"
 	exit 1
 }
 
 
-TARGET=Clutter.app
+TARGET=Butter.app
 IDENT="Developer ID Application: Florian Märkl (7C89959B9X)"
 ENTITLEMENTS="$(dirname "${BASH_SOURCE[0]}")/../dist/macos/Entitlements.plist"
 
@@ -84,8 +84,8 @@ notarize_bundle() {
 
 	echo_step "Notarizing ${TARGET}"
 
-	ee ditto -c -k --keepParent ${TARGET} Clutter-notarize-submit.zip
-	ee xcrun notarytool submit --wait --timeout 30m ${AUTH} Clutter-notarize-submit.zip
+	ee ditto -c -k --keepParent ${TARGET} Butter-notarize-submit.zip
+	ee xcrun notarytool submit --wait --timeout 30m ${AUTH} Butter-notarize-submit.zip
 	# TODO: if possible, fail the script here if the notarization failed. Unfortunately notarytool does not
 	# return a non-zero exit code by default on failure, so it does not work automatically yet.
 	# However, the staple below will still fail if the submission was not notarized, so we still detect it.
@@ -94,29 +94,29 @@ notarize_bundle() {
 
 resign_dmg() {
 	local TARGET="$1"
-	echo_step "Mounting temporary rw variant of ${TARGET} to Clutter-rw/"
-	rm -f Clutter-rw.dmg
-	ee hdiutil convert -format UDRW -o Clutter-rw.dmg "${TARGET}"
-	ee hdiutil resize -size 4G Clutter-rw.dmg # ensure enough space for temporary files during codesign
-	mkdir -p Clutter-rw
-	ee hdiutil attach Clutter-rw.dmg -mount required -mountpoint Clutter-rw
+	echo_step "Mounting temporary rw variant of ${TARGET} to Butter-rw/"
+	rm -f Butter-rw.dmg
+	ee hdiutil convert -format UDRW -o Butter-rw.dmg "${TARGET}"
+	ee hdiutil resize -size 4G Butter-rw.dmg # ensure enough space for temporary files during codesign
+	mkdir -p Butter-rw
+	ee hdiutil attach Butter-rw.dmg -mount required -mountpoint Butter-rw
 	unmount() {
-		ee hdiutil detach Clutter-rw
+		ee hdiutil detach Butter-rw
 	}
 	trap unmount EXIT
-	sign_bundle Clutter-rw/Clutter.app
-	notarize_bundle Clutter-rw/Clutter.app
+	sign_bundle Butter-rw/Butter.app
+	notarize_bundle Butter-rw/Butter.app
 	unmount
 	trap - EXIT
 	# Remove temporary signing space and restore HFS+ volume consistency.
-	ee hdiutil resize -size min Clutter-rw.dmg
+	ee hdiutil resize -size min Butter-rw.dmg
 	OUTPUT="${1%.*}-signed.dmg"
 	echo_step "Creating final read-only ${OUTPUT}"
-	ee hdiutil convert -format UDZO -o "${OUTPUT}" Clutter-rw.dmg
+	ee hdiutil convert -format UDZO -o "${OUTPUT}" Butter-rw.dmg
 	echo_step "Verifying filesystem in ${OUTPUT}"
-	ee hdiutil attach "${OUTPUT}" -readonly -nobrowse -noautofsck -mountpoint Clutter-rw
+	ee hdiutil attach "${OUTPUT}" -readonly -nobrowse -noautofsck -mountpoint Butter-rw
 	trap unmount EXIT
-	ee diskutil verifyVolume Clutter-rw
+	ee diskutil verifyVolume Butter-rw
 	unmount
 	trap - EXIT
 }

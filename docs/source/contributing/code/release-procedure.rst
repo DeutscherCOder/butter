@@ -3,7 +3,7 @@ Release Procedure
 
 1. Update translations submodule `<https://github.com/rizinorg/cutter-translations>`_
     1. The latest archive from Crowdin should already be in the repository, if not make sure to merge any automated Pull Request from Crowdin (e.g. https://github.com/rizinorg/cutter-translations/pull/9)
-    2. Update submodule in clutter
+    2. Update submodule in butter
 2. Merge the current state of dev into stable. This can happen even earlier in order to feature-freeze the release while keeping development on dev alive. The rizin submodule on stable should point to a commit of stable in rizin and dev to a commit in dev.
 3. Lock rzghidra and rzdec versions downloaded by packaging scripts. Specify a tag or commit hash.
 4. Update version
@@ -11,7 +11,7 @@ Release Procedure
     #. docs/sourc/conf.py
     #. docs/source/index.rst
     #. CMakeLists.txt
-    #. Clutter.appdata.xml
+    #. Butter.appdata.xml
     #. To be safe, search the code base for the previous version number.
 5. Create a tag for the release candidate. For example, for the `v1.11.0` release you'd do something like this:
     #. ``git tag v1.11.0-rc1``
@@ -55,4 +55,4 @@ If it makes sense repeat the step multiple times at different offsets and click 
    * Start debugging
    * Go to main using function widget, make sure relocation was done correctly and you see code instead of unmapped memory and breakpoint is where you placed
    * Click continue until you hit breakpoint in main
-* Delete clutter settings file, and test that clean start works and layout isn't broken
+* Delete butter settings file, and test that clean start works and layout isn't broken

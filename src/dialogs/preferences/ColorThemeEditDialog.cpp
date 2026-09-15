@@ -130,7 +130,7 @@ void ColorThemeEditDialog::colorOptionChanged(const QColor &newColor)
     ui->colorThemeListView->model()->setData(currIndex, QVariant::fromValue(currOption));
 
     Config()->setColor(currOption.optionName, currOption.color);
-    if (!ColorThemeWorker::clutterSpecificOptions.contains(currOption.optionName)) {
+    if (!ColorThemeWorker::butterSpecificOptions.contains(currOption.optionName)) {
         Core()->setColor(currOption.optionName, currOption.color.name());
     }
     previewDisasmWidget->colorsUpdatedSlot();

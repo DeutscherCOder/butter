@@ -6,9 +6,9 @@
 #include <QIntValidator>
 #include <QMessageBox>
 
-using namespace Clutter;
+using namespace Butter;
 
-LayoutManager::LayoutManager(QMap<QString, Clutter::ClutterLayout> &layouts, QWidget *parent)
+LayoutManager::LayoutManager(QMap<QString, Butter::ButterLayout> &layouts, QWidget *parent)
     : QDialog(parent), ui(new Ui::LayoutManager), layouts(layouts)
 {
     ui->setupUi(this);
@@ -25,7 +25,7 @@ void LayoutManager::refreshNameList(const QString &selection)
 {
     ui->layoutSelector->clear();
     for (auto it = layouts.begin(), end = layouts.end(); it != end; ++it) {
-        if (!Clutter::isBuiltinLayoutName(it.key())) {
+        if (!Butter::isBuiltinLayoutName(it.key())) {
             ui->layoutSelector->addItem(it.key());
         }
     }

@@ -1,15 +1,15 @@
 #ifndef SEARCHABLEDOCKWIDGET_H
 #define SEARCHABLEDOCKWIDGET_H
 
-#include "ClutterDockWidget.h"
-#include "ClutterSearchable.h"
+#include "ButterDockWidget.h"
+#include "ButterSearchable.h"
 
 class SearchBarWidget;
 
 /**
  * @brief A dock widget that includes a search bar
  */
-class CLUTTER_EXPORT SearchableDockWidget : public ClutterDockWidget, public ClutterSearchableI
+class BUTTER_EXPORT SearchableDockWidget : public ButterDockWidget, public ButterSearchableI
 {
     Q_OBJECT
 

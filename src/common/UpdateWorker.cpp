@@ -1,7 +1,7 @@
 #include "UpdateWorker.h"
 
-#if CLUTTER_UPDATE_WORKER_AVAILABLE
-#    include "ClutterConfig.h"
+#if BUTTER_UPDATE_WORKER_AVAILABLE
+#    include "ButterConfig.h"
 #    include "common/Configuration.h"
 
 #    include <QApplication>
@@ -22,7 +22,7 @@
 #    include <QtNetwork/QNetworkRequest>
 #endif
 
-#if CLUTTER_UPDATE_WORKER_AVAILABLE
+#if BUTTER_UPDATE_WORKER_AVAILABLE
 UpdateWorker::UpdateWorker(QObject *parent) : QObject(parent), pending(false)
 {
     connect(&t, &QTimer::timeout, this, [this]() {
@@ -56,8 +56,8 @@ void UpdateWorker::showUpdateDialog(bool showDontCheckForUpdatesButton)
 {
     QMessageBox mb;
     mb.setWindowTitle(tr("Version control"));
-    mb.setText(tr("There is an update available for Clutter.<br/>") + "<b>" + tr("Current version:")
-               + "</b> " CLUTTER_VERSION_FULL "<br/>" + "<b>" + tr("Latest version:") + "</b> "
+    mb.setText(tr("There is an update available for Butter.<br/>") + "<b>" + tr("Current version:")
+               + "</b> " BUTTER_VERSION_FULL "<br/>" + "<b>" + tr("Latest version:") + "</b> "
                + latestVersion.toString() + "<br/><br/>"
                + tr("To update, please check the link:<br/>")
                + QString("<a href=\"https://github.com/rizinorg/cutter/releases/tag/v%1\">"
@@ -101,6 +101,6 @@ void UpdateWorker::serveVersionCheckReply()
 
 QVersionNumber UpdateWorker::currentVersionNumber()
 {
-    return QVersionNumber(CLUTTER_VERSION_MAJOR, CLUTTER_VERSION_MINOR, CLUTTER_VERSION_PATCH);
+    return QVersionNumber(BUTTER_VERSION_MAJOR, BUTTER_VERSION_MINOR, BUTTER_VERSION_PATCH);
 }
-#endif // CLUTTER_UPDATE_WORKER_AVAILABLE
+#endif // BUTTER_UPDATE_WORKER_AVAILABLE

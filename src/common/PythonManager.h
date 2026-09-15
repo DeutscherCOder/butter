@@ -1,7 +1,7 @@
 #ifndef PYTHONMANAGER_H
 #define PYTHONMANAGER_H
 
-#ifdef CLUTTER_ENABLE_PYTHON
+#ifdef BUTTER_ENABLE_PYTHON
 
 #    include <QObject>
 
@@ -53,6 +53,6 @@ private:
 
 #    define Python() (PythonManager::getInstance())
 
-#endif // CLUTTER_ENABLE_PYTHON
+#endif // BUTTER_ENABLE_PYTHON
 
 #endif // PYTHONMANAGER_H

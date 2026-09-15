@@ -19,9 +19,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Clutter'
-copyright = '2026, The Clutter Developers'
-author = 'The Clutter Developers'
+project = 'Butter'
+copyright = '2026, The Butter Developers'
+author = 'The Butter Developers'
 
 # The short X.Y version
 version = '2.5'
@@ -80,8 +80,8 @@ autosectionlabel_maxdepth = 2
 
 # -- Options for Breathe -----------------------------------------------------
 
-breathe_projects = { 'clutter': '../doxygen-out/xml' }
-breathe_default_project = 'clutter'
+breathe_projects = { 'butter': '../doxygen-out/xml' }
+breathe_default_project = 'butter'
 breathe_default_members = ('members', 'undoc-members')
 
 # -- Options for HTML output -------------------------------------------------
@@ -89,9 +89,9 @@ breathe_default_members = ('members', 'undoc-members')
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'clutter_theme'
+html_theme = 'butter_theme'
 html_theme_path = ['..']
-html_logo = '../../src/img/clutter.ico'
+html_logo = '../../src/img/butter.ico'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -105,11 +105,11 @@ html_logo = '../../src/img/clutter.ico'
 # html_static_path = ['static']
 
 html_js_files = [
-    'clutter.js',
+    'butter.js',
 ]
 
 html_css_files = [
-    'clutter.css',
+    'butter.css',
     'admonitions.css'
 ]
 
@@ -129,7 +129,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ClutterDoc'
+htmlhelp_basename = 'ButterDoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -156,8 +156,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Clutter.tex', 'Clutter Documentation',
-     'The Clutter Developers', 'manual'),
+    (master_doc, 'Butter.tex', 'Butter Documentation',
+     'The Butter Developers', 'manual'),
 ]
 
 
@@ -166,7 +166,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'clutter', 'Clutter Documentation',
+    (master_doc, 'butter', 'Butter Documentation',
      [author], 1)
 ]
 
@@ -177,8 +177,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Clutter', 'Clutter Documentation',
-     author, 'Clutter', 'One line description of project.',
+    (master_doc, 'Butter', 'Butter Documentation',
+     author, 'Butter', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -6,8 +6,8 @@
 #include <QApplication>
 #include <QMessageBox>
 
-#define CLUTTER_SETTINGS_VERSION_CURRENT 7
-#define CLUTTER_SETTINGS_VERSION_KEY "version"
+#define BUTTER_SETTINGS_VERSION_CURRENT 7
+#define BUTTER_SETTINGS_VERSION_KEY "version"
 
 #define THEME_VERSION_CURRENT 2
 #define THEME_VERSION_KEY "theme_version"
@@ -16,7 +16,7 @@
  * How Settings migrations work:
  *
  * Every time settings are changed in a way that needs migration,
- * CLUTTER_SETTINGS_VERSION_CURRENT is raised by 1 and a function migrateSettingsToX
+ * BUTTER_SETTINGS_VERSION_CURRENT is raised by 1 and a function migrateSettingsToX
  * is implemented and added to initializeSettings().
  * This function takes care of migrating from EXACTLY version X-1 to X.
  */
@@ -24,11 +24,11 @@
 namespace {
 
 const char preRizinOrg[] = "RadareOrg";
-const char preRizinApp[] = "Clutter";
-const int lastR2ClutterSettingVersion = 6;
+const char preRizinApp[] = "Butter";
+const int lastR2ButterSettingVersion = 6;
 
 /**
- * @brief Migrate Settings used before Clutter 1.8
+ * @brief Migrate Settings used before Butter 1.8
  *
  * @return whether any settings have been migrated
  */
@@ -37,7 +37,7 @@ bool migrateSettingsPre18(QSettings &newSettings)
     if (newSettings.value("settings_migrated", false).toBool()) {
         return false;
     }
-    QSettings oldSettings(QSettings::NativeFormat, QSettings::Scope::UserScope, "Clutter", "Clutter");
+    QSettings oldSettings(QSettings::NativeFormat, QSettings::Scope::UserScope, "Butter", "Butter");
     const QStringList allKeys = oldSettings.allKeys();
     if (allKeys.isEmpty()) {
         return false;
@@ -154,7 +154,7 @@ void migrateSettingsTo7(QSettings &settings)
 
 void removeObsoleteOptionsFromCustomThemes()
 {
-    const QStringList options = Core()->getThemeKeys() << ColorThemeWorker::clutterSpecificOptions;
+    const QStringList options = Core()->getThemeKeys() << ColorThemeWorker::butterSpecificOptions;
     const QStringList themes = Core()->getColorThemes();
     for (const auto &themeName : themes) {
         if (!ThemeWorker().isCustomTheme(themeName)) {
@@ -173,10 +173,10 @@ void removeObsoleteOptionsFromCustomThemes()
 
 void syncCustomThemes()
 {
-    const QStringList options = Core()->getThemeKeys() << ColorThemeWorker::clutterSpecificOptions;
+    const QStringList options = Core()->getThemeKeys() << ColorThemeWorker::butterSpecificOptions;
     const QStringList themes = Core()->getColorThemes();
     const ColorThemeWorker::Theme lightTheme =
-            ThemeWorker().getTheme("clutter"); // default light theme
+            ThemeWorker().getTheme("butter"); // default light theme
     const ColorThemeWorker::Theme darkTheme = ThemeWorker().getTheme("ayu"); // default dark theme
 
     // note that there was no entry for angui.navbar.str (as it was a typo) so the
@@ -228,11 +228,11 @@ void importOldSettings()
 {
     // QSettings
     QSettings::setDefaultFormat(QSettings::IniFormat);
-    const QSettings r2ClutterSettings(QSettings::IniFormat, QSettings::Scope::UserScope, preRizinOrg,
+    const QSettings r2ButterSettings(QSettings::IniFormat, QSettings::Scope::UserScope, preRizinOrg,
                                      preRizinApp);
     QSettings newSettings;
-    for (const auto &key : r2ClutterSettings.allKeys()) {
-        newSettings.setValue(key, r2ClutterSettings.value(key));
+    for (const auto &key : r2ButterSettings.allKeys()) {
+        newSettings.setValue(key, r2ButterSettings.value(key));
     }
 
     // Color Themes
@@ -260,21 +260,21 @@ void importOldSettings()
 
 } // End Anonymous namespace
 
-void Clutter::initializeSettings()
+void Butter::initializeSettings()
 {
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QSettings settings;
 
-    const int settingsVersion = settings.value(CLUTTER_SETTINGS_VERSION_KEY, 0).toInt();
+    const int settingsVersion = settings.value(BUTTER_SETTINGS_VERSION_KEY, 0).toInt();
     if (settingsVersion == 0) {
         migrateSettingsPre18(settings);
     }
 
     if (settings.allKeys().length() > 0) {
-        if (settingsVersion > CLUTTER_SETTINGS_VERSION_CURRENT) {
+        if (settingsVersion > BUTTER_SETTINGS_VERSION_CURRENT) {
             qWarning() << "Settings have a higher version than current! Skipping migration.";
         } else if (settingsVersion >= 0) {
-            for (int v = settingsVersion + 1; v <= CLUTTER_SETTINGS_VERSION_CURRENT; v++) {
+            for (int v = settingsVersion + 1; v <= BUTTER_SETTINGS_VERSION_CURRENT; v++) {
                 qInfo() << "Migrating Settings to Version" << v;
                 switch (v) {
                 case 1:
@@ -304,10 +304,10 @@ void Clutter::initializeSettings()
             }
         }
     }
-    settings.setValue(CLUTTER_SETTINGS_VERSION_KEY, CLUTTER_SETTINGS_VERSION_CURRENT);
+    settings.setValue(BUTTER_SETTINGS_VERSION_KEY, BUTTER_SETTINGS_VERSION_CURRENT);
 }
 
-void Clutter::migrateThemes()
+void Butter::migrateThemes()
 {
     QSettings settings;
     const int themeVersion = settings.value(THEME_VERSION_KEY, 0).toInt();
@@ -332,7 +332,7 @@ void Clutter::migrateThemes()
     settings.setValue(THEME_VERSION_KEY, THEME_VERSION_CURRENT);
 }
 
-bool Clutter::shouldOfferSettingImport()
+bool Butter::shouldOfferSettingImport()
 {
     QSettings::setDefaultFormat(QSettings::IniFormat);
     const QSettings settings;
@@ -340,27 +340,27 @@ bool Clutter::shouldOfferSettingImport()
     if (settings.contains("firstExecution")) {
         return false;
     }
-    const QSettings r2ClutterSettings(QSettings::IniFormat, QSettings::Scope::UserScope, preRizinOrg,
+    const QSettings r2ButterSettings(QSettings::IniFormat, QSettings::Scope::UserScope, preRizinOrg,
                                      preRizinApp);
-    const QString f = r2ClutterSettings.fileName();
-    if (r2ClutterSettings.value("firstExecution", true) != QVariant(false)) {
-        return false; // no Clutter <= 1.12 settings to import
+    const QString f = r2ButterSettings.fileName();
+    if (r2ButterSettings.value("firstExecution", true) != QVariant(false)) {
+        return false; // no Butter <= 1.12 settings to import
     }
-    const int version = r2ClutterSettings.value("version", -1).toInt();
-    if (version < 1 || version > lastR2ClutterSettingVersion) {
-        return false; // version too new maybe it's from r2Clutter fork instead of pre-rizin Clutter.
+    const int version = r2ButterSettings.value("version", -1).toInt();
+    if (version < 1 || version > lastR2ButterSettingVersion) {
+        return false; // version too new maybe it's from r2Butter fork instead of pre-rizin Butter.
     }
     return true;
 }
 
-void Clutter::showSettingImportDialog(int &argc, char **argv)
+void Butter::showSettingImportDialog(int &argc, char **argv)
 {
-    // Creating temporary QApplication because this happens before anything else in Clutter is
+    // Creating temporary QApplication because this happens before anything else in Butter is
     // initialized
     const QApplication temporaryApp(argc, argv);
-    const QSettings r2ClutterSettings(QSettings::IniFormat, QSettings::Scope::UserScope, preRizinOrg,
+    const QSettings r2ButterSettings(QSettings::IniFormat, QSettings::Scope::UserScope, preRizinOrg,
                                      preRizinApp);
-    const QString oldFile = r2ClutterSettings.fileName();
+    const QString oldFile = r2ButterSettings.fileName();
     // Can't use message translations because settings have not been imported
     auto result =
             QMessageBox::question(nullptr, "Setting import",

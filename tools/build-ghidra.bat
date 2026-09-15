@@ -3,18 +3,18 @@ REM Rebuild rz-ghidra (the Ghidra decompiler + its rizin bridge).
 REM
 REM The rz-ghidra source tree lives inside the build directory, created by the
 REM install step. Re-run this after changing the Ghidra sources it uses
-REM (see tools\upgrade-ghidra.sh) to avoid a full Clutter rebuild.
+REM (see tools\upgrade-ghidra.sh) to avoid a full Butter rebuild.
 REM
 REM Usage:  tools\build-ghidra.bat [jobs]
 setlocal
 IF "%~1"=="" (set JOBS=8) ELSE (set JOBS=%~1)
 
 for %%I in ("%~dp0..") do set "ROOT=%%~fI"
-set "RZG=%ROOT%\build-clutter\dist\rz-ghidra-prefix\src\rz-ghidra-build"
+set "RZG=%ROOT%\build-butter\dist\rz-ghidra-prefix\src\rz-ghidra-build"
 
 if not exist "%RZG%" (
     echo [!] rz-ghidra build directory not found: %RZG%
-    echo     Run build-clutter.bat install first.
+    echo     Run build-butter.bat install first.
     exit /b 1
 )
 

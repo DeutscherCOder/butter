@@ -2,8 +2,8 @@
 #define BREAKPOINTWIDGET_H
 
 #include "AddressableItemModel.h"
-#include "ClutterDockWidget.h"
-#include "core/Clutter.h"
+#include "ButterDockWidget.h"
+#include "core/Butter.h"
 
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
@@ -69,7 +69,7 @@ public:
 /**
  * @brief Widget for seeing/editing all breakpoints
  */
-class BreakpointWidget : public ClutterDockWidget
+class BreakpointWidget : public ButterDockWidget
 {
     Q_OBJECT
 

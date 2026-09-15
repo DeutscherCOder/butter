@@ -221,7 +221,7 @@ QVariant BinClassesModel::data(const QModelIndex &index, int role) const
     }
 }
 
-AnalysisClassesModel::AnalysisClassesModel(ClutterDockWidget *parent)
+AnalysisClassesModel::AnalysisClassesModel(ButterDockWidget *parent)
     : ClassesModel(parent),
       refreshDeferrer(parent->createRefreshDeferrer([this]() { this->refreshAll(); })),
       attrs(new QMap<QString, QVector<Attribute>>)
@@ -229,12 +229,12 @@ AnalysisClassesModel::AnalysisClassesModel(ClutterDockWidget *parent)
     // Just use a simple refresh deferrer. If an event was triggered in the background, simply
     // refresh everything later.
 
-    connect(Core(), &ClutterCore::refreshAll, this, &AnalysisClassesModel::refreshAll);
-    connect(Core(), &ClutterCore::codeRebased, this, &AnalysisClassesModel::refreshAll);
-    connect(Core(), &ClutterCore::classNew, this, &AnalysisClassesModel::classNew);
-    connect(Core(), &ClutterCore::classDeleted, this, &AnalysisClassesModel::classDeleted);
-    connect(Core(), &ClutterCore::classRenamed, this, &AnalysisClassesModel::classRenamed);
-    connect(Core(), &ClutterCore::classAttrsChanged, this, &AnalysisClassesModel::classAttrsChanged);
+    connect(Core(), &ButterCore::refreshAll, this, &AnalysisClassesModel::refreshAll);
+    connect(Core(), &ButterCore::codeRebased, this, &AnalysisClassesModel::refreshAll);
+    connect(Core(), &ButterCore::classNew, this, &AnalysisClassesModel::classNew);
+    connect(Core(), &ButterCore::classDeleted, this, &AnalysisClassesModel::classDeleted);
+    connect(Core(), &ButterCore::classRenamed, this, &AnalysisClassesModel::classRenamed);
+    connect(Core(), &ButterCore::classAttrsChanged, this, &AnalysisClassesModel::classAttrsChanged);
 
     refreshAll();
 }

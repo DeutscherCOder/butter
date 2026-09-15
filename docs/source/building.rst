@@ -3,12 +3,12 @@ Building
 
 .. note::
 
- If you just want to use the latest Release version of Clutter, please note
+ If you just want to use the latest Release version of Butter, please note
  that we provide pre-compiled binaries for Windows, Linux, and macOS on
  our `release page <https://github.com/rizinorg/cutter/releases/latest>`_ and
  `CI page <https://nightly.link/rizinorg/cutter/workflows/ccpp/dev>`_ for latest development builds.
 
-This page describes how to do a basic build from the command line. If you are planning to modify Clutter it is recommended to also read our :doc:`development environment setup</contributing/code/ide-setup>`.
+This page describes how to do a basic build from the command line. If you are planning to modify Butter it is recommended to also read our :doc:`development environment setup</contributing/code/ide-setup>`.
 
 Getting the Source
 ------------------
@@ -20,17 +20,17 @@ Make sure you've ``git`` installed in your system (`Installation guide <https://
    git clone --recurse-submodules https://github.com/rizinorg/cutter
 
 
-This will clone the Clutter source and its dependencies(rizin, etc.)
-under **clutter** and you should see the following dir structure:
+This will clone the Butter source and its dependencies(rizin, etc.)
+under **butter** and you should see the following dir structure:
 
 .. code-block:: sh
 
-    clutter/-|
-            |-docs/     # Clutter Documentation
+    butter/-|
+            |-docs/     # Butter Documentation
             |-rizin/    # Rizin submodule
-            |-src/      # Clutter Source Code
+            |-src/      # Butter Source Code
 
-Following sections assume that **clutter** is your working dir. (if not, do ``cd clutter``)
+Following sections assume that **butter** is your working dir. (if not, do ``cd butter``)
 
 Building on Linux
 -----------------
@@ -57,7 +57,7 @@ On Linux, you will need:
 
  `*` Recommended while building with ``make``/``Cmake``.
 
- `**` Optional. If present, these add extra features to Clutter. See `CMake Building Options`_.
+ `**` Optional. If present, these add extra features to Butter. See `CMake Building Options`_.
 
 On Debian-based Linux distributions, all of these essential packages can be installed with this single command:
 
@@ -69,7 +69,7 @@ Depending on your configuration you'll might also need the following:
 
 ::
 
-  # When building with CLUTTER_ENABLE_GRAPHVIZ (Default)
+  # When building with BUTTER_ENABLE_GRAPHVIZ (Default)
   sudo apt install libgraphviz-dev
 
 .. note::
@@ -81,11 +81,11 @@ On Arch-based Linux distributions:
 
    sudo pacman -Syu --needed base-devel cmake meson qt6-base qt6-svg qt6-tools
 
-   # When building with CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING (Default)
+   # When building with BUTTER_ENABLE_KSYNTAXHIGHLIGHTING (Default)
    sudo pacman -Syu --needed syntax-highlighting
-   # When building with CLUTTER_ENABLE_GRAPHVIZ (Default)
+   # When building with BUTTER_ENABLE_GRAPHVIZ (Default)
    sudo pacman -Syu --needed graphviz
-   # When building with CLUTTER_ENABLE_PYTHON and CLUTTER_ENABLE_PYTHON_BINDINGS
+   # When building with BUTTER_ENABLE_PYTHON and BUTTER_ENABLE_PYTHON_BINDINGS
    sudo pacman -Syu --needed pyside6 shiboken6
 
 On dnf/yum based distributions:
@@ -102,7 +102,7 @@ On older Linux systems not supported by QT6 you can use Qt 5.15. Use of Qt5 on o
 Building Steps
 ~~~~~~~~~~~~~~
 
-The recommended way to build Clutter on Linux is by using CMake. Simply invoke CMake to build Clutter and its dependency Rizin.
+The recommended way to build Butter on Linux is by using CMake. Simply invoke CMake to build Butter and its dependency Rizin.
 
 .. code:: sh
 
@@ -117,20 +117,20 @@ If your operating system has a newer version of CMake (> v3.12) you can use this
    cmake -B build
    cmake --build build
 
-If you want to use Clutter with another version of Rizin you can set ``-DCLUTTER_USE_BUNDLED_RIZIN=OFF``. Note that using a version of Rizin which isn't the version Clutter is using can cause issues and the compilation might fail.
+If you want to use Butter with another version of Rizin you can set ``-DBUTTER_USE_BUNDLED_RIZIN=OFF``. Note that using a version of Rizin which isn't the version Butter is using can cause issues and the compilation might fail.
 
 .. note::
 
-   If you are interested in building Clutter with support for Python plugins,
+   If you are interested in building Butter with support for Python plugins,
    Syntax Highlighting and more, please look at the full list of `CMake Building Options`_.
 
 
-After the build process is complete, you should have the ``Clutter`` executable in the **build** dir.
-You can now execute Clutter like this:
+After the build process is complete, you should have the ``Butter`` executable in the **build** dir.
+You can now execute Butter like this:
 
 .. code:: sh
 
-   ./build/clutter
+   ./build/butter
 
 
 Making Linux distribution specific packages
@@ -140,24 +140,24 @@ It uses CMake built-in functionality and `GNUInstallDirs <https://cmake.org/cmak
 installing the executable, desktop file, headers and other files required for plugin compilation. See CMake documentation for adjusting installed file locations and properties.
 It shouldn't be necessary to manually copy files from plain build.
 
-It is recommended to build and package rizin as a separate package so that it can be used with or without Clutter. Doing that will also give more control over the way rizin dependencies are handled. We are trying to maintain
-compatibility with latest rizin release at the time of Clutter release and making a new Clutter release when new rizin version is released.
+It is recommended to build and package rizin as a separate package so that it can be used with or without Butter. Doing that will also give more control over the way rizin dependencies are handled. We are trying to maintain
+compatibility with latest rizin release at the time of Butter release and making a new Butter release when new rizin version is released.
 
-If you are packaging Clutter, users will appreciate it if you also package `rz-ghidra <https://github.com/rizinorg/rz-ghidra>`_ and `jsdec <https://github.com/rizinorg/jsdec>`_ decompilers as optional packages.
-It should be possible to compile Clutter plugins against proper Clutter installation without having direct access to Clutter source code.
+If you are packaging Butter, users will appreciate it if you also package `rz-ghidra <https://github.com/rizinorg/rz-ghidra>`_ and `jsdec <https://github.com/rizinorg/jsdec>`_ decompilers as optional packages.
+It should be possible to compile Butter plugins against proper Butter installation without having direct access to Butter source code.
 
-If the names "Clutter" or "clutter" conflict with other packages or their content, "rz-clutter" can be used.
+If the names "Butter" or "butter" conflict with other packages or their content, "rz-butter" can be used.
 
 :Configuration for packaging:
 
 * ``-DCMAKE_BUILD_TYPE=Release`` turn on release optimizations, unless your distro has more specific guidelines for common compiler options.
-* ``CLUTTER_USE_BUNDLED_RIZIN=OFF`` turn off use of rizin from submodule to use previously packaged rizin. Note that keeping it on doesn't install rizin in a way suitable for linux packaging without doing additional manual steps making packaging process more complex. Bundled rizin will also likely conflict with standalone rizin package.
+* ``BUTTER_USE_BUNDLED_RIZIN=OFF`` turn off use of rizin from submodule to use previously packaged rizin. Note that keeping it on doesn't install rizin in a way suitable for linux packaging without doing additional manual steps making packaging process more complex. Bundled rizin will also likely conflict with standalone rizin package.
 * Correct install prefix. By default CMake will install to /usr/local suitable for user builds. Change it according to your distro packaging guidelines.
-* ``CLUTTER_ENABLE_PYTHON`` and  ``CLUTTER_ENABLE_PYTHON_BINDINGS`` it is recommended to turn on for complete user experience. May require manual path specification on distros with multiple python versions.
-* ``CLUTTER_ENABLE_GRAPHVIZ`` and ``CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING`` optional but nice to have since they are available on most distros.
-* ``CLUTTER_EXTRA_PLUGIN_DIRS`` use it to specify additional plugin search locations if distro packaging guidelines require you placing them in locations Clutter doesn't use by default.
-* ``CLUTTER_VERSION_SUFFIX`` can be used to differentiate multiple builds based on same upstream Clutter version, distro specific package build number and similar.
-* ``CLUTTER_INCLUDE_GIT_HASH=OFF`` By default clutter includes git commit hash in the full version string. If you are building from source tarrball or other source which isn't original git repository you might want to disable this.
+* ``BUTTER_ENABLE_PYTHON`` and  ``BUTTER_ENABLE_PYTHON_BINDINGS`` it is recommended to turn on for complete user experience. May require manual path specification on distros with multiple python versions.
+* ``BUTTER_ENABLE_GRAPHVIZ`` and ``BUTTER_ENABLE_KSYNTAXHIGHLIGHTING`` optional but nice to have since they are available on most distros.
+* ``BUTTER_EXTRA_PLUGIN_DIRS`` use it to specify additional plugin search locations if distro packaging guidelines require you placing them in locations Butter doesn't use by default.
+* ``BUTTER_VERSION_SUFFIX`` can be used to differentiate multiple builds based on same upstream Butter version, distro specific package build number and similar.
+* ``BUTTER_INCLUDE_GIT_HASH=OFF`` By default butter includes git commit hash in the full version string. If you are building from source tarrball or other source which isn't original git repository you might want to disable this.
 
 Building on Windows
 -------------------
@@ -165,8 +165,8 @@ Building on Windows
 Requirements
 ~~~~~~~~~~~~
 
-Clutter works on Windows 10 or newer.
-To compile Clutter it is necessary to have the following installed:
+Butter works on Windows 10 or newer.
+To compile Butter it is necessary to have the following installed:
 
 * A version of `Visual Studio <https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16>`_ (2019 or newer)
 * `CMake <https://cmake.org/download/>`_
@@ -177,7 +177,7 @@ To compile Clutter it is necessary to have the following installed:
 Building Steps
 ~~~~~~~~~~~~~~~
 
-To build Clutter on Windows machines using CMake,
+To build Butter on Windows machines using CMake,
 you will have to make sure that the executables are available
 in your ``%PATH%`` environment variable.
 
@@ -204,12 +204,12 @@ Note that the paths below may vary depending on your version of Qt and Visual St
    # Add the following directory to your PATH
    $Env:Path += ";C:\Qt\6.7.2\msvc2019_64\bin"
 
-   # Build Clutter
+   # Build Butter
    cmake -B build
    cmake --build build
 
 
-After the compilation completes, the ``clutter.exe`` binary will be available in ``.\build\Debug\clutter.exe``.
+After the compilation completes, the ``butter.exe`` binary will be available in ``.\build\Debug\butter.exe``.
 
 
 
@@ -250,33 +250,33 @@ CMake Building Options
 
 Note that there are some major building options available:
 
-* ``CLUTTER_USE_BUNDLED_RIZIN`` automatically compile Rizin from submodule (Enabled by default).
-* ``CLUTTER_ENABLE_PYTHON`` compile with Python support, required for Python plugins.
-* ``CLUTTER_ENABLE_PYTHON_BINDINGS`` automatically generate Python Bindings with Shiboken, required for Python plugins!
-* ``CLUTTER_ENABLE_KSYNTAXHIGHLIGHTING`` use KSyntaxHighlighting for code highlighting.
-* ``CLUTTER_ENABLE_GRAPHVIZ`` enable Graphviz for graph layouts.
-* ``CLUTTER_EXTRA_PLUGIN_DIRS`` List of addition plugin locations. Useful when preparing package for Linux distros that have strict package layout rules.
-* ``CLUTTER_QT`` Qt major version to use. Defaults to 6. Allowed values: 5, 6. 
+* ``BUTTER_USE_BUNDLED_RIZIN`` automatically compile Rizin from submodule (Enabled by default).
+* ``BUTTER_ENABLE_PYTHON`` compile with Python support, required for Python plugins.
+* ``BUTTER_ENABLE_PYTHON_BINDINGS`` automatically generate Python Bindings with Shiboken, required for Python plugins!
+* ``BUTTER_ENABLE_KSYNTAXHIGHLIGHTING`` use KSyntaxHighlighting for code highlighting.
+* ``BUTTER_ENABLE_GRAPHVIZ`` enable Graphviz for graph layouts.
+* ``BUTTER_EXTRA_PLUGIN_DIRS`` List of addition plugin locations. Useful when preparing package for Linux distros that have strict package layout rules.
+* ``BUTTER_QT`` Qt major version to use. Defaults to 6. Allowed values: 5, 6. 
 
-Clutter binary release options, not needed for most users and might not work easily outside CI environment: 
+Butter binary release options, not needed for most users and might not work easily outside CI environment: 
 
-* ``CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS`` Enable downloading of dependencies. Setting to OFF doesn't affect any downloads done by Rizin build. This option is used for preparing Clutter binary release packges. Turned off by default.
-* ``CLUTTER_PACKAGE_DEPENDENCIES`` During install step include the third party dependencies. This option is used for preparing Clutter binary release packages. 
+* ``BUTTER_ENABLE_DEPENDENCY_DOWNLOADS`` Enable downloading of dependencies. Setting to OFF doesn't affect any downloads done by Rizin build. This option is used for preparing Butter binary release packges. Turned off by default.
+* ``BUTTER_PACKAGE_DEPENDENCIES`` During install step include the third party dependencies. This option is used for preparing Butter binary release packages. 
 
-For full list of Clutter specific build options and their description see CMakeCache.txt after configuring the project or use a graphical CMake configurator if your IDE provides one.
+For full list of Butter specific build options and their description see CMakeCache.txt after configuring the project or use a graphical CMake configurator if your IDE provides one.
 
 These options can be enabled or disabled from the command line arguments passed to CMake.
-For example, to build Clutter with support for Python plugins, you can run this command:
+For example, to build Butter with support for Python plugins, you can run this command:
 
 ::
 
-   cmake -B build -DCLUTTER_ENABLE_PYTHON=ON -DCLUTTER_ENABLE_PYTHON_BINDINGS=ON
+   cmake -B build -DBUTTER_ENABLE_PYTHON=ON -DBUTTER_ENABLE_PYTHON_BINDINGS=ON
 
 Or if one wants to explicitly disable an option:
 
 ::
 
-   cmake -B build -DCLUTTER_ENABLE_PYTHON=OFF
+   cmake -B build -DBUTTER_ENABLE_PYTHON=OFF
 
 
 
@@ -302,12 +302,12 @@ containing bin/, lib/, include/, etc.) and specify it to CMake using
    rm CMakeCache.txt # the cache may be polluted with unwanted libraries found before
    cmake -DCMAKE_PREFIX_PATH=/opt/Qt/5.9.1/gcc_64 ..
 
-* **Rizin's librz_*.so cannot be found when running Clutter**
+* **Rizin's librz_*.so cannot be found when running Butter**
 
-   ./clutter: error while loading shared libraries: librz_lang.so: cannot open shared object file: No such file or directory
+   ./butter: error while loading shared libraries: librz_lang.so: cannot open shared object file: No such file or directory
 
-The exact Rizin .so file that cannot be found may vary. On some systems, the linker by default uses RUNPATH instead of RPATH which is incompatible with the way Rizin is currently compiled. It results in some of the Rizin libraries not being found when running clutter. You can verify if this is the problem by running `ldd ./clutter`. If all the Rizin libraries are missing you have a different problem.
-The workaround is to either add the `--disable-new-dtags` linker flag when compiling Clutter or add the Rizin installation path to LD_LIBRARY_PATH environment variable.
+The exact Rizin .so file that cannot be found may vary. On some systems, the linker by default uses RUNPATH instead of RPATH which is incompatible with the way Rizin is currently compiled. It results in some of the Rizin libraries not being found when running butter. You can verify if this is the problem by running `ldd ./butter`. If all the Rizin libraries are missing you have a different problem.
+The workaround is to either add the `--disable-new-dtags` linker flag when compiling Butter or add the Rizin installation path to LD_LIBRARY_PATH environment variable.
 
 ::
 
@@ -318,7 +318,7 @@ The workaround is to either add the `--disable-new-dtags` linker flag when compi
     Eg: rz_util/rz_annotated_code.h: No such file or directory
 
 If you face an error where some header file starting with ``rz_`` is missing, you should check the **rizin** submodule and
-make sure it is in sync with upstream **Clutter** repo. Simply run:
+make sure it is in sync with upstream **Butter** repo. Simply run:
 
 ::
 
@@ -343,7 +343,7 @@ You can also try:
 
 -  ``PKG_CONFIG_PATH=$HOME/bin/prefix/rizin/lib/pkgconfig cmake ...``
 
-.. image:: images/clutter_path_settings.png
+.. image:: images/butter_path_settings.png
 
 You can also install Rizin into ``/usr/lib/pkgconfig/`` and then
 add a variable ``PKG_CONFIG_PATH`` with the value ``/usr/lib/pkgconfig/``.

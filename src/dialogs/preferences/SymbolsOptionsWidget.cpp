@@ -1,7 +1,7 @@
 #include "SymbolsOptionsWidget.h"
 
 #include "PreferencesDialog.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 #include "ui_SymbolsOptionsWidget.h"
 
@@ -18,10 +18,10 @@ SymbolsOptionsWidget::SymbolsOptionsWidget(PreferencesDialog *parent)
     updateSymbolsOptions();
 
     auto symbolOptionsChanged = [this] {
-        disconnect(Core(), &ClutterCore::symbolsOptionsChanged, this,
+        disconnect(Core(), &ButterCore::symbolsOptionsChanged, this,
                    &SymbolsOptionsWidget::updateSymbolsOptions);
         Core()->triggerSymbolsOptionsChanged();
-        connect(Core(), &ClutterCore::symbolsOptionsChanged, this,
+        connect(Core(), &ButterCore::symbolsOptionsChanged, this,
                 &SymbolsOptionsWidget::updateSymbolsOptions);
     };
 
@@ -53,7 +53,7 @@ SymbolsOptionsWidget::SymbolsOptionsWidget(PreferencesDialog *parent)
         Core()->setConfig("pdb.server", ui->pdbServerEdit->text());
         symbolOptionsChanged();
     });
-    connect(Core(), &ClutterCore::symbolsOptionsChanged, this,
+    connect(Core(), &ButterCore::symbolsOptionsChanged, this,
             &SymbolsOptionsWidget::updateSymbolsOptions);
 }
 

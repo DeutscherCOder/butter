@@ -1,7 +1,7 @@
 #ifndef ADDRESSABLEITEMCONTEXTMENU_H
 #define ADDRESSABLEITEMCONTEXTMENU_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QKeySequence>
 #include <QMenu>
@@ -11,7 +11,7 @@ class MainWindow;
 /**
  * @brief Generic context menu for Addressable widgets
  */
-class CLUTTER_EXPORT AddressableItemContextMenu : public QMenu
+class BUTTER_EXPORT AddressableItemContextMenu : public QMenu
 {
     Q_OBJECT
 

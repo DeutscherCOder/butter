@@ -1,7 +1,7 @@
 #ifndef EDITSTRINGDIALOG_H
 #define EDITSTRINGDIALOG_H
 
-#include "ClutterDescriptions.h" // IWYU pragma: keep
+#include "ButterDescriptions.h" // IWYU pragma: keep
 
 #include <QDialog>
 

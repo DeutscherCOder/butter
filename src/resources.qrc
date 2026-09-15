@@ -103,10 +103,10 @@
         <file>img/icons/home.svg</file>
         <file>fonts/Anonymous Pro.ttf</file>
         <file>fonts/Inconsolata-Regular.ttf</file>
-        <file>img/clutter_plain.svg</file>
-        <file>img/clutter_white_plain.svg</file>
-        <file>img/clutter.svg</file>
-        <file>img/clutter_macos_simple.svg</file>
+        <file>img/butter_plain.svg</file>
+        <file>img/butter_white_plain.svg</file>
+        <file>img/butter.svg</file>
+        <file>img/butter_macos_simple.svg</file>
         <file>img/icons/copy.svg</file>
         <file>img/icons/delete.svg</file>
         <file>img/icons/previous.svg</file>
@@ -114,8 +114,8 @@
         <file>img/icons/fork.svg</file>
         <file>img/icons/plugins.svg</file>
         <file>img/icons/light/plugins.svg</file>
-        <file>python/clutter.py</file>
-        <file>python/cutter.py</file>
+        <file>python/butter.py</file>
+        <file>python/butter.py</file>
         <file>python/reg_qtres_importer.py</file>
         <file>img/icons/download_black.svg</file>
         <file>img/icons/pencil_thin.svg</file>

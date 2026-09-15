@@ -3,7 +3,7 @@
  * CMake's FindPkgConfig only accepts an executable file (it will not run a .bat),
  * so this forwards every argument to "python ../pkgconfig-shim.py" and passes the
  * exit code straight back. No system installation is involved: it is built by
- * build-clutter.bat into .tools\bin next to the batch wrapper.
+ * build-butter.bat into .tools\bin next to the batch wrapper.
  *
  * Build:  cl /nologo /O2 /Fe:pkg-config.exe pkgconfig-wrapper.c
  */

@@ -124,9 +124,9 @@ HeadersWidget::HeadersWidget(MainWindow *main)
     setModels(headersProxyModel);
     ui->treeView->sortByColumn(HeadersModel::OffsetColumn, Qt::AscendingOrder);
 
-    connect(Core(), &ClutterCore::codeRebased, this, &HeadersWidget::refreshHeaders);
-    connect(Core(), &ClutterCore::refreshAll, this, &HeadersWidget::refreshHeaders);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::codeRebased, this, &HeadersWidget::refreshHeaders);
+    connect(Core(), &ButterCore::refreshAll, this, &HeadersWidget::refreshHeaders);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(headersModel, HeadersModel::CommentColumn); });
     connect(ui->quickFilterView, &QuickFilterView::filterTextChanged, this,
             [this] { ui->quickFilterView->setItemCount(headersProxyModel->rowCount()); });

@@ -1,7 +1,7 @@
 #ifndef GRAPHLAYOUT_H
 #define GRAPHLAYOUT_H
 
-#include "ClutterCommon.h" // IWYU pragma: keep
+#include "ButterCommon.h" // IWYU pragma: keep
 
 #include <QPolygonF>
 

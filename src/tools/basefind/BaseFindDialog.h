@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QListWidgetItem>
 
-#include <core/Clutter.h>
+#include <core/Butter.h>
 #include <memory>
 
 namespace Ui {

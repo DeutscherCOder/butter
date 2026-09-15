@@ -2,13 +2,13 @@
 #
 # Compatibility facade for Python plugins written against upstream Cutter.
 #
-# This fork ships the same API as `clutter`; upstream plugins do
-# `import cutter`, so re-export everything under the old module name too.
+# This fork ships the same API as `butter`; upstream plugins do `import cutter`,
+# so re-export everything under the old module name too.
 #
 #     import cutter
 #     cutter.cmd("pdg")          # still works
 #
 # See the "Rebrand and compatibility" section of README.md.
 
-from clutter import *          # noqa: F401,F403
-from clutter import cmd, cmdj, core  # noqa: F401
+from butter import *          # noqa: F401,F403
+from butter import cmd, cmdj, core  # noqa: F401

@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>Clutter</string>
+	<string>Butter</string>
 	<key>CFBundleExecutable</key>
-	<string>clutter</string>
+	<string>butter</string>
 	<key>CFBundleVersion</key>
-	<string>@CLUTTER_VERSION_FULL@</string>
+	<string>@BUTTER_VERSION_FULL@</string>
 	<key>CFBundleShortVersionString</key>
-	<string>@CLUTTER_VERSION_FULL@</string>
+	<string>@BUTTER_VERSION_FULL@</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Licensed under the GPLv3 by the Clutter developers.</string>
+	<string>Licensed under the GPLv3 by the Butter developers.</string>
 	<key>CFBundleIconFile</key>
 	<string>@ICON@</string>
 	<key>CFBundleIdentifier</key>
-	<string>re.rizin.clutter</string>
+	<string>re.rizin.butter</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>NSPrincipalClass</key>

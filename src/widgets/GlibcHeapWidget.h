@@ -1,8 +1,8 @@
 #ifndef GLIBCHEAPWIDGET_H
 #define GLIBCHEAPWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 
 #include <QComboBox>
 #include <QDockWidget>

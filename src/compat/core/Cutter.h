@@ -7,7 +7,7 @@
 #ifndef CUTTER_H
 #define CUTTER_H
 
-#include "Clutter.h"
+#include "Butter.h"
 #include <CutterCompat.h>
 
 #endif // CUTTER_H

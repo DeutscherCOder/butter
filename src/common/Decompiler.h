@@ -1,7 +1,7 @@
 #ifndef DECOMPILER_H
 #define DECOMPILER_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QObject>
 #include <QString>
@@ -9,9 +9,9 @@
 #include <rz_util/rz_annotated_code.h>
 
 /**
- * @brief Implements a decompiler that can be registered using ClutterCore::registerDecompiler()
+ * @brief Implements a decompiler that can be registered using ButterCore::registerDecompiler()
  */
-class CLUTTER_EXPORT Decompiler : public QObject
+class BUTTER_EXPORT Decompiler : public QObject
 {
     Q_OBJECT
 

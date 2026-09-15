@@ -1,7 +1,7 @@
 #include "AddressableDockWidget.h"
 
 #include "MainWindow.h"
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 
 #include <QAction>
 #include <QContextMenuEvent>
@@ -9,14 +9,14 @@
 #include <QMenu>
 
 AddressableDockWidget::AddressableDockWidget(MainWindow *parent)
-    : ClutterDockWidget(parent),
-      seekable(new ClutterSeekable(this)),
+    : ButterDockWidget(parent),
+      seekable(new ButterSeekable(this)),
       syncAction(tr("Sync/unsync offset"), this),
       dockMenu(new QMenu(this))
 {
-    connect(seekable, &ClutterSeekable::syncChanged, this,
+    connect(seekable, &ButterSeekable::syncChanged, this,
             &AddressableDockWidget::updateWindowTitle);
-    connect(&syncAction, &QAction::triggered, seekable, &ClutterSeekable::toggleSynchronization);
+    connect(&syncAction, &QAction::triggered, seekable, &ButterSeekable::toggleSynchronization);
 
     dockMenu->addAction(&syncAction);
 
@@ -25,7 +25,7 @@ AddressableDockWidget::AddressableDockWidget(MainWindow *parent)
 
 QVariantMap AddressableDockWidget::serializeViewProprties()
 {
-    auto result = ClutterDockWidget::serializeViewProprties();
+    auto result = ButterDockWidget::serializeViewProprties();
     result["synchronized"] = seekable->isSynchronized();
     return result;
 }
@@ -44,7 +44,7 @@ void AddressableDockWidget::updateWindowTitle()
         name += " " + id;
     }
     if (!seekable->isSynchronized()) {
-        name += ClutterSeekable::tr(" (unsynced)");
+        name += ButterSeekable::tr(" (unsynced)");
     }
     setWindowTitle(name);
 }
@@ -55,7 +55,7 @@ void AddressableDockWidget::contextMenuEvent(QContextMenuEvent *event)
     dockMenu->exec(mapToGlobal(event->pos()));
 }
 
-ClutterSeekable *AddressableDockWidget::getSeekable() const
+ButterSeekable *AddressableDockWidget::getSeekable() const
 {
     return seekable;
 }

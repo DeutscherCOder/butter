@@ -8,14 +8,14 @@
 #include <QTreeWidget>
 
 EntrypointWidget::EntrypointWidget(MainWindow *main)
-    : ClutterDockWidget(main), ui(new Ui::EntrypointWidget)
+    : ButterDockWidget(main), ui(new Ui::EntrypointWidget)
 {
     ui->setupUi(this);
 
     setScrollMode();
 
-    connect(Core(), &ClutterCore::codeRebased, this, &EntrypointWidget::fillEntrypoint);
-    connect(Core(), &ClutterCore::refreshAll, this, &EntrypointWidget::fillEntrypoint);
+    connect(Core(), &ButterCore::codeRebased, this, &EntrypointWidget::fillEntrypoint);
+    connect(Core(), &ButterCore::refreshAll, this, &EntrypointWidget::fillEntrypoint);
     connect(ui->entrypointTreeWidget, &QTreeWidget::itemDoubleClicked, this,
             &EntrypointWidget::onEntrypointTreeWidgetItemDoubleClicked);
 }

@@ -1,7 +1,7 @@
 #ifndef FLIRT_CONTEXTMENU_H
 #define FLIRT_CONTEXTMENU_H
 
-#include "ClutterDescriptions.h"
+#include "ButterDescriptions.h"
 
 #include <QKeySequence>
 #include <QMenu>
@@ -11,7 +11,7 @@ class MainWindow;
 /**
  * @brief Context menu for @ref FlirtWidget
  */
-class CLUTTER_EXPORT FlirtContextMenu : public QMenu
+class BUTTER_EXPORT FlirtContextMenu : public QMenu
 {
     Q_OBJECT
 

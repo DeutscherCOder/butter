@@ -1,7 +1,7 @@
 #include "BugReporting.h"
 
-#include "Clutter.h"
-#include "ClutterConfig.h"
+#include "Butter.h"
+#include "ButterConfig.h"
 
 #include <QDesktopServices>
 #include <QJsonObject>
@@ -24,8 +24,8 @@ void openIssue()
     type = info && RZ_STR_ISNOTEMPTY(info->type) ? info->type : "N/A";
     url = "https://github.com/rizinorg/cutter/issues/new?&body=**Environment information**\n* "
           "Operating System: "
-            + osInfo + "\n* Clutter version: " + CLUTTER_VERSION_FULL + "\n* Obtained from:\n"
-            + "  - [ ] Built from source\n  - [ ] Downloaded release from Clutter website or GitHub "
+            + osInfo + "\n* Butter version: " + BUTTER_VERSION_FULL + "\n* Obtained from:\n"
+            + "  - [ ] Built from source\n  - [ ] Downloaded release from Butter website or GitHub "
               "\n"
               "  - [ ] Distribution repository\n* File format: "
             + format + "\n * Arch: " + arch + "\n * Type: " + type

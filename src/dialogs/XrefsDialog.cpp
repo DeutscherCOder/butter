@@ -91,7 +91,7 @@ XrefsDialog::XrefsDialog(MainWindow *parent, bool hideXrefFrom)
     connect(ui->toTreeWidget, &QAbstractItemView::doubleClicked, this, &QWidget::close);
     connect(ui->fromTreeWidget, &QAbstractItemView::doubleClicked, this, &QWidget::close);
 
-    connect(Core(), &ClutterCore::commentsChanged, this, [this]() {
+    connect(Core(), &ButterCore::commentsChanged, this, [this]() {
         qhelpers::emitColumnChanged(&toModel, XrefModel::COMMENT);
         qhelpers::emitColumnChanged(&fromModel, XrefModel::COMMENT);
     });

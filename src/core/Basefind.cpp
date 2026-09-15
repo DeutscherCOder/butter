@@ -1,6 +1,6 @@
 #include "Basefind.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 
 bool Basefind::threadCallback(const RzBaseFindThreadInfo *info, void *user)
 {
@@ -85,7 +85,7 @@ QList<BasefindResultDescription> Basefind::results()
     QList<BasefindResultDescription> pairs;
     RzListIter *it;
     RzBaseFindScore *pair;
-    ClutterRzListForeach (scores, it, RzBaseFindScore, pair) {
+    ButterRzListForeach (scores, it, RzBaseFindScore, pair) {
         BasefindResultDescription desc;
         desc.candidate = pair->candidate;
         desc.score = pair->score;

@@ -1,7 +1,7 @@
 #ifndef ENTRYPOINTWIDGET_H
 #define ENTRYPOINTWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 #include <QStyledItemDelegate>
 #include <QTreeWidgetItem>
@@ -18,7 +18,7 @@ class EntrypointWidget;
 /**
  * @brief Widget that displays all entry points
  */
-class EntrypointWidget : public ClutterDockWidget
+class EntrypointWidget : public ButterDockWidget
 {
     Q_OBJECT
 

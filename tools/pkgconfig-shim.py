@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Minimal pkg-config implementation, used only by this project's build.
 
-Why it exists: Cutter's optional plugin bundling scripts (rz-frida's Cutter
+Why it exists: Butter's optional plugin bundling scripts (rz-frida's Butter
 plugin, and anything else that runs `pkg_check_modules`) require a `pkg-config`
 binary. This machine has none and installing one system-wide is exactly what
 this project avoids. The build only needs to read the `.pc` files that the
-bundled rizin installs into `clutter-dist/lib/pkgconfig`, so a small
+bundled rizin installs into `butter-dist/lib/pkgconfig`, so a small
 stdlib-only reader is enough.
 
 Supported: --version, --exists, --modversion, --cflags, --libs, --variable,
@@ -86,8 +86,8 @@ class Pc:
 def default_paths():
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     return [
-        os.path.join(here, "clutter-dist", "lib", "pkgconfig"),
-        os.path.join(here, "cutter", "build-clutter", "lib", "pkgconfig"),
+        os.path.join(here, "butter-dist", "lib", "pkgconfig"),
+        os.path.join(here, "butter", "build-butter", "lib", "pkgconfig"),
     ]
 
 
@@ -186,7 +186,7 @@ def main(argv):
     while i < len(argv):
         a = argv[i]
         if a == "--version":
-            print(SHIM_VERSION + " (clutter shim)")
+            print(SHIM_VERSION + " (butter shim)")
             return 0
         elif a == "--cflags" or a == "--cflags-only-I" or a == "--cflags-only-other":
             want_cflags = True

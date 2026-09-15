@@ -1,7 +1,7 @@
 #ifndef RIZINCONFIGOPTIONSWIDGET_H
 #define RIZINCONFIGOPTIONSWIDGET_H
 
-#include "ClutterDescriptions.h"
+#include "ButterDescriptions.h"
 #include "PreferencesDialog.h"
 
 #include <QAbstractItemModel>

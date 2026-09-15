@@ -2,7 +2,7 @@
 #define STRINGSTASK_H
 
 #include "common/AsyncTask.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 /**
  * @brief AsyncTask for querying all strings in binary

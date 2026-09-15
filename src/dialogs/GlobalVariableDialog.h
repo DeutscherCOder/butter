@@ -1,7 +1,7 @@
 #ifndef GLOBALVARIABLEDIALOG_H
 #define GLOBALVARIABLEDIALOG_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QDialog>
 

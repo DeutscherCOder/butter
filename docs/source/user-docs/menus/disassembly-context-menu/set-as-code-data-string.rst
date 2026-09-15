@@ -3,7 +3,7 @@ Set as Code\Data\String
 
 Set as Code
 ----------------------------------------
-**Description:** Set the current instruction to Code. This will force Clutter to display the current instruction as Code.  
+**Description:** Set the current instruction to Code. This will force Butter to display the current instruction as Code.  
 
 **Steps:** Set as... -> Code  
 
@@ -11,7 +11,7 @@ Set as Code
 
 Set as String (auto-detect length) 
 ----------------------------------------
-**Description:** Set the current location to String. This will tell Clutter to treat the current address as a string and will auto-detect the length (e.g by looking for a string null-terminator).   
+**Description:** Set the current location to String. This will tell Butter to treat the current address as a string and will auto-detect the length (e.g by looking for a string null-terminator).   
 
 **Steps:** Right click on an instruction and choose ``Set as... -> String... -> Auto-detect``  
 
@@ -19,13 +19,13 @@ Set as String (auto-detect length)
 
 Remove string definition
 ----------------------------------------
-**Description:** Remove a defined string in this address. Clutter will then treat this location as a code.  
+**Description:** Remove a defined string in this address. Butter will then treat this location as a code.  
 
 **Steps:** Right click on an instruction and choose ``Set as... -> String... -> Remove``.  
 
 Set as String (Advance dialog)
 ----------------------------------------
-**Description:** Set the current location to String. This will open a String definition dialog in which the user will supply the length and the type (ASCII, UTF8, ...) of the string. Clutter will then treat the current address as the defined string.  
+**Description:** Set the current location to String. This will open a String definition dialog in which the user will supply the length and the type (ASCII, UTF8, ...) of the string. Butter will then treat the current address as the defined string.  
 
 **Steps:** Right click on an instruction and choose ``Set as... -> String... -> Advanced``.  
 

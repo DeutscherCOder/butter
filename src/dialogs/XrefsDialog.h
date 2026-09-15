@@ -1,8 +1,8 @@
 #ifndef XREFSDIALOG_H
 #define XREFSDIALOG_H
 
-#include "ClutterCommon.h" // IWYU pragma: keep
-#include "ClutterDescriptions.h"
+#include "ButterCommon.h" // IWYU pragma: keep
+#include "ButterDescriptions.h"
 #include "common/AddressableItemModel.h"
 
 #include <QDialog>

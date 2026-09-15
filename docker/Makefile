@@ -9,13 +9,13 @@ LGID := $(shell id -g)
 
 # To mount a specific binary using BINARY=/absolute/path/to/binary
 ifdef BINARY
-    MOUNTFLAGS += -v $(BINARY):/home/clutter/$(shell basename $(BINARY)):ro
-    RUNFLAGS += /home/clutter/$(shell basename $(BINARY))
+    MOUNTFLAGS += -v $(BINARY):/home/butter/$(shell basename $(BINARY)):ro
+    RUNFLAGS += /home/butter/$(shell basename $(BINARY))
 endif
 
 VERSION ?= latest
-IMAGE_NAME ?= rizin/clutter
-CONTAINER_NAME ?= clutter
+IMAGE_NAME ?= rizin/butter
+CONTAINER_NAME ?= butter
 
 # This will output the help for each task
 # thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -35,11 +35,11 @@ build-nc: ## Build the container without caching
 
 run: ## Run container
 	XSOCK=/tmp/.X11-unix && \
-	XAUTH=$(shell mktemp /tmp/clutter_tmp.XXX.xauth) && \
+	XAUTH=$(shell mktemp /tmp/butter_tmp.XXX.xauth) && \
 	xauth nlist $$DISPLAY | sed -e 's/^..../ffff/' | xauth -f $$XAUTH nmerge - && \
 	chmod 644 $$XAUTH && \
 	touch $(DIR)/rizinrc && \
-	mkdir -p $(DIR)/clutter-config && \
+	mkdir -p $(DIR)/butter-config && \
 	mkdir -p $(DIR)/sharedFolder && \
 	sudo docker run \
 		-it \
@@ -53,12 +53,12 @@ run: ## Run container
 		-v $$XAUTH:$$XAUTH \
 		$(MOUNTFLAGS) \
 		-v $(DIR)/sharedFolder:/var/sharedFolder \
-		-v $(DIR)/rizinrc:/home/clutter/.rizinrc \
-		-v $(DIR)/clutter-config:/home/clutter/.config/rizin \
+		-v $(DIR)/rizinrc:/home/butter/.rizinrc \
+		-v $(DIR)/butter-config:/home/butter/.config/rizin \
 		$(IMAGE_NAME):$(VERSION) $(RUNFLAGS) && \
 	rm $$XAUTH
 
-get: ## Get the latest Clutter image
+get: ## Get the latest Butter image
 	sudo docker pull $(IMAGE_NAME):$(VERSION)
 
 stop: ## Stop a running container

@@ -1,7 +1,7 @@
 #include "Omnibar.h"
 
-#include "ClutterDescriptions.h"
-#include "ClutterSeekable.h"
+#include "ButterDescriptions.h"
+#include "ButterSeekable.h"
 #include "core/MainWindow.h"
 #include "shortcuts/ShortcutManager.h"
 
@@ -69,9 +69,9 @@ Omnibar::Omnibar(MainWindow *main, QWidget *parent)
     this->setCompleter(completer);
     this->installEventFilter(this);
 
-    connect(Core(), &ClutterCore::flagsChanged, this, &Omnibar::refresh);
-    connect(Core(), &ClutterCore::codeRebased, this, &Omnibar::refresh);
-    connect(Core(), &ClutterCore::refreshAll, this, &Omnibar::refresh);
+    connect(Core(), &ButterCore::flagsChanged, this, &Omnibar::refresh);
+    connect(Core(), &ButterCore::codeRebased, this, &Omnibar::refresh);
+    connect(Core(), &ButterCore::refreshAll, this, &Omnibar::refresh);
 }
 
 bool Omnibar::eventFilter(QObject *obj, QEvent *event)

@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Clutter
-GenericName=Reverse Engineering Platform
-Comment=Reverse Engineering Platform powered by rizin
-Exec=clutter
-Icon=clutter
-Categories=Development;

@@ -118,7 +118,7 @@ bool RegisterRefProxyModel::lessThan(const QModelIndex &left, const QModelIndex 
 }
 
 RegisterRefsWidget::RegisterRefsWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::RegisterRefsWidget),
       registerRefModel(new RegisterRefModel(this)),
       registerRefProxyModel(new RegisterRefProxyModel(registerRefModel, this)),
@@ -152,9 +152,9 @@ RegisterRefsWidget::RegisterRefsWidget(MainWindow *main)
     connect(ui->quickFilterView, &QuickFilterView::filterClosed, ui->registerRefTreeView,
             [this]() { ui->registerRefTreeView->setFocus(); });
     setScrollMode();
-    connect(Core(), &ClutterCore::refreshAll, this, &RegisterRefsWidget::refreshRegisterRef);
-    connect(Core(), &ClutterCore::registersChanged, this, &RegisterRefsWidget::refreshRegisterRef);
-    connect(Core(), &ClutterCore::commentsChanged, this, [this]() {
+    connect(Core(), &ButterCore::refreshAll, this, &RegisterRefsWidget::refreshRegisterRef);
+    connect(Core(), &ButterCore::registersChanged, this, &RegisterRefsWidget::refreshRegisterRef);
+    connect(Core(), &ButterCore::commentsChanged, this, [this]() {
         qhelpers::emitColumnChanged(registerRefModel, RegisterRefModel::CommentColumn);
     });
     connect(actionCopyValue, &QAction::triggered, this,

@@ -1,11 +1,11 @@
 
-import clutter
+import butter
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QSizePolicy, QPushButton
 
 
-class FortuneWidget(clutter.ClutterDockWidget):
+class FortuneWidget(butter.ButterDockWidget):
     def __init__(self, parent):
         super(FortuneWidget, self).__init__(parent)
         self.setObjectName("FancyDockWidgetFromCoolPlugin")
@@ -30,26 +30,26 @@ class FortuneWidget(clutter.ClutterDockWidget):
         layout.setAlignment(button, Qt.AlignHCenter)
 
         button.clicked.connect(self.generate_fortune)
-        clutter.core().seekChanged.connect(self.generate_fortune)
+        butter.core().seekChanged.connect(self.generate_fortune)
 
         self.show()
 
     def generate_fortune(self):
-        fortune = clutter.cmd("fortune").replace("\n", "")
-        res = clutter.core().cmdRaw(f"?E {fortune}")
+        fortune = butter.cmd("fortune").replace("\n", "")
+        res = butter.core().cmdRaw(f"?E {fortune}")
         self.text.setText(res)
 
 
-class ClutterSamplePlugin(clutter.ClutterPlugin):
+class ButterSamplePlugin(butter.ButterPlugin):
     name = "Sample Plugin"
     description = "A sample plugin written in python."
     version = "1.2"
-    author = "Clutter developers"
+    author = "Butter developers"
 
-    # Override ClutterPlugin methods
+    # Override ButterPlugin methods
 
     def __init__(self):
-        super(ClutterSamplePlugin, self).__init__()
+        super(ButterSamplePlugin, self).__init__()
         self.disassembly_actions = []
         self.addressable_item_actions = []
         self.disas_action = None
@@ -65,14 +65,14 @@ class ClutterSamplePlugin(clutter.ClutterPlugin):
         main.addPluginDockWidget(widget)
 
         # Dissassembly context menu
-        menu = main.getContextMenuExtensions(clutter.MainWindow.ContextMenuType.Disassembly)
-        self.disas_action = menu.addAction("ClutterSamplePlugin dissassembly action")
+        menu = main.getContextMenuExtensions(butter.MainWindow.ContextMenuType.Disassembly)
+        self.disas_action = menu.addAction("ButterSamplePlugin dissassembly action")
         self.disas_action.triggered.connect(self.handle_disassembler_action)
         self.main = main
 
         # Context menu for tables with addressable items like Flags,Functions,Strings,Search results,...
-        addressable_item_menu = main.getContextMenuExtensions(clutter.MainWindow.ContextMenuType.Addressable)
-        self.addr_submenu = addressable_item_menu.addMenu("ClutterSamplePlugin") # create submenu
+        addressable_item_menu = main.getContextMenuExtensions(butter.MainWindow.ContextMenuType.Addressable)
+        self.addr_submenu = addressable_item_menu.addMenu("ButterSamplePlugin") # create submenu
         adrr_action = self.addr_submenu.addAction("Action 1")
         self.addr_submenu.addSeparator() # can use separator and other qt functionality
         adrr_action2 = self.addr_submenu.addAction("Action 2")
@@ -80,27 +80,27 @@ class ClutterSamplePlugin(clutter.ClutterPlugin):
         adrr_action2.triggered.connect(self.handle_addressable_item_action)
 
     def terminate(self): # optional
-        print("ClutterSamplePlugin shutting down")
+        print("ButterSamplePlugin shutting down")
         if self.main:
-            menu = self.main.getContextMenuExtensions(clutter.MainWindow.ContextMenuType.Disassembly)
+            menu = self.main.getContextMenuExtensions(butter.MainWindow.ContextMenuType.Disassembly)
             menu.removeAction(self.disas_action)
-            addressable_item_menu = self.main.getContextMenuExtensions(clutter.MainWindow.ContextMenuType.Addressable)
+            addressable_item_menu = self.main.getContextMenuExtensions(butter.MainWindow.ContextMenuType.Addressable)
             submenu_action = self.addr_submenu.menuAction()
             addressable_item_menu.removeAction(submenu_action)
-        print("ClutterSamplePlugin finished clean up")
+        print("ButterSamplePlugin finished clean up")
 
     # Plugin methods
 
     def handle_addressable_item_action(self):
-        # for actions in plugin menu Clutter sets data to current item address
+        # for actions in plugin menu Butter sets data to current item address
         submenu_action = self.addr_submenu.menuAction()
-        clutter.message("Context menu action callback 0x{:x}".format(submenu_action.data()))
+        butter.message("Context menu action callback 0x{:x}".format(submenu_action.data()))
 
     def handle_disassembler_action(self):
-        # for actions in plugin menu Clutter sets data to address for current dissasembly line
-        clutter.message("Dissasembly menu action callback 0x{:x}".format(self.disas_action.data()))
+        # for actions in plugin menu Butter sets data to address for current dissasembly line
+        butter.message("Dissasembly menu action callback 0x{:x}".format(self.disas_action.data()))
 
 
-# This function will be called by Clutter and should return an instance of the plugin.
-def create_clutter_plugin():
-    return ClutterSamplePlugin()
+# This function will be called by Butter and should return an instance of the plugin.
+def create_butter_plugin():
+    return ButterSamplePlugin()

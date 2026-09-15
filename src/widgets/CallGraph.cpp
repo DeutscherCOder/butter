@@ -13,7 +13,7 @@ CallGraphWidget::CallGraphWidget(MainWindow *main, bool global)
 {
     setObjectName(main ? main->getUniqueObjectName(getWidgetType()) : getWidgetType());
     this->setWindowTitle(getWindowTitle());
-    connect(seekable, &ClutterSeekable::seekableSeekChanged, this, &CallGraphWidget::onSeekChanged);
+    connect(seekable, &ButterSeekable::seekableSeekChanged, this, &CallGraphWidget::onSeekChanged);
 
     setWidget(graphView);
 }
@@ -37,15 +37,15 @@ void CallGraphWidget::onSeekChanged(RVA address)
     }
 }
 
-CallGraphView::CallGraphView(ClutterDockWidget *parent, MainWindow *main, bool global)
+CallGraphView::CallGraphView(ButterDockWidget *parent, MainWindow *main, bool global)
     : SimpleTextGraphView(parent, main), global(global), refreshDeferrer(nullptr, this)
 {
     enableAddresses(true);
     addressableItemContextMenu.toggleBreakpointAction(true);
     refreshDeferrer.registerFor(parent);
     connect(&refreshDeferrer, &RefreshDeferrer::refreshNow, this, &CallGraphView::refreshView);
-    connect(Core(), &ClutterCore::refreshAll, this, &SimpleTextGraphView::refreshView);
-    connect(Core(), &ClutterCore::functionRenamed, this, &CallGraphView::refreshView);
+    connect(Core(), &ButterCore::refreshAll, this, &SimpleTextGraphView::refreshView);
+    connect(Core(), &ButterCore::functionRenamed, this, &CallGraphView::refreshView);
 }
 
 void CallGraphView::showExportDialog()
@@ -99,7 +99,7 @@ void CallGraphView::loadCurrentGraph()
 
         auto xrefs = fromOwned(rz_analysis_function_get_xrefs_from(fcn));
         auto calls = std::unordered_set<ut64>();
-        for (const auto &xref : ClutterRzList<RzAnalysisXRef>(xrefs.get())) {
+        for (const auto &xref : ButterRzList<RzAnalysisXRef>(xrefs.get())) {
             const auto x = xref->to;
             if (!(xref->type == RZ_ANALYSIS_XREF_TYPE_CALL && calls.find(x) == calls.end())) {
                 continue;
@@ -116,7 +116,7 @@ void CallGraphView::loadCurrentGraph()
     auto core = Core()->lock();
     if (global) {
         for (const auto &fcn :
-             ClutterRzList<RzAnalysisFunction>(rz_analysis_function_list(core->analysis))) {
+             ButterRzList<RzAnalysisFunction>(rz_analysis_function_list(core->analysis))) {
             if (!isBetween(from, fcn->addr, to)) {
                 continue;
             }

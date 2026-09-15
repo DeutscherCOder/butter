@@ -1,7 +1,7 @@
 #ifndef COLORTHEMEWORKER_H
 #define COLORTHEMEWORKER_H
 
-#include "Clutter.h"
+#include "Butter.h"
 
 #include <QColor>
 #include <QFile>
@@ -22,12 +22,12 @@ public:
     typedef QHash<QString, QColor> Theme;
 
     /**
-     * @brief clutterSpecificOptions is list of all available Clutter-only color options.
+     * @brief butterSpecificOptions is list of all available Butter-only color options.
      */
-    static const QStringList clutterSpecificOptions;
+    static const QStringList butterSpecificOptions;
 
     /**
-     * @brief rizinUnusedOptions is a list of all Rizin options that Clutter does not use.
+     * @brief rizinUnusedOptions is a list of all Rizin options that Butter does not use.
      */
     static const QStringList rizinUnusedOptions;
 

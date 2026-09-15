@@ -1,5 +1,5 @@
-#ifndef CLUTTER_HEAPBINSGRAPHVIEW_H
-#define CLUTTER_HEAPBINSGRAPHVIEW_H
+#ifndef BUTTER_HEAPBINSGRAPHVIEW_H
+#define BUTTER_HEAPBINSGRAPHVIEW_H
 #include "SimpleTextGraphView.h"
 
 /**
@@ -39,4 +39,4 @@ private:
     int bits;
 };
 
-#endif // CLUTTER_HEAPBINSGRAPHVIEW_H
+#endif // BUTTER_HEAPBINSGRAPHVIEW_H

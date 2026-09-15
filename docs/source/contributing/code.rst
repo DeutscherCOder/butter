@@ -2,7 +2,7 @@ Developer Documentation
 =======================
 
 .. note::
-   New to Clutter development? Check out our :doc:`tutorial for new developers <code/getting-started>`.
+   New to Butter development? Check out our :doc:`tutorial for new developers <code/getting-started>`.
 
 .. toctree::
    :maxdepth: 2

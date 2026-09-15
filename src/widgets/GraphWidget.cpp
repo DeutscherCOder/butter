@@ -52,8 +52,8 @@ GraphWidget::GraphWidget(MainWindow *main)
 
     connect(graphView, &DisassemblerGraphView::graphMoved, this,
             [=, this]() { main->toggleOverview(true, this); });
-    connect(seekable, &ClutterSeekable::seekableSeekChanged, this, &GraphWidget::prepareHeader);
-    connect(Core(), &ClutterCore::functionRenamed, this, &GraphWidget::prepareHeader);
+    connect(seekable, &ButterSeekable::seekableSeekChanged, this, &GraphWidget::prepareHeader);
+    connect(Core(), &ButterCore::functionRenamed, this, &GraphWidget::prepareHeader);
     graphView->installEventFilter(this);
 }
 
@@ -64,7 +64,7 @@ QWidget *GraphWidget::widgetToFocusOnRaise()
 
 void GraphWidget::closeEvent(QCloseEvent *event)
 {
-    ClutterDockWidget::closeEvent(event);
+    ButterDockWidget::closeEvent(event);
     emit graphClosed();
 }
 

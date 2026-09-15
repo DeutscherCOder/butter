@@ -1,7 +1,7 @@
 Building docs
 =======================
 
-This page explains the steps that are needed to build Clutter's documentation.
+This page explains the steps that are needed to build Butter's documentation.
 
 Requirements
 ------------
@@ -27,11 +27,11 @@ Then, you can build the documentation with the following commands:
 
 .. code:: sh
 
-   cd clutter/docs/
+   cd butter/docs/
    make html
 
 .. tip::
 
    If you do not need API documentation, type ``make quick`` instead of ``make html``.
    
-You can find the generated html files at ``clutter/docs/build``. Open ``clutter/docs/build/html/index.html`` with your browser to visit the index file of your local copy of the documentation.
+You can find the generated html files at ``butter/docs/build``. Open ``butter/docs/build/html/index.html`` with your browser to visit the index file of your local copy of the documentation.

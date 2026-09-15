@@ -1,5 +1,5 @@
-#ifndef CLUTTER_SELECTIONHIGHLIGHT_H
-#define CLUTTER_SELECTIONHIGHLIGHT_H
+#ifndef BUTTER_SELECTIONHIGHLIGHT_H
+#define BUTTER_SELECTIONHIGHLIGHT_H
 
 #include <QTextEdit>
 
@@ -48,4 +48,4 @@ QTextEdit::ExtraSelection createLineHighlightPC(const QTextCursor &cursor);
  */
 QTextEdit::ExtraSelection createLineHighlightBP(const QTextCursor &cursor);
 
-#endif // CLUTTER_SELECTIONHIGHLIGHT_H
+#endif // BUTTER_SELECTIONHIGHLIGHT_H

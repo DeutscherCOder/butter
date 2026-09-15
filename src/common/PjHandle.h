@@ -1,7 +1,7 @@
 #ifndef PJHANDLE_H
 #define PJHANDLE_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <memory>
 
@@ -28,7 +28,7 @@
  * }
  * @endcode
  */
-class CLUTTER_EXPORT PjHandle
+class BUTTER_EXPORT PjHandle
 {
 public:
     PjHandle();

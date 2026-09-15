@@ -1,6 +1,6 @@
 #include "VersionInfoDialog.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "common/Helpers.h"
 #include "ui_VersionInfoDialog.h"
 

@@ -7,10 +7,10 @@
  * @file ResourcePaths.h
  * Set of functions for obtaining various paths. Some of the functions are wrappers around
  * QStandardPaths functions having the same name but with modifications specific to way
- * Clutter is packaged.
+ * Butter is packaged.
  */
 
-namespace Clutter {
+namespace Butter {
 QStringList locateAll(QStandardPaths::StandardLocation type, const QString &fileName,
                       QStandardPaths::LocateOptions options = QStandardPaths::LocateFile);
 QStringList standardLocations(QStandardPaths::StandardLocation type);

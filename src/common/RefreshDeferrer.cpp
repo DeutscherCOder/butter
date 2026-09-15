@@ -1,6 +1,6 @@
 #include "RefreshDeferrer.h"
 
-#include "widgets/ClutterDockWidget.h"
+#include "widgets/ButterDockWidget.h"
 
 RefreshDeferrer::RefreshDeferrer(RefreshDeferrerAccumulator *acc, QObject *parent)
     : QObject(parent), acc(acc)
@@ -28,10 +28,10 @@ bool RefreshDeferrer::attemptRefresh(RefreshDeferrerParams params)
     }
 }
 
-void RefreshDeferrer::registerFor(ClutterDockWidget *dockWidget)
+void RefreshDeferrer::registerFor(ButterDockWidget *dockWidget)
 {
     this->dockWidget = dockWidget;
-    connect(dockWidget, &ClutterDockWidget::becameVisibleToUser, this, [this]() {
+    connect(dockWidget, &ButterDockWidget::becameVisibleToUser, this, [this]() {
         if (dirty) {
             emit refreshNow(acc ? acc->result() : nullptr);
             if (acc) {

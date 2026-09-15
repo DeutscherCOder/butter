@@ -7,7 +7,7 @@ mkdir -p cutter-deps && cd cutter-deps
 
 DEPS_BASE_URL=https://github.com/rizinorg/cutter-deps/releases/download/v19
 
-if [ "$CLUTTER_QT" == "5" ]; then
+if [ "$BUTTER_QT" == "5" ]; then
 	DEPS_FILE_linux_x86_64=cutter-deps-q5-linux-x86_64.tar.gz
 	DEPS_SHA256_linux_x86_64=ab3099fe699db100f2d00e1b70cdf77dec6b8fdd9cd1709c96e123a15fb62571
 	DEPS_BASE_URL=https://github.com/rizinorg/cutter-deps/releases/download/qt5-v17

@@ -1,7 +1,7 @@
 #include "RegisterProfileDialog.h"
 
 #include "Configuration.h"
-#include "Clutter.h"
+#include "Butter.h"
 #include "EditRegProfileDialog.h"
 #include "ui_RegisterProfileDialog.h"
 

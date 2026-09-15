@@ -25,6 +25,6 @@ Redo Seek
 
 Preferences
 ----------------------------------------
-**Description:** Open the preferences dialog to access and define Clutter's configurations.  
+**Description:** Open the preferences dialog to access and define Butter's configurations.  
 
 **Steps:** Edit -> Preferences

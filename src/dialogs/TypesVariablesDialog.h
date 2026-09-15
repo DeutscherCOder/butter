@@ -1,7 +1,7 @@
 #ifndef TYPESVARIABLESDIALOG_H
 #define TYPESVARIABLESDIALOG_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QAbstractTableModel>
 #include <QDialog>

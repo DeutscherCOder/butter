@@ -1,8 +1,8 @@
 #ifndef VTABLESWIDGET_H
 #define VTABLESWIDGET_H
 
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 
 #include <QSortFilterProxyModel>
 #include <QTreeView>
@@ -59,7 +59,7 @@ protected:
 /**
  * @brief Widget for listing C++ Virtual Tables (vtables) and their methods
  */
-class VTablesWidget : public ClutterDockWidget
+class VTablesWidget : public ButterDockWidget
 {
     Q_OBJECT
 

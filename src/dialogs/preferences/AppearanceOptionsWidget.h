@@ -1,7 +1,7 @@
 #ifndef AppearanceOptionsWidget_H
 #define AppearanceOptionsWidget_H
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 #include <QDialog>
 #include <QPushButton>

@@ -9,13 +9,13 @@
 
 #include <utility>
 
-SdbWidget::SdbWidget(MainWindow *main) : ClutterDockWidget(main), ui(new Ui::SdbWidget)
+SdbWidget::SdbWidget(MainWindow *main) : ButterDockWidget(main), ui(new Ui::SdbWidget)
 {
     ui->setupUi(this);
 
     path.clear();
 
-    connect(Core(), &ClutterCore::refreshAll, this, [this]() { reload(); });
+    connect(Core(), &ButterCore::refreshAll, this, [this]() { reload(); });
 
     connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this,
             &SdbWidget::onTreeWidgetItemDoubleClicked);

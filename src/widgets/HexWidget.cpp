@@ -1,7 +1,7 @@
 #include "HexWidget.h"
 
 #include "Configuration.h"
-#include "Clutter.h"
+#include "Butter.h"
 #include "dialogs/CommentsDialog.h"
 #include "dialogs/FlagDialog.h"
 #include "dialogs/MarkDialog.h"

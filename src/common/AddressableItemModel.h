@@ -1,7 +1,7 @@
 #ifndef ADDRESSABLEITEMMODEL_H
 #define ADDRESSABLEITEMMODEL_H
 
-#include "core/ClutterCommon.h"
+#include "core/ButterCommon.h"
 
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
@@ -9,7 +9,7 @@
 /**
  * @brief An interface for QAbstractItemModel containing an address field for each index
  */
-class CLUTTER_EXPORT AddressableItemModelI
+class BUTTER_EXPORT AddressableItemModelI
 {
 public:
     virtual RVA address(const QModelIndex &index) const = 0;
@@ -26,7 +26,7 @@ public:
  * @brief A wrapper class for QAbstractItemModel containing an address field for each index
  */
 template<class ParentModel = QAbstractItemModel>
-class CLUTTER_EXPORT AddressableItemModel : public ParentModel, public AddressableItemModelI
+class BUTTER_EXPORT AddressableItemModel : public ParentModel, public AddressableItemModelI
 {
     static_assert(std::is_base_of<QAbstractItemModel, ParentModel>::value,
                   "ParentModel needs to inherit from QAbstractItemModel");
@@ -41,7 +41,7 @@ public:
  * @brief A wrapper class for QSortFilterProxyModel with @ref AddressableItemModelI as source
  * model
  */
-class CLUTTER_EXPORT AddressableFilterProxyModel : public AddressableItemModel<QSortFilterProxyModel>
+class BUTTER_EXPORT AddressableFilterProxyModel : public AddressableItemModel<QSortFilterProxyModel>
 {
     using ParentClass = AddressableItemModel<QSortFilterProxyModel>;
 

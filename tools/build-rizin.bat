@@ -5,7 +5,7 @@ REM Why this exists: the bundled-rizin ExternalProject calls plain `ninja`
 REM (all cores) and meson's MSVC symbolextractor step is flaky on Windows --
 REM it intermittently dies with 0xC000070A, which aborts the whole build.
 REM Running ninja here with bounded parallelism and retrying gets through it;
-REM the Clutter build afterwards finds rizin up to date and simply continues.
+REM the Butter build afterwards finds rizin up to date and simply continues.
 REM
 REM Usage:  tools\build-rizin.bat [jobs]
 setlocal
@@ -13,11 +13,11 @@ IF "%~1"=="" (set JOBS=8) ELSE (set JOBS=%~1)
 
 REM Repo root = two levels up from this script (tools\..).
 for %%I in ("%~dp0..") do set "ROOT=%%~fI"
-set "RZB=%ROOT%\build-clutter\Rizin-Bundled-prefix\src\Rizin-Bundled-build"
+set "RZB=%ROOT%\build-butter\Rizin-Bundled-prefix\src\Rizin-Bundled-build"
 
 if not exist "%RZB%" (
     echo [!] rizin build directory not found: %RZB%
-    echo     Run build-clutter.bat configure first.
+    echo     Run build-butter.bat configure first.
     exit /b 1
 )
 

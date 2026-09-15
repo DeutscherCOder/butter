@@ -518,7 +518,7 @@ void DisassemblyContextMenu::aboutToShowSlot()
     st64 memDisp = 0; // Displacement
 
     if (cdb) {
-        const ClutterJson operands =
+        const ButterJson operands =
                 Core()->parseJson("opex", rz_structured_data_to_json(cdb->an_op.opex), nullptr);
 
         // Loop through both the operands of the instruction
@@ -546,7 +546,7 @@ void DisassemblyContextMenu::aboutToShowSlot()
         const RzTypeDB *typedb = rz_analysis_get_type_db(core->analysis);
         RzList *typeoffs = rz_type_db_get_by_offset(typedb, memDisp);
         if (typeoffs) {
-            for (const auto &ty : ClutterRzList<RzTypePath>(typeoffs)) {
+            for (const auto &ty : ButterRzList<RzTypePath>(typeoffs)) {
                 if (RZ_STR_ISEMPTY(ty->path)) {
                     continue;
                 }
@@ -896,19 +896,19 @@ void DisassemblyContextMenu::setAsStringAdvancedTriggered()
                               tr("Can't edit string at this address"));
         return;
     }
-    ClutterCore::StringTypeFormats coreStringType = ClutterCore::StringTypeFormats::None;
+    ButterCore::StringTypeFormats coreStringType = ButterCore::StringTypeFormats::None;
 
     const auto strSize = dialog.getStringSizeValue();
     const auto strType = dialog.getStringType();
     switch (strType) {
     case EditStringDialog::StringType::Auto:
-        coreStringType = ClutterCore::StringTypeFormats::None;
+        coreStringType = ButterCore::StringTypeFormats::None;
         break;
     case EditStringDialog::StringType::ASCII_LATIN1:
-        coreStringType = ClutterCore::StringTypeFormats::ASCII_LATIN1;
+        coreStringType = ButterCore::StringTypeFormats::ASCII_LATIN1;
         break;
     case EditStringDialog::StringType::UTF8:
-        coreStringType = ClutterCore::StringTypeFormats::UTF8;
+        coreStringType = ButterCore::StringTypeFormats::UTF8;
         break;
     };
 
@@ -980,7 +980,7 @@ void DisassemblyContextMenu::editFunctionTriggered()
         }
         RzListIter *iter;
         const char *cc;
-        ClutterRzListForeach (list, iter, const char, cc) {
+        ButterRzListForeach (list, iter, const char, cc) {
             callConList << cc;
         }
         rz_list_free(list);

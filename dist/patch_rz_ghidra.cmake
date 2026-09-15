@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Clutter patch for rz-ghidra, applied to the freshly downloaded checkout by the
-# install step (see dist/CMakeLists.txt, CLUTTER_PACKAGE_RZ_GHIDRA).
+# Butter patch for rz-ghidra, applied to the freshly downloaded checkout by the
+# install step (see dist/CMakeLists.txt, BUTTER_PACKAGE_RZ_GHIDRA).
 #
 # Why: rizin marks some stack slots as *arguments*, and for functions that
 # address their frame through the stack pointer (no frame pointer, big local
@@ -24,7 +24,7 @@
 # intended to be sent upstream as-is.
 #
 # Run standalone with:
-#   cmake -DSRC=<rz-ghidra checkout> -P cutter/dist/patch_rz_ghidra.cmake
+#   cmake -DSRC=<rz-ghidra checkout> -P butter/dist/patch_rz_ghidra.cmake
 
 if(NOT DEFINED SRC)
     message(FATAL_ERROR "patch_rz_ghidra: SRC is not set")
@@ -37,8 +37,8 @@ endif()
 
 file(READ "${_file}" _text)
 
-if(_text MATCHES "clutter: stack arg demotion")
-    message(STATUS "rz-ghidra: Clutter stack-arg patch already applied")
+if(_text MATCHES "butter: stack arg demotion")
+    message(STATUS "rz-ghidra: Butter stack-arg patch already applied")
     return()
 endif()
 
@@ -48,7 +48,7 @@ string(REPLACE "\r\n" "\n" _text "${_text}")
 
 string(REPLACE
 "\t\tint4 paramIndex = -1;\n\t\tif(rz_analysis_var_is_arg(var))\n\t\t{\n\t\t\tif(proto && !proto->possibleInputParam(addr, type->getSize()))\n\t\t\t{\n\t\t\t\t// Prevent segfaults in the Decompiler\n\t\t\t\tarch->addWarning(\"Removing arg \" + to_string(var->name) + \" because it doesn't fit into ProtoModel\");\n\t\t\t\treturn true;\n\t\t\t}\n"
-"\t\tint4 paramIndex = -1;\n\t\tbool isArg = rz_analysis_var_is_arg(var);\n\t\tif(isArg && proto && !proto->possibleInputParam(addr, type->getSize()))\n\t\t{\n\t\t\tif(var->storage.type == RZ_ANALYSIS_VAR_STORAGE_STACK)\n\t\t\t{\n\t\t\t\t// clutter: stack arg demotion. No input map accepts this address, and on a\n\t\t\t\t// frame that is addressed through the stack pointer the slot is really a local.\n\t\t\t\t// Emitting it as one keeps the variable instead of dropping it.\n\t\t\t\tarch->addWarning(\"Treating stack arg \" + to_string(var->name) + \" as a local variable because it doesn't fit into ProtoModel\");\n\t\t\t\tisArg = false;\n\t\t\t}\n\t\t\telse\n\t\t\t{\n\t\t\t\t// Prevent segfaults in the Decompiler\n\t\t\t\tarch->addWarning(\"Removing arg \" + to_string(var->name) + \" because it doesn't fit into ProtoModel\");\n\t\t\t\treturn true;\n\t\t\t}\n\t\t}\n\n\t\tif(isArg)\n\t\t{\n"
+"\t\tint4 paramIndex = -1;\n\t\tbool isArg = rz_analysis_var_is_arg(var);\n\t\tif(isArg && proto && !proto->possibleInputParam(addr, type->getSize()))\n\t\t{\n\t\t\tif(var->storage.type == RZ_ANALYSIS_VAR_STORAGE_STACK)\n\t\t\t{\n\t\t\t\t// butter: stack arg demotion. No input map accepts this address, and on a\n\t\t\t\t// frame that is addressed through the stack pointer the slot is really a local.\n\t\t\t\t// Emitting it as one keeps the variable instead of dropping it.\n\t\t\t\tarch->addWarning(\"Treating stack arg \" + to_string(var->name) + \" as a local variable because it doesn't fit into ProtoModel\");\n\t\t\t\tisArg = false;\n\t\t\t}\n\t\t\telse\n\t\t\t{\n\t\t\t\t// Prevent segfaults in the Decompiler\n\t\t\t\tarch->addWarning(\"Removing arg \" + to_string(var->name) + \" because it doesn't fit into ProtoModel\");\n\t\t\t\treturn true;\n\t\t\t}\n\t\t}\n\n\t\tif(isArg)\n\t\t{\n"
 _text "${_text}")
 
 string(REPLACE
@@ -66,9 +66,9 @@ string(REPLACE
 "\t\tif(isArg && var->storage.type == RZ_ANALYSIS_VAR_STORAGE_REG)"
 _text "${_text}")
 
-if(NOT _text MATCHES "clutter: stack arg demotion")
+if(NOT _text MATCHES "butter: stack arg demotion")
     message(FATAL_ERROR "patch_rz_ghidra: patch did not apply, RizinScope.cpp changed upstream?")
 endif()
 
 file(WRITE "${_file}" "${_text}")
-message(STATUS "rz-ghidra: applied the Clutter stack-arg patch")
+message(STATUS "rz-ghidra: applied the Butter stack-arg patch")

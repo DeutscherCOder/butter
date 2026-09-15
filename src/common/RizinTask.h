@@ -1,14 +1,14 @@
 #ifndef RZTASK_H
 #define RZTASK_H
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 #include <memory>
 
 /**
  * @brief Base class for managing background tasks via the Rizin core task API
  */
-class CLUTTER_EXPORT RizinTask : public QObject
+class BUTTER_EXPORT RizinTask : public QObject
 {
     Q_OBJECT
 
@@ -34,7 +34,7 @@ signals:
 /**
  * @brief AsyncTask for executing individual Rizin commands and fetching their output
  */
-class CLUTTER_EXPORT RizinCmdTask : public RizinTask
+class BUTTER_EXPORT RizinCmdTask : public RizinTask
 {
     Q_OBJECT
 
@@ -45,11 +45,11 @@ public:
     explicit RizinCmdTask(const QString &cmd, bool transient = true);
 
     QString getResult();
-    ClutterJson getResultJson();
+    ButterJson getResultJson();
     const char *getResultRaw();
 };
 
-class CLUTTER_EXPORT RizinFunctionTask : public RizinTask
+class BUTTER_EXPORT RizinFunctionTask : public RizinTask
 {
     Q_OBJECT
 

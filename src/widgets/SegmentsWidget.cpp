@@ -149,9 +149,9 @@ SegmentsWidget::SegmentsWidget(MainWindow *main)
 
     ui->treeView->sortByColumn(SegmentsModel::NameColumn, Qt::AscendingOrder);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &SegmentsWidget::refreshSegments);
-    connect(Core(), &ClutterCore::codeRebased, this, &SegmentsWidget::refreshSegments);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::refreshAll, this, &SegmentsWidget::refreshSegments);
+    connect(Core(), &ButterCore::codeRebased, this, &SegmentsWidget::refreshSegments);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(segmentsModel, SegmentsModel::CommentColumn); });
     connect(ui->quickFilterView, &QuickFilterView::filterTextChanged, this,
             [this] { ui->quickFilterView->setItemCount(proxyModel->rowCount()); });

@@ -2,9 +2,9 @@
 #define DISASSEMBLYWIDGET_H
 
 #include "MemoryDockWidget.h"
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 #include "common/RefreshDeferrer.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 #include <QAction>
 #include <QPlainTextEdit>
@@ -79,7 +79,7 @@ public slots:
     void refreshDisasm(RVA offset = RVA_INVALID, RefreshMode mode = RefreshMode::Reset);
 
 protected slots:
-    void onSeekChanged(RVA offset, ClutterCore::SeekHistoryType type);
+    void onSeekChanged(RVA offset, ButterCore::SeekHistoryType type);
     void refreshIfInRange(RVA offset);
     void instructionChanged(RVA offset);
 

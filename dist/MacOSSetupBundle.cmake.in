@@ -3,8 +3,8 @@ include(BundleUtilities)
 set(MACDEPLOYQT_PATH "@MACDEPLOYQT_PATH@")
 set(INFO_PLIST_PATH "@CPACK_BUNDLE_PLIST@")
 set(ADJUST_RIZIN_LIBS "@ADJUST_RIZIN_LIBS@")
-set(CLUTTER_PACKAGE_DEPENDENCIES "@CLUTTER_PACKAGE_DEPENDENCIES@")
-set(CLUTTER_ENABLE_PYTHON "@CLUTTER_ENABLE_PYTHON@")
+set(BUTTER_PACKAGE_DEPENDENCIES "@BUTTER_PACKAGE_DEPENDENCIES@")
+set(BUTTER_ENABLE_PYTHON "@BUTTER_ENABLE_PYTHON@")
 set(RZ_BIN "@RZ_BIN@")
 
 
@@ -35,10 +35,10 @@ endforeach()
 foreach(_lib ${ADJUST_RIZIN_LIBS})
 	get_filename_component(_lib "${_lib}" REALPATH)
 	get_filename_component(_name "${_lib}" NAME)
-	# Clutter reference to lib
+	# Butter reference to lib
 	run_or_die(COMMAND install_name_tool
 		-change "${_lib}" "@rpath/${_name}"
-		"${EXECUTABLE_DIR}/clutter")
+		"${EXECUTABLE_DIR}/butter")
 	# lib LC_ID_DYLIB
 	run_or_die(COMMAND install_name_tool
 			-id "@rpath/${_name}"	
@@ -68,18 +68,18 @@ endforeach()
 # Add rpaths because macdeployqt fails to do that properly
 run_or_die(COMMAND install_name_tool
 	-add_rpath "@executable_path/../Frameworks"
-	"${EXECUTABLE_DIR}/clutter")
+	"${EXECUTABLE_DIR}/butter")
 run_or_die(COMMAND install_name_tool
 	-add_rpath "@executable_path/../Resources/lib"
-	"${EXECUTABLE_DIR}/clutter")
+	"${EXECUTABLE_DIR}/butter")
 run_or_die(COMMAND install_name_tool
 	-add_rpath "@executable_path/../Resources/lib/rizin/plugins"
-	"${EXECUTABLE_DIR}/clutter")
+	"${EXECUTABLE_DIR}/butter")
 
 set(MACDEPLOYQT_COMMAND "${MACDEPLOYQT_PATH}" "${BUNDLE_PATH}" "-verbose=2" "-libpath=${CMAKE_INSTALL_PREFIX}/lib")
 message("Running macdeployqt \"${MACDEPLOYQT_COMMAND}\"")
 run_or_die(COMMAND ${MACDEPLOYQT_COMMAND}) # First run
-if (CLUTTER_PACKAGE_DEPENDENCIES AND CLUTTER_ENABLE_PYTHON)
+if (BUTTER_PACKAGE_DEPENDENCIES AND BUTTER_ENABLE_PYTHON)
 	file(REAL_PATH "${FRAMEWORK_DIR}/Python.framework/Python" _python_lib_path)
 	message("Python lib ${_python_lib_path}")
 	list(APPEND MACDEPLOYQT_COMMAND "-executable=${_python_lib_path}")

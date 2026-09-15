@@ -4,7 +4,7 @@
 #include "widgets/GlibcHeapWidget.h"
 
 HeapDockWidget::HeapDockWidget(MainWindow *main)
-    : ClutterDockWidget(main), ui(new Ui::HeapDockWidget), main(main)
+    : ButterDockWidget(main), ui(new Ui::HeapDockWidget), main(main)
 {
     ui->setupUi(this);
 

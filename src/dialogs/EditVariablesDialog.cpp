@@ -1,6 +1,6 @@
 #include "EditVariablesDialog.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "ui_EditVariablesDialog.h"
 
 #include <QComboBox>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Report how far Clutter's Ghidra decompiler is behind upstream.
+"""Report how far Butter's Ghidra decompiler is behind upstream.
 
-Clutter's decompiler is the Ghidra decompiler engine plus Ghidra's Sleigh processor
+Butter's decompiler is the Ghidra decompiler engine plus Ghidra's Sleigh processor
 specs, taken from a pinned upstream tag and patched with rizinorg/ghidra's `rizin`
 branch. This script answers "what could I upgrade?" with numbers instead of guesses:
 
@@ -25,7 +25,7 @@ import urllib.request
 
 API = "https://api.github.com/repos/NationalSecurityAgency/ghidra"
 DEFAULT_TREE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                            "build-clutter", "dist", "rz-ghidra-prefix",
+                            "build-butter", "dist", "rz-ghidra-prefix",
                             "src", "rz-ghidra", "ghidra", "ghidra")
 WATCH = [
     ("decompiler engine", "Ghidra/Features/Decompiler/src/decompile/cpp"),
@@ -36,7 +36,7 @@ WATCH = [
 def api(url):
     req = urllib.request.Request(url, headers={
         "Accept": "application/vnd.github+json",
-        "User-Agent": "clutter-ghidra-delta",
+        "User-Agent": "butter-ghidra-delta",
     })
     with urllib.request.urlopen(req, timeout=60) as r:
         return json.load(r)

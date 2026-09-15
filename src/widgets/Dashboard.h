@@ -1,7 +1,7 @@
 #ifndef DASHBOARD_H
 #define DASHBOARD_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 #include <QFormLayout>
 
@@ -21,7 +21,7 @@ class Dashboard;
 /**
  * @brief Dock widget that contains info about the loaded binary
  */
-class Dashboard : public ClutterDockWidget
+class Dashboard : public ButterDockWidget
 {
     Q_OBJECT
 

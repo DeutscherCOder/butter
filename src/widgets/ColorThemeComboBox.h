@@ -4,7 +4,7 @@
 #include <QComboBox>
 
 /**
- * @brief The ColorThemeComboBox class provides combobox with Clutter color themes.
+ * @brief The ColorThemeComboBox class provides combobox with Butter color themes.
  */
 class ColorThemeComboBox : public QComboBox
 {
@@ -21,7 +21,7 @@ public:
 public slots:
     /**
      * @brief updateFromConfig updates list of themes to be shown.
-     * @param interfaceThemeChanged should be set to true if the interface theme of Clutter was
+     * @param interfaceThemeChanged should be set to true if the interface theme of Butter was
      * changed since the last call to the function. This will preserve the selected item in the
      * combo box.
      *

@@ -184,9 +184,9 @@ ImportsWidget::ImportsWidget(MainWindow *main)
     const QShortcut *toggleShortcut = Shortcuts()->makeQShortcut("Imports.toggle", main);
     connect(toggleShortcut, &QShortcut::activated, this, [=, this]() { toggleDockWidget(true); });
 
-    connect(Core(), &ClutterCore::codeRebased, this, &ImportsWidget::refreshImports);
-    connect(Core(), &ClutterCore::refreshAll, this, &ImportsWidget::refreshImports);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::codeRebased, this, &ImportsWidget::refreshImports);
+    connect(Core(), &ButterCore::refreshAll, this, &ImportsWidget::refreshImports);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(importsModel, ImportsModel::CommentColumn); });
 }
 

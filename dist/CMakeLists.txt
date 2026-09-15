@@ -9,18 +9,18 @@ if(WIN32)
 	set(CPACK_GENERATOR "ZIP")
 	set(RIZIN_INSTALL_PLUGDIR "lib/rizin/plugins")
 
-	if (CLUTTER_PACKAGE_DEPENDENCIES)
-		if (CLUTTER_ENABLE_PYTHON)
-			if (CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
+	if (BUTTER_PACKAGE_DEPENDENCIES)
+		if (BUTTER_ENABLE_PYTHON)
+			if (BUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
 				set(CPACK_INSTALL_SCRIPTS ${CMAKE_CURRENT_SOURCE_DIR}/WindowsBundlePython.cmake)
 			endif()
-			find_package (Python3 ${CLUTTER_PYTHON_MIN} REQUIRED COMPONENTS)
+			find_package (Python3 ${BUTTER_PYTHON_MIN} REQUIRED COMPONENTS)
 			install(DIRECTORY ${CUTTER_DEPS}/pyside/lib/site-packages DESTINATION "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}")
 			install(FILES ${CUTTER_DEPS}/pyside/bin/shiboken6.abi3.dll ${CUTTER_DEPS}/pyside/bin/pyside6.abi3.dll DESTINATION .)
 		endif()
 		install(SCRIPT WindowsBundleQt.cmake)
 	endif()
-	if (CLUTTER_PACKAGE_JSDEC AND CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
+	if (BUTTER_PACKAGE_JSDEC AND BUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
 		install(CODE "
 			set(ENV{RZ_PREFIX} \"\${CMAKE_INSTALL_PREFIX}\")
 			set(ENV{PATH} \"\${CMAKE_INSTALL_PREFIX};\$ENV{PATH}\")
@@ -34,7 +34,7 @@ if(WIN32)
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_LIBSWIFT AND CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
+	if (BUTTER_PACKAGE_RZ_LIBSWIFT AND BUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
 		install(CODE "
 			set(ENV{RZ_PREFIX} \"\${CMAKE_INSTALL_PREFIX}\")
 			set(ENV{PATH} \"\${CMAKE_INSTALL_PREFIX};\$ENV{PATH}\")
@@ -46,7 +46,7 @@ if(WIN32)
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_LIBYARA AND CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
+	if (BUTTER_PACKAGE_RZ_LIBYARA AND BUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
 		install(CODE "
 			set(ENV{RZ_PREFIX} \"\${CMAKE_INSTALL_PREFIX}\")
 			set(ENV{PATH} \"\${CMAKE_INSTALL_PREFIX};\$ENV{PATH}\")
@@ -61,7 +61,7 @@ if(WIN32)
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_SILHOUETTE AND CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
+	if (BUTTER_PACKAGE_RZ_SILHOUETTE AND BUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
 		install(CODE "
 			set(ENV{RZ_PREFIX} \"\${CMAKE_INSTALL_PREFIX}\")
 			set(ENV{PATH} \"\${CMAKE_INSTALL_PREFIX};\$ENV{PATH}\")
@@ -73,7 +73,7 @@ if(WIN32)
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_FRIDA AND CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
+	if (BUTTER_PACKAGE_RZ_FRIDA AND BUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
 		install(CODE "
 			set(ENV{RZ_PREFIX} \"\${CMAKE_INSTALL_PREFIX}\")
 			set(ENV{PATH} \"\${CMAKE_INSTALL_PREFIX};\$ENV{PATH}\")
@@ -93,16 +93,16 @@ endif()
 
 if(APPLE)
 	set(CPACK_GENERATOR "Bundle")
-	set(CPACK_BUNDLE_NAME "Clutter")
-	set(ICON "Clutter")
+	set(CPACK_BUNDLE_NAME "Butter")
+	set(ICON "Butter")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/macos/Info.plist.in" "${CMAKE_CURRENT_BINARY_DIR}/macos/Info.plist")
 	set(CPACK_BUNDLE_PLIST "${CMAKE_CURRENT_BINARY_DIR}/macos/Info.plist")
-	set(CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/macos/clutter.icns")
-	set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/macos/clutter_mac_app.png")
+	set(CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/macos/butter.icns")
+	set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/macos/butter_mac_app.png")
 	set(CPACK_DMG_DS_STORE "${CMAKE_CURRENT_SOURCE_DIR}/macos/DS_Store_ForDMGBackground")
-	set(CPACK_DMG_VOLUME_NAME "Clutter")
+	set(CPACK_DMG_VOLUME_NAME "Butter")
 	set(CPACK_BUNDLE_APPLE_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/macos/Entitlements.plist")
-	set(CPACK_APPLE_BUNDLE_ID "re.rizin.clutter")
+	set(CPACK_APPLE_BUNDLE_ID "re.rizin.butter")
 
 	find_program(MACDEPLOYQT_PATH macdeployqt HINTS "${Qt5_DIR}/../../../bin")
 	if(NOT MACDEPLOYQT_PATH)
@@ -117,7 +117,7 @@ if(APPLE)
 		list(APPEND ADJUST_RIZIN_LIBS "${RIZIN_INSTALL_DIR}/lib/lib${_lib}.dylib")
 	endforeach()
 
-	if(CLUTTER_PACKAGE_DEPENDENCIES AND CLUTTER_ENABLE_PYTHON)
+	if(BUTTER_PACKAGE_DEPENDENCIES AND BUTTER_ENABLE_PYTHON)
 		set(EMBED_PYTHON_SH "${CMAKE_CURRENT_SOURCE_DIR}/appbundle_embed_python.sh")
 		set(PYTHON_FRAMEWORK_DIR "${CUTTER_DEPS}/python/Library/Frameworks/Python.framework")
 		set(PYSIDE_PREFIX "${CUTTER_DEPS}/pyside")
@@ -139,8 +139,8 @@ endif()
 # macOS + Linux
 ################################################
 
-if(CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS AND (NOT WIN32))
-	if (CLUTTER_PACKAGE_JSDEC)
+if(BUTTER_ENABLE_DEPENDENCY_DOWNLOADS AND (NOT WIN32))
+	if (BUTTER_PACKAGE_JSDEC)
 		if(APPLE)
 			set (JSDEC_PLUGIN_OPTIONS "-DCUTTER_INSTALL_PLUGDIR=plugins/native")
 		else()
@@ -156,7 +156,7 @@ if(CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS AND (NOT WIN32))
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_LIBSWIFT)
+	if (BUTTER_PACKAGE_RZ_LIBSWIFT)
 		install(CODE "
 			execute_process(COMMAND \"${CMAKE_CURRENT_SOURCE_DIR}/../scripts/rz-libswift.sh\"
 							--pkg-config-path=\${CMAKE_INSTALL_PREFIX}/lib/pkgconfig --prefix=\${CMAKE_INSTALL_PREFIX}
@@ -167,14 +167,14 @@ if(CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS AND (NOT WIN32))
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_LIBYARA)
+	if (BUTTER_PACKAGE_RZ_LIBYARA)
 		if(APPLE)
 			set (YARA_PLUGIN_OPTIONS "-DCUTTER_INSTALL_PLUGDIR=plugins/native")
 		else()
 			set (YARA_PLUGIN_OPTIONS "")
 		endif()
-		if (CLUTTER_QT EQUAL 6)
-			set (YARA_PLUGIN_OPTIONS "${YARA_PLUGIN_OPTIONS} -DCLUTTER_QT6=ON")
+		if (BUTTER_QT EQUAL 6)
+			set (YARA_PLUGIN_OPTIONS "${YARA_PLUGIN_OPTIONS} -DBUTTER_QT6=ON")
 		endif()
 		install(CODE "
 			execute_process(COMMAND
@@ -187,7 +187,7 @@ if(CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS AND (NOT WIN32))
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_SILHOUETTE)
+	if (BUTTER_PACKAGE_RZ_SILHOUETTE)
 		install(CODE "
 			execute_process(COMMAND
 							\"${CMAKE_CURRENT_SOURCE_DIR}/../scripts/rz-silhouette.sh\"
@@ -199,7 +199,7 @@ if(CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS AND (NOT WIN32))
 			endif()
 		")
 	endif()
-	if (CLUTTER_PACKAGE_RZ_FRIDA)
+	if (BUTTER_PACKAGE_RZ_FRIDA)
 		if(APPLE)
 			set (FRIDA_PLUGIN_OPTIONS "-DCUTTER_INSTALL_PLUGDIR=plugins/native")
 		else()
@@ -222,12 +222,12 @@ endif()
 # rz-ghidra
 ################################################
 
-if(CLUTTER_PACKAGE_RZ_GHIDRA)
-	if(CLUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
+if(BUTTER_PACKAGE_RZ_GHIDRA)
+	if(BUTTER_ENABLE_DEPENDENCY_DOWNLOADS)
 		# Currently using external project only for downloading source
-		# It neeeds to link against compiled clutter so for now build it using custom install script.
+		# It neeeds to link against compiled butter so for now build it using custom install script.
 		# That way rz-ghidra build process is the same as with any other external plugin built against
-		# installed Clutter.
+		# installed Butter.
 		ExternalProject_Add(rz-ghidra
 			GIT_REPOSITORY https://github.com/rizinorg/rz-ghidra
 			#GIT_TAG v0.3.0
@@ -237,7 +237,7 @@ if(CLUTTER_PACKAGE_RZ_GHIDRA)
 			CONFIGURE_COMMAND ""
 			BUILD_COMMAND ""
 			INSTALL_COMMAND ""
-			# Clutter keeps the decompiler upgrade inside this checkout: it carries the
+			# Butter keeps the decompiler upgrade inside this checkout: it carries the
 			# reviewed Ghidra version in the "ghidra" submodule plus the Sleigh specs that
 			# were raised with it. An unconditional "git fetch origin dev" would stash and
 			# then discard that (the unstash step fails on a dirty submodule), so the
@@ -251,7 +251,7 @@ if(CLUTTER_PACKAGE_RZ_GHIDRA)
 			\"-DRIZIN_INSTALL_PLUGDIR=\${CMAKE_INSTALL_PREFIX}/${RIZIN_INSTALL_PLUGDIR}\"
 			-DCUTTER_INSTALL_PLUGDIR=plugins/native")
 	else()
-		set (GHIDRA_OPTIONS "-DCUTTER_INSTALL_PLUGDIR=\${CMAKE_INSTALL_PREFIX}/share/rizin/clutter/plugins/native")
+		set (GHIDRA_OPTIONS "-DCUTTER_INSTALL_PLUGDIR=\${CMAKE_INSTALL_PREFIX}/share/rizin/butter/plugins/native")
 	endif()
 	
 	if(WIN32)
@@ -264,7 +264,7 @@ if(CLUTTER_PACKAGE_RZ_GHIDRA)
     endif()
 
 	install(CODE "
-		# Clutter carries small, documented patches for rz-ghidra so they survive
+		# Butter carries small, documented patches for rz-ghidra so they survive
 		# re-downloads of the checkout. See dist/patch_rz_ghidra.cmake.
 		execute_process(
 			COMMAND \${CMAKE_COMMAND}

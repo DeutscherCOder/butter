@@ -1,7 +1,7 @@
 #ifndef REGISTERPROFILEDIALOG_H
 #define REGISTERPROFILEDIALOG_H
 
-#include "ClutterCommon.h" // IWYU pragma: keep
+#include "ButterCommon.h" // IWYU pragma: keep
 
 #include <QDialog>
 #include <QListWidgetItem>

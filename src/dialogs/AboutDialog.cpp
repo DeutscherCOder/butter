@@ -1,10 +1,10 @@
 #include "AboutDialog.h"
 
-#include "ClutterConfig.h"
+#include "ButterConfig.h"
 #include "RizinPluginsDialog.h"
 #include "common/BugReporting.h"
 #include "common/Configuration.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "ui_AboutDialog.h"
 
 #include <QEventLoop>
@@ -25,12 +25,12 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
     ui->logoSvgWidget->load(Config()->getLogoFile());
 
     const QString aboutString(
-            tr("Version") + " " CLUTTER_VERSION_FULL "<br/>" + tr("Using rizin ")
+            tr("Version") + " " BUTTER_VERSION_FULL "<br/>" + tr("Using rizin ")
             + Core()->getRizinVersionReadable() + "<br/>" + buildQtVersionString() + "<p><b>"
             + tr("Optional Features:") + "</b><br/>"
             + tr("Python: %1")
                       .arg(
-#ifdef CLUTTER_ENABLE_PYTHON
+#ifdef BUTTER_ENABLE_PYTHON
                               tr("ON")
 #else
                               tr("OFF")
@@ -39,7 +39,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
             + "<br/>"
             + tr("Python Bindings: %1")
                       .arg(
-#ifdef CLUTTER_ENABLE_PYTHON_BINDINGS
+#ifdef BUTTER_ENABLE_PYTHON_BINDINGS
                               tr("ON")
 #else
                               tr("OFF")
@@ -48,7 +48,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
             + "</p>" + "<h2>" + tr("License") + "</h2>"
             + tr("This Software is released under the GNU General Public License v3.0") + "<h2>"
             + tr("Authors") + "</h2>"
-            + tr("Clutter is developed by the community and maintained by its core and development "
+            + tr("Butter is developed by the community and maintained by its core and development "
                  "teams.<br/>")
             + tr("Check our <a "
                  "href='https://github.com/rizinorg/cutter/graphs/contributors'>contributors "
@@ -58,7 +58,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
     const QSignalBlocker s(ui->updatesCheckBox);
     ui->updatesCheckBox->setChecked(Config()->getAutoUpdateEnabled());
 
-    if (!CLUTTER_UPDATE_WORKER_AVAILABLE) {
+    if (!BUTTER_UPDATE_WORKER_AVAILABLE) {
         ui->updatesCheckBox->hide();
         ui->checkForUpdatesButton->hide();
     }
@@ -112,7 +112,7 @@ void AboutDialog::onIssueClicked()
 
 void AboutDialog::onCheckForUpdatesButtonClicked()
 {
-#if CLUTTER_UPDATE_WORKER_AVAILABLE
+#if BUTTER_UPDATE_WORKER_AVAILABLE
     UpdateWorker updateWorker;
 
     auto parentWindow = this;
@@ -132,7 +132,7 @@ void AboutDialog::onCheckForUpdatesButtonClicked()
                 } else {
                     if (version <= UpdateWorker::currentVersionNumber()) {
                         QMessageBox::information(parentWindow, tr("Version control"),
-                                                 tr("Clutter is up to date!"));
+                                                 tr("Butter is up to date!"));
                     } else {
                         updateWorker.showUpdateDialog(false);
                     }

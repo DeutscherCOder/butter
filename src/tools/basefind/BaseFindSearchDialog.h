@@ -5,7 +5,7 @@
 #include <QListWidgetItem>
 #include <QProgressBar>
 
-#include <core/Clutter.h>
+#include <core/Butter.h>
 #include <memory>
 
 namespace Ui {

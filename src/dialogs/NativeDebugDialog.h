@@ -1,7 +1,7 @@
 #ifndef NATIVEDEBUGDIALOG_H
 #define NATIVEDEBUGDIALOG_H
 
-#include "ClutterCommon.h" // IWYU pragma: keep
+#include "ButterCommon.h" // IWYU pragma: keep
 
 #include <QDialog>
 

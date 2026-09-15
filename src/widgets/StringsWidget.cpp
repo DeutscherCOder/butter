@@ -163,7 +163,7 @@ bool StringsProxyModel::lessThan(const QModelIndex &left, const QModelIndex &rig
 }
 
 StringsWidget::StringsWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::StringsWidget),
       model(new StringsModel(this)),
       proxyModel(new StringsProxyModel(model, this))
@@ -216,9 +216,9 @@ StringsWidget::StringsWidget(MainWindow *main)
     });
     clearShortcut->setContext(Qt::WidgetWithChildrenShortcut);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &StringsWidget::refreshStrings);
-    connect(Core(), &ClutterCore::codeRebased, this, &StringsWidget::refreshStrings);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::refreshAll, this, &StringsWidget::refreshStrings);
+    connect(Core(), &ButterCore::codeRebased, this, &StringsWidget::refreshStrings);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(model, StringsModel::CommentColumn); });
 
     connect(ui->quickFilterView->comboBox(), &QComboBox::currentTextChanged, this, [this]() {

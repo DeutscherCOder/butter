@@ -8,7 +8,7 @@
 #include "ui_StackWidget.h"
 
 StackWidget::StackWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::StackWidget),
       menuText(this),
       refreshDeferrer(createRefreshDeferrer([this]() { updateContents(); })),
@@ -33,10 +33,10 @@ StackWidget::StackWidget(MainWindow *main)
     editAction = new QAction(tr("Edit stack value..."), this);
     viewStack->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &StackWidget::updateContents);
-    connect(Core(), &ClutterCore::registersChanged, this, &StackWidget::updateContents);
-    connect(Core(), &ClutterCore::stackChanged, this, &StackWidget::updateContents);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::refreshAll, this, &StackWidget::updateContents);
+    connect(Core(), &ButterCore::registersChanged, this, &StackWidget::updateContents);
+    connect(Core(), &ButterCore::stackChanged, this, &StackWidget::updateContents);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(modelStack, StackModel::CommentColumn); });
     connect(Config(), &Configuration::fontsUpdated, this, &StackWidget::fontsUpdatedSlot);
     connect(viewStack, &QAbstractItemView::doubleClicked, this, &StackWidget::onDoubleClicked);

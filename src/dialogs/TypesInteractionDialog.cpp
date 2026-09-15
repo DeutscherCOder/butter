@@ -1,7 +1,7 @@
 #include "dialogs/TypesInteractionDialog.h"
 
 #include "common/Configuration.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "ui_TypesInteractionDialog.h"
 
 #include <QFileDialog>

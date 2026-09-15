@@ -3,9 +3,9 @@ find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
 if(NOT WINDEPLOYQT_EXECUTABLE)
 	message(FATAL_ERROR "Failed to find windeployqt")
 endif()
-execute_process(COMMAND "${WINDEPLOYQT_EXECUTABLE}" clutter.exe
+execute_process(COMMAND "${WINDEPLOYQT_EXECUTABLE}" butter.exe
         --plugindir "qtplugins"
-        --no-translations # Clutter currently isn't loading Qt translation file
+        --no-translations # Butter currently isn't loading Qt translation file
     WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
     RESULT_VARIABLE SCRIPT_RESULT)
 if (SCRIPT_RESULT)

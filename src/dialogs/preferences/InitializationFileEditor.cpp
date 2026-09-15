@@ -17,58 +17,58 @@ InitializationFileEditor::InitializationFileEditor(PreferencesDialog *dialog)
     : QDialog(dialog), ui(new Ui::InitializationFileEditor)
 {
     ui->setupUi(this);
-    connect(ui->saveRC, &QDialogButtonBox::accepted, this, &InitializationFileEditor::saveClutterRC);
+    connect(ui->saveRC, &QDialogButtonBox::accepted, this, &InitializationFileEditor::saveButterRC);
     connect(ui->executeNow, &QDialogButtonBox::accepted, this,
-            &InitializationFileEditor::executeClutterRC);
+            &InitializationFileEditor::executeButterRC);
     connect(ui->configFileEdit, &QPlainTextEdit::modificationChanged, ui->saveRC,
             &QWidget::setEnabled);
 
-    const QDir clutterRCDirectory = Core()->getClutterRCDefaultDirectory();
-    auto clutterRCFileInfo = QFileInfo(clutterRCDirectory, "rc");
-    const QString clutterRCLocation = clutterRCFileInfo.absoluteFilePath();
+    const QDir butterRCDirectory = Core()->getButterRCDefaultDirectory();
+    auto butterRCFileInfo = QFileInfo(butterRCDirectory, "rc");
+    const QString butterRCLocation = butterRCFileInfo.absoluteFilePath();
 
-    ui->clutterRCLoaded->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    ui->clutterRCLoaded->setOpenExternalLinks(true);
-    ui->clutterRCLoaded->setText(
+    ui->butterRCLoaded->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->butterRCLoaded->setOpenExternalLinks(true);
+    ui->butterRCLoaded->setText(
             tr("Script is loaded from <a href=\"%1\">%2</a>")
-                    .arg(QUrl::fromLocalFile(clutterRCDirectory.absolutePath()).toString(),
-                         clutterRCLocation.toHtmlEscaped()));
+                    .arg(QUrl::fromLocalFile(butterRCDirectory.absolutePath()).toString(),
+                         butterRCLocation.toHtmlEscaped()));
 
     ui->executeNow->button(QDialogButtonBox::Retry)->setText(tr("Execute", "script"));
     ui->configFileEdit->clear();
-    if (clutterRCFileInfo.exists()) {
-        QFile clutterRC(clutterRCLocation);
-        if (clutterRC.open(QIODevice::ReadWrite | QIODevice::Text)) {
-            ui->configFileEdit->setPlainText(clutterRC.readAll());
+    if (butterRCFileInfo.exists()) {
+        QFile butterRC(butterRCLocation);
+        if (butterRC.open(QIODevice::ReadWrite | QIODevice::Text)) {
+            ui->configFileEdit->setPlainText(butterRC.readAll());
         }
-        clutterRC.close();
+        butterRC.close();
     }
     ui->saveRC->setDisabled(true);
 }
 
 InitializationFileEditor::~InitializationFileEditor() {};
 
-void InitializationFileEditor::saveClutterRC()
+void InitializationFileEditor::saveButterRC()
 {
-    const QDir clutterRCDirectory = Core()->getClutterRCDefaultDirectory();
-    if (!clutterRCDirectory.exists()) {
-        clutterRCDirectory.mkpath(".");
+    const QDir butterRCDirectory = Core()->getButterRCDefaultDirectory();
+    if (!butterRCDirectory.exists()) {
+        butterRCDirectory.mkpath(".");
     }
-    auto clutterRCFileInfo = QFileInfo(clutterRCDirectory, "rc");
-    const QString clutterRCLocation = clutterRCFileInfo.absoluteFilePath();
+    auto butterRCFileInfo = QFileInfo(butterRCDirectory, "rc");
+    const QString butterRCLocation = butterRCFileInfo.absoluteFilePath();
 
-    QFile clutterRC(clutterRCLocation);
-    if (clutterRC.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) {
-        QTextStream out(&clutterRC);
+    QFile butterRC(butterRCLocation);
+    if (butterRC.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) {
+        QTextStream out(&butterRC);
         const QString text = ui->configFileEdit->toPlainText();
         out << text;
-        clutterRC.close();
+        butterRC.close();
     }
     ui->configFileEdit->document()->setModified(false);
 }
 
-void InitializationFileEditor::executeClutterRC()
+void InitializationFileEditor::executeButterRC()
 {
-    saveClutterRC();
-    Core()->loadDefaultClutterRC();
+    saveButterRC();
+    Core()->loadDefaultButterRC();
 }

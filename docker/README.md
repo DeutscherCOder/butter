@@ -1,6 +1,6 @@
-# Docker Configuration for Clutter
+# Docker Configuration for Butter
 
-These files provide an easy way to deploy *Clutter* in a Docker container. After additional configuration you may want to apply to the `Makefile`, execute `make run`. By default, the *Clutter* image on [Docker Hub](https://hub.docker.com/r/rizin/clutter/) will be used along with additional UID, capability, X and mount settings:
+These files provide an easy way to deploy *Butter* in a Docker container. After additional configuration you may want to apply to the `Makefile`, execute `make run`. By default, the *Butter* image on [Docker Hub](https://hub.docker.com/r/rizin/butter/) will be used along with additional UID, capability, X and mount settings:
 
 - Xauthority settings which avoid using potentially insecure `xhost` directives. The settings have been adapted from [this post](https://stackoverflow.com/questions/16296753/can-you-run-gui-apps-in-a-docker-container/25280523#25280523).
 - Mount directives to mount a shared folder and rizin configuration files.
@@ -8,9 +8,9 @@ These files provide an easy way to deploy *Clutter* in a Docker container. After
 
 ## Mounting and Using a Specific Binary
 
-The `Makefile` allows mounting a single binary file as read-only, which will also be used as an input for *Clutter*. To use this feature, execute `make run BINARY=/absolute/path/to/binary`.
+The `Makefile` allows mounting a single binary file as read-only, which will also be used as an input for *Butter*. To use this feature, execute `make run BINARY=/absolute/path/to/binary`.
 
 ## Additional Notes
 
-- The internal container user doesn't use superuser privileges and is called `clutter`.
+- The internal container user doesn't use superuser privileges and is called `butter`.
 - To check for more options of the `Makefile`, execute `make`.

@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ClutterRC Editor</string>
+   <string>ButterRC Editor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
-    <widget class="QLabel" name="clutterRCLoaded">
+    <widget class="QLabel" name="butterRCLoaded">
      <property name="text">
       <string>TextLabel</string>
      </property>

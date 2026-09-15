@@ -256,9 +256,9 @@ CommentsWidget::CommentsWidget(MainWindow *main)
     connect(this, &QWidget::customContextMenuRequested, this,
             &CommentsWidget::showTitleContextMenu);
 
-    connect(Core(), &ClutterCore::codeRebased, this, &CommentsWidget::refreshTree);
-    connect(Core(), &ClutterCore::commentsChanged, this, &CommentsWidget::refreshTree);
-    connect(Core(), &ClutterCore::refreshAll, this, &CommentsWidget::refreshTree);
+    connect(Core(), &ButterCore::codeRebased, this, &CommentsWidget::refreshTree);
+    connect(Core(), &ButterCore::commentsChanged, this, &CommentsWidget::refreshTree);
+    connect(Core(), &ButterCore::refreshAll, this, &CommentsWidget::refreshTree);
 }
 
 CommentsWidget::~CommentsWidget() {}

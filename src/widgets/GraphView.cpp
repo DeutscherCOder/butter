@@ -1,7 +1,7 @@
 #include "GraphView.h"
 
 #include "GraphGridLayout.h"
-#ifdef CLUTTER_ENABLE_GRAPHVIZ
+#ifdef BUTTER_ENABLE_GRAPHVIZ
 #    include "GraphvizLayout.h"
 #endif
 #include "GraphHorizontalAdapter.h"
@@ -15,7 +15,7 @@
 
 #include <vector>
 
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
 #    include <QOpenGLContext>
 #    include <QOpenGLExtraFunctions>
 #    include <QOpenGLPaintDevice>
@@ -25,13 +25,13 @@
 GraphView::GraphView(QWidget *parent)
     : QAbstractScrollArea(parent),
       useGL(false)
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
       ,
       cacheTexture(0),
       cacheFBO(0)
 #endif
 {
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
     if (useGL) {
         glWidget = new QOpenGLWidget(this);
         setViewport(glWidget);
@@ -176,7 +176,7 @@ void GraphView::setViewScale(qreal scale)
 QSize GraphView::getCacheSize()
 {
     return
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
             useGL ? cacheSize :
 #endif
                   pixmap.size();
@@ -185,7 +185,7 @@ QSize GraphView::getCacheSize()
 qreal GraphView::getCacheDevicePixelRatioF()
 {
     return
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
             useGL ? 1.0 :
 #endif
                   qhelpers::devicePixelRatio(&pixmap);
@@ -199,7 +199,7 @@ QSize GraphView::getRequiredCacheSize()
 qreal GraphView::getRequiredCacheDevicePixelRatioF()
 {
     return
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
             useGL ? 1.0f :
 #endif
                   qhelpers::devicePixelRatio(this);
@@ -207,7 +207,7 @@ qreal GraphView::getRequiredCacheDevicePixelRatioF()
 
 void GraphView::paintEvent(QPaintEvent *)
 {
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
     if (useGL) {
         glWidget->makeCurrent();
     }
@@ -224,7 +224,7 @@ void GraphView::paintEvent(QPaintEvent *)
     }
 
     if (useGL) {
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
         auto gl = glWidget->context()->extraFunctions();
         gl->glBindFramebuffer(GL_READ_FRAMEBUFFER, cacheFBO);
         gl->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, glWidget->defaultFramebufferObject());
@@ -267,12 +267,12 @@ void GraphView::addViewOffset(QPoint move, bool emitSignal)
 
 void GraphView::paintGraphCache()
 {
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
     std::unique_ptr<QOpenGLPaintDevice> paintDevice;
 #endif
     QPainter p;
     if (useGL) {
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
         auto gl = QOpenGLContext::currentContext()->functions();
 
         bool resizeTex = false;
@@ -444,7 +444,7 @@ void GraphView::saveAsSvg(const QString &path)
     generator.setFileName(path);
     generator.setSize(QSize(width, height));
     generator.setViewBox(QRect(0, 0, width, height));
-    generator.setTitle(tr("Clutter graph export"));
+    generator.setTitle(tr("Butter graph export"));
     QPainter p;
     p.begin(&generator);
     paint(p, QPoint(0, 0), QRect(0, 0, width, height), 1.0, false);
@@ -555,7 +555,7 @@ std::unique_ptr<GraphLayout> GraphView::makeGraphLayout(GraphView::Layout layout
     std::unique_ptr<GraphLayout> result;
     bool needAdapter = true; // NOLINT
 
-#ifdef CLUTTER_ENABLE_GRAPHVIZ
+#ifdef BUTTER_ENABLE_GRAPHVIZ
     auto makeGraphvizLayout = [&](GraphvizLayout::LayoutType type) {
         result.reset(new GraphvizLayout(
                 type, horizontal ? GraphvizLayout::Direction::LR : GraphvizLayout::Direction::TB));
@@ -589,7 +589,7 @@ std::unique_ptr<GraphLayout> GraphView::makeGraphLayout(GraphView::Layout layout
         result = std::move(gridLayout);
         break;
     }
-#ifdef CLUTTER_ENABLE_GRAPHVIZ
+#ifdef BUTTER_ENABLE_GRAPHVIZ
     case Layout::GraphvizOrtho:
         makeGraphvizLayout(GraphvizLayout::LayoutType::DotOrtho);
         break;

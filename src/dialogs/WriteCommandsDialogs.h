@@ -1,7 +1,7 @@
 #ifndef WRITECOMMANDSDIALOGS_H
 #define WRITECOMMANDSDIALOGS_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QDialog>
 

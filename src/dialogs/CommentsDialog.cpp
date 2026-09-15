@@ -1,6 +1,6 @@
 #include "CommentsDialog.h"
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "ui_CommentsDialog.h"
 
 #include <QErrorMessage>

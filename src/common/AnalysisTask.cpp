@@ -1,6 +1,6 @@
 #include "common/AnalysisTask.h"
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 #include "dialogs/InitialOptionsDialog.h"
 
@@ -93,7 +93,7 @@ void AnalysisTask::runTask()
 
     rz_flag_space_set(core->flags, "*");
 
-    // Clutter-tuned analysis defaults. The decompiler is only as good as the
+    // Butter-tuned analysis defaults. The decompiler is only as good as the
     // analysis feeding it: stock `aaa` leaves indirect-jump following, jump-
     // table recovery and hasnext off, which costs real functions and xrefs on
     // MSVC binaries (measured with .tools/analysis-bench.py: hasnext alone

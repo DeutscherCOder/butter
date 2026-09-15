@@ -1,4 +1,4 @@
-/* Clutter crackme -- a deliberately hostile Windows target.
+/* Butter crackme -- a deliberately hostile Windows target.
  *
  * Protections:
  *   - the real check is a bytecode VM whose program lives in an encrypted blob
@@ -201,9 +201,9 @@ static const char *decoy_strings[] = {
     "s3cr3t_k3y_do_not_sh4re",
     "correct horse battery staple",
     "VM_SALT_9f8e7d6c",
-    "CLUTTER{str1ngs_ar3_f0r_b3g1nn3rs}",
+    "BUTTER{str1ngs_ar3_f0r_b3g1nn3rs}",
     "admin:admin",
-    "Access granted. flag: CLUTTER{h4rdc0d3d_ch3ck}",
+    "Access granted. flag: BUTTER{h4rdc0d3d_ch3ck}",
 };
 
 static int decoy_check(const char *in)
@@ -211,7 +211,7 @@ static int decoy_check(const char *in)
     static const char *fake[] = {
         "hunter2",
         "s3cr3t_k3y_do_not_sh4re",
-        "CLUTTER{str1ngs_ar3_f0r_b3g1nn3rs}",
+        "BUTTER{str1ngs_ar3_f0r_b3g1nn3rs}",
     };
 
     for (unsigned i = 0; i < 3; i++) {
@@ -258,7 +258,7 @@ int main(int argc, char **argv)
     if (opaque_false()) {
         /* Dead code that looks like the real check. */
         if (decoy_check(input))
-            printf("Access granted. flag: CLUTTER{h4rdc0d3d_ch3ck}\n");
+            printf("Access granted. flag: BUTTER{h4rdc0d3d_ch3ck}\n");
         else
             printf("Access denied.\n");
         return 0;
@@ -294,7 +294,7 @@ int main(int argc, char **argv)
                 (const unsigned char *)input, (unsigned int)strlen(input));
 
     if (ok) {
-        printf("Access granted. flag: CLUTTER{v1rtu4l_m4ch1n3s_4nd_p4ck3rs}\n");
+        printf("Access granted. flag: BUTTER{v1rtu4l_m4ch1n3s_4nd_p4ck3rs}\n");
         memset(payload, 0, G_BLOB_LEN);
         free(payload);
         return 0;

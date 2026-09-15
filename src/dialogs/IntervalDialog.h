@@ -1,7 +1,7 @@
 #ifndef INTERVALDIALOG_H
 #define INTERVALDIALOG_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QDialog>
 

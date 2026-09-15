@@ -1,7 +1,7 @@
 #ifndef LISTDOCKWIDGET_H
 #define LISTDOCKWIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 #include "common/AddressableItemModel.h"
 #include "menus/AddressableItemContextMenu.h"
 
@@ -22,7 +22,7 @@ class ListDockWidget;
 /**
  * @brief A dockable widget that displays data in a searchable tree or list format
  */
-class CLUTTER_EXPORT ListDockWidget : public ClutterDockWidget
+class BUTTER_EXPORT ListDockWidget : public ButterDockWidget
 {
     Q_OBJECT
 

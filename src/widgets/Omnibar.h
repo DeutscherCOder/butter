@@ -1,7 +1,7 @@
 #ifndef OMNIBAR_H
 #define OMNIBAR_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QCompleter>
 #include <QLineEdit>

@@ -12,20 +12,20 @@ constexpr int vPadding = 4;
 };
 
 SearchableDockWidget::SearchableDockWidget(MainWindow *parent)
-    : ClutterDockWidget(parent), searchBar(new SearchBarWidget(this))
+    : ButterDockWidget(parent), searchBar(new SearchBarWidget(this))
 {
-    ClutterSearchableHelper::setupConnections(this, searchBar);
+    ButterSearchableHelper::setupConnections(this, searchBar);
 }
 
 void SearchableDockWidget::resizeEvent(QResizeEvent *event)
 {
-    ClutterDockWidget::resizeEvent(event);
+    ButterDockWidget::resizeEvent(event);
     updateSearchBarPosition();
 }
 
 void SearchableDockWidget::updateSearchBarPosition()
 {
-    ClutterSearchableHelper::positionSearchBar(this, searchBar, searchableArea(), searchHPadding(),
+    ButterSearchableHelper::positionSearchBar(this, searchBar, searchableArea(), searchHPadding(),
                                               searchVPadding());
 }
 

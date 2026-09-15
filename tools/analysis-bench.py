@@ -19,12 +19,12 @@ import sys
 import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RIZIN = os.environ.get("CLUTTER_RIZIN", os.path.join(ROOT, "clutter-dist", "rizin.exe"))
+RIZIN = os.environ.get("BUTTER_RIZIN", os.path.join(ROOT, "butter-dist", "rizin.exe"))
 
-# What Cutter runs today as the default (InitialOptionsDialog level 1).
+# What Butter runs today as the default (InitialOptionsDialog level 1).
 BASELINE = ["aaa"]
 
-# Candidate default profile for Clutter.
+# Candidate default profile for Butter.
 PROFILE = [
     "e analysis.hasnext=true",
     "e analysis.jmp.indir=true",
@@ -103,7 +103,7 @@ def main():
         binaries = [os.path.join(ROOT, "crackme", "crackme.exe"),
                     os.path.join(ROOT, "tools", "testprobe", "probe.exe")]
     if not os.path.isfile(RIZIN):
-        print(f"[!] rizin not found at {RIZIN} (set CLUTTER_RIZIN)")
+        print(f"[!] rizin not found at {RIZIN} (set BUTTER_RIZIN)")
         return 1
 
     print(f"[*] engine: {RIZIN}")

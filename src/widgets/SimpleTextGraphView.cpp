@@ -3,7 +3,7 @@
 #include "common/Configuration.h"
 #include "common/Helpers.h"
 #include "common/SyntaxHighlighter.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "core/MainWindow.h"
 
 #include <QAction>
@@ -23,7 +23,7 @@
 #include <cmath>
 
 SimpleTextGraphView::SimpleTextGraphView(QWidget *parent, MainWindow *mainWindow)
-    : ClutterGraphView(parent),
+    : ButterGraphView(parent),
       contextMenu(new QMenu(this)),
       addressableItemContextMenu(this, mainWindow),
       copyAction(tr("Copy"), this)

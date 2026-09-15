@@ -1,7 +1,7 @@
 #include "OverviewView.h"
 
 #include "common/Configuration.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 #include <QMouseEvent>
 #include <QPainter>

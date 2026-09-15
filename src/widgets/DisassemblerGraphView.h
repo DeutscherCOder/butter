@@ -3,10 +3,10 @@
 
 // Based on the DisassemblerGraphView from x64dbg
 
-#include "common/ClutterSeekable.h"
+#include "common/ButterSeekable.h"
 #include "common/RichTextPainter.h"
 #include "menus/DisassemblyContextMenu.h"
-#include "widgets/ClutterGraphView.h"
+#include "widgets/ButterGraphView.h"
 
 #include <QLabel>
 #include <QPainter>
@@ -19,7 +19,7 @@ class FallbackSyntaxHighlighter;
 /**
  * @brief Graph View widget for disassembly
  */
-class DisassemblerGraphView : public ClutterGraphView
+class DisassemblerGraphView : public ButterGraphView
 {
     Q_OBJECT
 
@@ -92,7 +92,7 @@ class DisassemblerGraphView : public ClutterGraphView
     };
 
 public:
-    DisassemblerGraphView(QWidget *parent, ClutterSeekable *seekable, MainWindow *mainWindow,
+    DisassemblerGraphView(QWidget *parent, ButterSeekable *seekable, MainWindow *mainWindow,
                           const QList<QAction *> &additionalMenuAction);
     ~DisassemblerGraphView() override;
     std::unordered_map<ut64, DisassemblyBlock> disassemblyBlocks;
@@ -189,7 +189,7 @@ private:
     void seekLocal(RVA addr, bool update_viewport = true);
     void seekInstruction(bool previous_instr);
 
-    ClutterSeekable *seekable = nullptr;
+    ButterSeekable *seekable = nullptr;
     QList<QShortcut *> shortcuts;
     QList<RVA> breakpoints;
 

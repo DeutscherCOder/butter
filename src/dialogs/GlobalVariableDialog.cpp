@@ -1,6 +1,6 @@
 #include "GlobalVariableDialog.h"
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "ui_GlobalVariableDialog.h"
 
 #include <QIntValidator>

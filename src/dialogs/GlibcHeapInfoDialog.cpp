@@ -1,6 +1,6 @@
 #include "GlibcHeapInfoDialog.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "ui_GlibcHeapInfoDialog.h"
 
 #include <utility>

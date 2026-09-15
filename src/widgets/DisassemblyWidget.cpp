@@ -133,19 +133,19 @@ DisassemblyWidget::DisassemblyWidget(MainWindow *main)
 
     // Avoids the "The slot requires more arguments than the signal provides" error
     auto refresh = [this]() { refreshDisasm(); };
-    connect(Core(), &ClutterCore::commentsChanged, this, refresh);
-    connect(Core(), &ClutterCore::flagsChanged, this, refresh);
-    connect(Core(), &ClutterCore::globalVarsChanged, this, refresh);
-    connect(Core(), &ClutterCore::functionsChanged, this, refresh);
-    connect(Core(), &ClutterCore::functionRenamed, this, refresh);
-    connect(Core(), &ClutterCore::varsChanged, this, refresh);
-    connect(Core(), &ClutterCore::asmOptionsChanged, this, refresh);
-    connect(Core(), &ClutterCore::refreshCodeViews, this, [this] {
+    connect(Core(), &ButterCore::commentsChanged, this, refresh);
+    connect(Core(), &ButterCore::flagsChanged, this, refresh);
+    connect(Core(), &ButterCore::globalVarsChanged, this, refresh);
+    connect(Core(), &ButterCore::functionsChanged, this, refresh);
+    connect(Core(), &ButterCore::functionRenamed, this, refresh);
+    connect(Core(), &ButterCore::varsChanged, this, refresh);
+    connect(Core(), &ButterCore::asmOptionsChanged, this, refresh);
+    connect(Core(), &ButterCore::refreshCodeViews, this, [this] {
         breakpointsDirty = true;
         refreshDisasm();
     });
-    connect(Core(), &ClutterCore::instructionChanged, this, &DisassemblyWidget::instructionChanged);
-    connect(Core(), &ClutterCore::breakpointsChanged, this, [this](RVA offset) {
+    connect(Core(), &ButterCore::instructionChanged, this, &DisassemblyWidget::instructionChanged);
+    connect(Core(), &ButterCore::breakpointsChanged, this, [this](RVA offset) {
         breakpointsDirty = true;
         refreshIfInRange(offset);
     });
@@ -153,7 +153,7 @@ DisassemblyWidget::DisassemblyWidget(MainWindow *main)
     connect(Config(), &Configuration::fontsUpdated, this, &DisassemblyWidget::fontsUpdatedSlot);
     connect(Config(), &Configuration::colorsUpdated, this, &DisassemblyWidget::colorsUpdatedSlot);
 
-    connect(Core(), &ClutterCore::refreshAll, this, [this]() {
+    connect(Core(), &ButterCore::refreshAll, this, [this]() {
         // just in case if breakpoints were changed via rizin console
         breakpointsDirty = true;
         refreshDisasm(seekable->getOffset());
@@ -164,7 +164,7 @@ DisassemblyWidget::DisassemblyWidget(MainWindow *main)
 
     mCtxMenu->addSeparator();
     mCtxMenu->addAction(&syncAction);
-    connect(seekable, &ClutterSeekable::seekableSeekChanged, this,
+    connect(seekable, &ButterSeekable::seekableSeekChanged, this,
             &DisassemblyWidget::onSeekChanged);
 
     addActions(mCtxMenu->actions());
@@ -192,7 +192,7 @@ DisassemblyWidget::DisassemblyWidget(MainWindow *main)
 #undef ADD_ACTION
 
     QTimer::singleShot(0, [this] { updateMaxLines(); });
-    connect(this, &ClutterDockWidget::becameVisibleToUser, this, [this] { updateMaxLines(); });
+    connect(this, &ButterDockWidget::becameVisibleToUser, this, [this] { updateMaxLines(); });
 }
 
 void DisassemblyWidget::setPreviewMode(bool previewMode)
@@ -1147,9 +1147,9 @@ int DisassemblyWidget::getStartIndex() const
     return startIndex;
 }
 
-void DisassemblyWidget::onSeekChanged(RVA offset, ClutterCore::SeekHistoryType type)
+void DisassemblyWidget::onSeekChanged(RVA offset, ButterCore::SeekHistoryType type)
 {
-    if (type == ClutterCore::SeekHistoryType::New) {
+    if (type == ButterCore::SeekHistoryType::New) {
         // Erase previous history past this point.
         if (topOffsetHistory.size() > topOffsetHistoryPos + 1) {
             topOffsetHistory.erase(topOffsetHistory.begin() + topOffsetHistoryPos + 1,
@@ -1157,9 +1157,9 @@ void DisassemblyWidget::onSeekChanged(RVA offset, ClutterCore::SeekHistoryType t
         }
         topOffsetHistory.push_back(offset);
         topOffsetHistoryPos = topOffsetHistory.size() - 1;
-    } else if (type == ClutterCore::SeekHistoryType::Undo) {
+    } else if (type == ButterCore::SeekHistoryType::Undo) {
         --topOffsetHistoryPos;
-    } else if (type == ClutterCore::SeekHistoryType::Redo) {
+    } else if (type == ButterCore::SeekHistoryType::Redo) {
         ++topOffsetHistoryPos;
     }
     if (!seekFromCursor) {
@@ -1172,7 +1172,7 @@ void DisassemblyWidget::onSeekChanged(RVA offset, ClutterCore::SeekHistoryType t
     }
 
     if (topOffset != RVA_INVALID && offset >= topOffset && offset <= bottomOffset
-        && type == ClutterCore::SeekHistoryType::New) {
+        && type == ButterCore::SeekHistoryType::New) {
         // if the line with the seek offset is currently visible, just move the cursor there
         updateCursorPosition();
         topOffsetHistory[topOffsetHistoryPos] = topOffset;

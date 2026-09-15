@@ -5,7 +5,7 @@
 #include <QDialog>
 #include <QSortFilterProxyModel>
 
-#include <core/Clutter.h>
+#include <core/Butter.h>
 #include <memory>
 
 class BaseFindResultsDialog;
@@ -41,7 +41,7 @@ private:
 /**
  * @brief Dialog to display BaseFind results
  *
- * Contains context menu with options to reopen Clutter with base or map address as selected address
+ * Contains context menu with options to reopen Butter with base or map address as selected address
  */
 class BaseFindResultsDialog : public QDialog
 {

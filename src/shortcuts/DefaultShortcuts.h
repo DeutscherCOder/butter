@@ -8,7 +8,7 @@
 
 /**
  * @file DefaultShortcuts.h
- * Contains all of the default shortcuts for Clutter
+ * Contains all of the default shortcuts for Butter
  * Visually shown in @ref ShortcutOptionsWidget
  */
 

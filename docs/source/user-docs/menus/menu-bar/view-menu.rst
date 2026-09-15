@@ -4,22 +4,22 @@ View Menu
 
 Refresh Contents
 ----------------------------------------
-**Description:** In some cases, not all the displayed information on Clutter's widgets will be up-to-date, for example - after defining a new function from the integrated Rizin console. By refreshing the contents, Clutter will fetch the most up to date information from the session and will update the different views.
+**Description:** In some cases, not all the displayed information on Butter's widgets will be up-to-date, for example - after defining a new function from the integrated Rizin console. By refreshing the contents, Butter will fetch the most up to date information from the session and will update the different views.
 
-***Note:** In the future, Clutter will be aware to any underlying change and will update everything automatically. This is currently a work-in-progress.*
+***Note:** In the future, Butter will be aware to any underlying change and will update everything automatically. This is currently a work-in-progress.*
 
 
 **Steps:** View -> Refresh Contents  
 
 Reset to Default Layout
 ----------------------------------------
-**Description:** Reset the current :doc:`layout</user-docs/preferences/layout>` to the default layout provided by Clutter.
+**Description:** Reset the current :doc:`layout</user-docs/preferences/layout>` to the default layout provided by Butter.
 
 **Steps:** View -> Reset to default layout
 
 Reset to Default Settings
 ----------------------------------------
-**Description:** Reset the current settings to the default settings defined by Clutter.  
+**Description:** Reset the current settings to the default settings defined by Butter.  
 
 **Steps:** View -> Reset Settings  
 

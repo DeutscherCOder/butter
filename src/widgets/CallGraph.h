@@ -13,7 +13,7 @@ class CallGraphView : public SimpleTextGraphView
 {
     Q_OBJECT
 public:
-    CallGraphView(ClutterDockWidget *parent, MainWindow *main, bool global);
+    CallGraphView(ButterDockWidget *parent, MainWindow *main, bool global);
     void showExportDialog() override;
     void showAddress(RVA address);
     void refreshView() override;

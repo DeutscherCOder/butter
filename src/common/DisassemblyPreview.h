@@ -2,7 +2,7 @@
 #define DISASSEMBLYPREVIEW_H
 
 #include "DisassemblyHelper.h"
-#include "core/ClutterDescriptions.h"
+#include "core/ButterDescriptions.h"
 
 #include <QTextBlockUserData>
 

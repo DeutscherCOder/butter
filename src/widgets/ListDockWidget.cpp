@@ -10,7 +10,7 @@
 #include <QShortcut>
 
 ListDockWidget::ListDockWidget(MainWindow *main)
-    : ClutterDockWidget(main), ui(new Ui::ListDockWidget)
+    : ButterDockWidget(main), ui(new Ui::ListDockWidget)
 {
     ui->setupUi(this);
 

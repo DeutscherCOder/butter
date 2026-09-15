@@ -1,6 +1,6 @@
-# Contributing to Clutter
+# Contributing to Butter
 
-There are different ways you can help contributing to Clutter:
+There are different ways you can help contributing to Butter:
 
 ## Opening an issue
 
@@ -10,7 +10,7 @@ You can create an issue by clicking on [this link](https://github.com/rizinorg/c
 
 ## Contributing to the code
 
-Note that clutter is still under development and many parts of the code are to be improved.
+Note that butter is still under development and many parts of the code are to be improved.
 The best way is to check the opened issues [here](https://github.com/rizinorg/cutter/issues) or discuss with rizinorg team.
 Please follow our contribution guidelines: https://cutter.re/docs/contributing.html
 
@@ -22,7 +22,7 @@ Check issues marked as "Documentation" on our issues [list](https://github.com/r
 
 ## Translations
 
-You can help Clutter by adding translations to the project! We use the [Crowdin](https://crowdin.com/project/clutter) platform to help us share translations. Feel free to contribute and add translations to the project. If you need to add a language, ask any rizinorg developer.
+You can help Butter by adding translations to the project! We use the [Crowdin](https://crowdin.com/project/butter) platform to help us share translations. Feel free to contribute and add translations to the project. If you need to add a language, ask any rizinorg developer.
 
 ## Usage of AI tools
 

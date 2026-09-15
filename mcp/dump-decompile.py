@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Decompile a function through clutter_mcp.py and print/save the result.
+"""Decompile a function through butter_mcp.py and print/save the result.
 
     python dump-decompile.py <binary> <function-or-address> [outfile]
 

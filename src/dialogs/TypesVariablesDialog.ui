@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="9,1">
    <item>
-    <widget class="ClutterTreeView" name="treeView"/>
+    <widget class="ButterTreeView" name="treeView"/>
    </item>
    <item>
     <widget class="ComboQuickFilterView" name="quickFilterView" native="true"/>
@@ -24,9 +24,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ClutterTreeView</class>
+   <class>ButterTreeView</class>
    <extends>QTreeView</extends>
-   <header>widgets/ClutterTreeView.h</header>
+   <header>widgets/ButterTreeView.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

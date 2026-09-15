@@ -1,7 +1,7 @@
 Shortcuts
 =========
 
-This page regroups the common shortcuts available in Clutter.
+This page regroups the common shortcuts available in Butter.
 
 Global Shortcuts
 ----------------

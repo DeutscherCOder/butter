@@ -1,11 +1,11 @@
 Plugins
 =======
 
-Clutter supports writing plugins in both C++ and Python.
+Butter supports writing plugins in both C++ and Python.
 If you are unsure of which language to choose, starting with Python is strongly suggested as
 it provides a faster and simpler workflow. You can find example plugins `here <https://github.com/rizinorg/cutter/tree/dev/src/plugins>`__.
 
-If you plan to implement support for a new file format or architecture, Clutter plugins are not the correct approach.
+If you plan to implement support for a new file format or architecture, Butter plugins are not the correct approach.
 Instead, you will want to implement a Rizin plugin, which is documented `here <https://book.rizin.re/src/plugins/intro.html>`__.
 
 
@@ -18,11 +18,11 @@ To get the location of this directory and a list of currently loaded plugins, na
 .. image:: contributing/plugins/preferences-plugins.png
 
 The plugins directory contains two subdirectories, ``native`` and ``python`` for C++ and Python plugins respectively,
-which will be created automatically by Clutter.
+which will be created automatically by Butter.
 
 .. note::
-   The support for Python plugins is only available if Clutter was built with the options ``CLUTTER_ENABLE_PYTHON``
-   and ``CLUTTER_ENABLE_PYTHON_BINDINGS`` enabled.
+   The support for Python plugins is only available if Butter was built with the options ``BUTTER_ENABLE_PYTHON``
+   and ``BUTTER_ENABLE_PYTHON_BINDINGS`` enabled.
    This is the case for all official builds from GitHub Releases starting with version 1.8.0.
 
 

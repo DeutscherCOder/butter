@@ -2,8 +2,8 @@
 #define STRINGSWIDGET_H
 
 #include "AddressableItemModel.h"
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 #include "common/StringsTask.h"
 
 #include <QAbstractListModel>
@@ -78,7 +78,7 @@ protected:
 /**
  * @brief Widget listing all of the strings in binary
  */
-class StringsWidget : public ClutterDockWidget
+class StringsWidget : public ButterDockWidget
 {
     Q_OBJECT
 

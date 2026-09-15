@@ -1,7 +1,7 @@
 #ifndef LAYOUT_MANAGER_H
 #define LAYOUT_MANAGER_H
 
-#include "common/ClutterLayout.h"
+#include "common/ButterLayout.h"
 
 #include <QDialog>
 
@@ -19,7 +19,7 @@ class LayoutManager : public QDialog
     Q_OBJECT
 
 public:
-    LayoutManager(QMap<QString, Clutter::ClutterLayout> &layouts, QWidget *parent);
+    LayoutManager(QMap<QString, Butter::ButterLayout> &layouts, QWidget *parent);
     ~LayoutManager();
 
 private:
@@ -28,7 +28,7 @@ private:
     void deleteLayout();
     void updateButtons();
     std::unique_ptr<Ui::LayoutManager> ui;
-    QMap<QString, Clutter::ClutterLayout> &layouts;
+    QMap<QString, Butter::ButterLayout> &layouts;
 };
 
 #endif // LAYOUT_MANAGER_H

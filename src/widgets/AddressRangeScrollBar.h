@@ -1,7 +1,7 @@
 #ifndef ADDRESS_RANGE_SCROLLBAR_H
 #define ADDRESS_RANGE_SCROLLBAR_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QScrollBar>
 
@@ -27,7 +27,7 @@ public:
      * This allows external widgets (like side panels or text edits) to notify the
      * scrollbar of wheel activity. It is needed for systems (like MacOS) which have the option to
      * enable transient scrollbars meaning the ability to show the scrollbar only while scrolling
-     * and hiding it later (when using Clutter's "Native" theme)
+     * and hiding it later (when using Butter's "Native" theme)
      */
     void showTransientScrollBar();
 signals:

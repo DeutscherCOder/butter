@@ -6,7 +6,7 @@
 /**
  * @brief Background task for running a command in rizin
  */
-class CLUTTER_EXPORT CommandTask : public AsyncTask
+class BUTTER_EXPORT CommandTask : public AsyncTask
 {
     Q_OBJECT
 

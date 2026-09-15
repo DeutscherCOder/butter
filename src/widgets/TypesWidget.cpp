@@ -157,7 +157,7 @@ bool TypesSortFilterProxyModel::lessThan(const QModelIndex &left, const QModelIn
 }
 
 TypesWidget::TypesWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::TypesWidget),
       typesModel(new TypesModel(this)),
       typesProxyModel(new TypesSortFilterProxyModel(typesModel, this))
@@ -197,7 +197,7 @@ TypesWidget::TypesWidget(MainWindow *main)
             &ComboQuickFilterView::clearFilter);
     clearShortcut->setContext(Qt::WidgetWithChildrenShortcut);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &TypesWidget::refreshTypes);
+    connect(Core(), &ButterCore::refreshAll, this, &TypesWidget::refreshTypes);
 
     connect(ui->quickFilterView->comboBox(), &QComboBox::currentTextChanged, this, [this]() {
         typesProxyModel->setCategory(ui->quickFilterView->comboBox()->currentData().toString());
@@ -420,7 +420,7 @@ void TypesWidget::onActionDeleteTypeTriggered()
 
     const auto exp = index.data(TypesModel::typeDescriptionRole).value<TypeDescription>();
     const QMessageBox::StandardButton reply = QMessageBox::question(
-            this, tr("Clutter"), tr("Are you sure you want to delete \"%1\"?").arg(exp.type));
+            this, tr("Butter"), tr("Are you sure you want to delete \"%1\"?").arg(exp.type));
     if (reply == QMessageBox::Yes) {
         typesModel->removeRow(index.row());
     }

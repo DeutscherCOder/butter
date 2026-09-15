@@ -28,7 +28,7 @@ static QString substitutePath(QString path)
 }
 
 /**
- * @brief Substitute or filter paths returned by standardLocations based on Clutter package kind.
+ * @brief Substitute or filter paths returned by standardLocations based on Butter package kind.
  * @param paths list of paths to process
  * @return List of substituted path strings
  */
@@ -44,7 +44,7 @@ static QStringList substitutePaths(const QStringList &paths)
     return result;
 }
 
-QStringList Clutter::locateAll(QStandardPaths::StandardLocation type, const QString &fileName,
+QStringList Butter::locateAll(QStandardPaths::StandardLocation type, const QString &fileName,
                               QStandardPaths::LocateOptions options)
 {
     // This function is reimplemented here instead of forwarded to Qt becauase existence check needs
@@ -65,17 +65,17 @@ QStringList Clutter::locateAll(QStandardPaths::StandardLocation type, const QStr
     return result;
 }
 
-QStringList Clutter::standardLocations(QStandardPaths::StandardLocation type)
+QStringList Butter::standardLocations(QStandardPaths::StandardLocation type)
 {
     return substitutePaths(QStandardPaths::standardLocations(type));
 }
 
-QString Clutter::writableLocation(QStandardPaths::StandardLocation type)
+QString Butter::writableLocation(QStandardPaths::StandardLocation type)
 {
     return substitutePath(QStandardPaths::writableLocation(type));
 }
 
-QStringList Clutter::getTranslationsDirectories()
+QStringList Butter::getTranslationsDirectories()
 {
     auto result = locateAll(QStandardPaths::AppDataLocation, "translations",
                             QStandardPaths::LocateDirectory);

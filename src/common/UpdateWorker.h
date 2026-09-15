@@ -4,12 +4,12 @@
 #include <QtGlobal>
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-#    define CLUTTER_UPDATE_WORKER_AVAILABLE 1
+#    define BUTTER_UPDATE_WORKER_AVAILABLE 1
 #else
-#    define CLUTTER_UPDATE_WORKER_AVAILABLE 0
+#    define BUTTER_UPDATE_WORKER_AVAILABLE 0
 #endif
 
-#if CLUTTER_UPDATE_WORKER_AVAILABLE
+#if BUTTER_UPDATE_WORKER_AVAILABLE
 #    include <QDir>
 #    include <QObject>
 #    include <QTimer>
@@ -17,11 +17,11 @@
 #    include <QtNetwork/QNetworkAccessManager>
 #endif
 
-#if CLUTTER_UPDATE_WORKER_AVAILABLE
+#if BUTTER_UPDATE_WORKER_AVAILABLE
 class QNetworkReply;
 
 /**
- * @brief The UpdateWorker class is a class providing API to check for current/latest Clutter
+ * @brief The UpdateWorker class is a class providing API to check for current/latest Butter
  * version.
  */
 class UpdateWorker : public QObject
@@ -33,7 +33,7 @@ public:
     /**
      * @fn void UpdateWorker::checkCurrentVersion(time_t timeoutMs)
      *
-     * Sends request to determine current version of Clutter.
+     * Sends request to determine current version of Butter.
      * If there is no response in @a timeoutMs milliseconds, emits
      * @fn UpdateWorker::checkComplete(const QString& currVerson, const QString& errorMsg)
      * with timeout error message.
@@ -46,15 +46,15 @@ public:
     /**
      * @fn void UpdateWorker::showUpdateDialog()
      *
-     * Shows dialog that allows user to download latest version of Clutter from website.
+     * Shows dialog that allows user to download latest version of Butter from website.
      * This dialog also has "Don't check for updates" button which disables on-start update
      * checks if @a showDontCheckForUpdatesButton is true.
      */
     void showUpdateDialog(bool showDontCheckForUpdatesButton);
 
     /**
-     * @return the version of this Clutter binary, derived from CLUTTER_VERSION_MAJOR,
-     * CLUTTER_VERSION_MINOR and CLUTTER_VERSION_PATCH.
+     * @return the version of this Butter binary, derived from BUTTER_VERSION_MAJOR,
+     * BUTTER_VERSION_MINOR and BUTTER_VERSION_PATCH.
      */
     static QVersionNumber currentVersionNumber();
 
@@ -79,5 +79,5 @@ private:
     QNetworkReply *checkReply;
 };
 
-#endif // CLUTTER_UPDATE_WORKER_AVAILABLE
+#endif // BUTTER_UPDATE_WORKER_AVAILABLE
 #endif // UPDATEWORKER_H

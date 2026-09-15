@@ -1,32 +1,32 @@
 Development environment setup
 =============================
 
-This page contains recommendations and tips on how to better setup different IDEs for Clutter development.
+This page contains recommendations and tips on how to better setup different IDEs for Butter development.
 
 
 General advice
 --------------
 Everyone has their own preferences for their favorite IDE or code editor.
-There are no strict requirements for using a specific one for Clutter development.
+There are no strict requirements for using a specific one for Butter development.
 Any IDE with good CMake integration should work well.
 
-For most development builds, unless you are working on packaging issues, it is recommended to build Clutter with the bundled version of Rizin. It is the default configuration and the easiest way to ensure that a compatible Rizin version is used and helps you deal with different versions of Rizin when working with multiple Clutter branches. In case you want to build Clutter with a different version of Rizin installed on your system, you can set `CLUTTER_USE_BUNDLED_RIZIN=OFF`. On Linux, in case you have multiple Rizin versions without ``CLUTTER_USE_BUNDLED_RIZIN``, the ``PKG_CONFIG_PATH`` environment variable can be used to select the desired Rizin installation.
+For most development builds, unless you are working on packaging issues, it is recommended to build Butter with the bundled version of Rizin. It is the default configuration and the easiest way to ensure that a compatible Rizin version is used and helps you deal with different versions of Rizin when working with multiple Butter branches. In case you want to build Butter with a different version of Rizin installed on your system, you can set `BUTTER_USE_BUNDLED_RIZIN=OFF`. On Linux, in case you have multiple Rizin versions without ``BUTTER_USE_BUNDLED_RIZIN``, the ``PKG_CONFIG_PATH`` environment variable can be used to select the desired Rizin installation.
 
 While `Qt Creator`_ has a builtin visual form and widget editor, not having it in other IDEs is not a major problem. It is also available as a standalone tool called Qt Designer and you can configure the file associations so that ``.ui`` files are opened using it. Depending on the ``.ui`` file and changes you want to make, it is sometimes easier to perform them by editing the ``.ui`` file as a text file. Essentially, ``.ui`` files are XML files. Most code editors should have some support for XML highlighting and possibly block folding.
 
-The following instructions and recommendations assume that you have already download Clutter source and obtained required dependencies as described in :doc:`/building`.
+The following instructions and recommendations assume that you have already download Butter source and obtained required dependencies as described in :doc:`/building`.
 
 Linux
 -----
 
-On a rolling-release distribution or a somewhat recent version of traditional distributions like Ubuntu 18.04, it should be possible to get all the dependencies from the official repository. There might be some problems with PySide2 and Shiboken2 but it can be easily disabled and isn't necessary for most work on Clutter. Don't try to install PySide using pip.
+On a rolling-release distribution or a somewhat recent version of traditional distributions like Ubuntu 18.04, it should be possible to get all the dependencies from the official repository. There might be some problems with PySide2 and Shiboken2 but it can be easily disabled and isn't necessary for most work on Butter. Don't try to install PySide using pip.
 
 Windows
 -------
 
-Assuming you have a sufficiently powerful computer, a nice way of getting and configuring Qt for Clutter is to use `vcpkg <https://github.com/Microsoft/vcpkg>`_.
-For a quick test, the exact versions of libraries used by Clutter release packages can be obtained from `cutter-deps <https://github.com/rizinorg/cutter-deps/releases>`_ but they don't contain debug
-versions of libraries so they are not suitable for more serious Clutter development on Windows.
+Assuming you have a sufficiently powerful computer, a nice way of getting and configuring Qt for Butter is to use `vcpkg <https://github.com/Microsoft/vcpkg>`_.
+For a quick test, the exact versions of libraries used by Butter release packages can be obtained from `cutter-deps <https://github.com/rizinorg/cutter-deps/releases>`_ but they don't contain debug
+versions of libraries so they are not suitable for more serious Butter development on Windows.
 
 Qt Creator
 ----------
@@ -45,7 +45,7 @@ Project setup
 ~~~~~~~~~~~~~
 The following instructions were made based on version 4.12.4 of Qt Creator. The steps might slightly differ between the versions.
 
-- Go to :menuselection:`File --> Open File or Project..` and select :file:`clutter/CMakeList.txt`
+- Go to :menuselection:`File --> Open File or Project..` and select :file:`butter/CMakeList.txt`
 - Select kit and press :guilabel:`Configure Project`
 
 Formatting using clang-format
@@ -78,15 +78,15 @@ Recommended plugins
 
 Project setup
 ~~~~~~~~~~~~~
-- :menuselection:`File --> Open Folder...` and select the folder in which you cloned Clutter
+- :menuselection:`File --> Open Folder...` and select the folder in which you cloned Butter
 - Install the recommended plugins.
-- Once the `CMake Tools` plugin is installed, in the corner you will see a popup asking you "Would you like to configure project 'clutter'? Source: CMake Tools (Extension)". Click Yes.
+- Once the `CMake Tools` plugin is installed, in the corner you will see a popup asking you "Would you like to configure project 'butter'? Source: CMake Tools (Extension)". Click Yes.
 - In the kit selection popup, choose :guilabel:`[Unspecified]` unless you have more specific needs.
 - If you initially dismissed the configuration window or didn't have the plugins installed yet - open command-palette using :kbd:`Ctrl-Shift-P` and select :guilabel:`Cmake: Configure`
 
 Changing CMake configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-After the first configuration :kbd:`Ctrl-Shift-P`/:guilabel:`CMake: Edit CMake Cache` opens a text editor with all CMake options. Clutter specific ones mostly start with "CLUTTER".
+After the first configuration :kbd:`Ctrl-Shift-P`/:guilabel:`CMake: Edit CMake Cache` opens a text editor with all CMake options. Butter specific ones mostly start with "BUTTER".
 
 .. _vscode-debug-setup:
 
@@ -132,8 +132,8 @@ Pros and Cons
 
 Project setup
 ~~~~~~~~~~~~~
-- Go to :menuselection:`File --> Open` and select the folder in which you cloned Clutter
-- Open :file:`clutter/CMakeLists.txt` using the project file list on the left side of the screen
+- Go to :menuselection:`File --> Open` and select the folder in which you cloned Butter
+- Open :file:`butter/CMakeLists.txt` using the project file list on the left side of the screen
 - A yellow bar with a message :guilabel:`CMake project is not loaded` should appear, click :guilabel:`Load CMake project`
 
 Changing CMake configuration
@@ -177,9 +177,9 @@ Pros and Cons
 
 Project setup
 ~~~~~~~~~~~~~
-- Open folder in which you cloned Clutter source using Visual Studio
+- Open folder in which you cloned Butter source using Visual Studio
 - Open CMake settings configurator using either :menuselection:`Project --> CMake Settings` or by clicking :guilabel:`Open the CMake Settings Editor` in the overview page.
-- Check options that you want Clutter to be built with, or leave it as-is for the default options.
+- Check options that you want Butter to be built with, or leave it as-is for the default options.
 - If you are using vcpkg, Visual Studio should detect it automatically. The list of CMake options in the configurator should have some referring to vcpkg. If they are not there, specify the path to vcpkg toolchain file in the :guilabel:`CMake toolchain file` field.
 - If you are not using vcpkg, configure the path to Qt as mentioned in :ref:`windows CMake instructions<building:Building on Windows>`. You can specify the CMake flag in :guilabel:`CMake command arguments:` field.
 - To Ensure that VS debugger can display Qt types in a readable way, it is recommended to install `Qt Visual Studio Tools <https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019>`_ plugin. It will create a :file:`Documents/Visual Studio 2019/Visualizers/qt6.natvis` file. Once :file:`qt6.natvis` has been created you can uninstall the plugin.
@@ -190,11 +190,11 @@ Open :menuselection:`Project --> CMake Settings`. CMake options can be modified 
 
 Formatting using clang-format
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Visual Studio supports ``clang-format`` by default so you should not do anything special. It will simple use the existing ``_clang-format`` file from Clutter's root directory. If you wish to configure how and when Visual Studio will use ``clang-format``, you can do this from :menuselection:`Tools --> Options --> Text Editor --> C/C++ --> Formatting`.
+Visual Studio supports ``clang-format`` by default so you should not do anything special. It will simple use the existing ``_clang-format`` file from Butter's root directory. If you wish to configure how and when Visual Studio will use ``clang-format``, you can do this from :menuselection:`Tools --> Options --> Text Editor --> C/C++ --> Formatting`.
 
 Editing Qt .ui files and Qt integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 By default Visual Studio will open ``.ui`` files as XML text documents. You can configure to open it using Qt Designer by right-clicking and selecting :guilabel:`Open With...`.
 
-There is a  Qt plugin for Visual Studio from Qt. It isn't very useful for Clutter development since it is aimed more at helping with Qt integration into Visual Studio projects.
+There is a  Qt plugin for Visual Studio from Qt. It isn't very useful for Butter development since it is aimed more at helping with Qt integration into Visual Studio projects.
 It doesn't do much for CMake based projects. The biggest benefit is that it automatically installs :file:`qt6.natvis` file for more readable displaying of Qt types in the debugger.

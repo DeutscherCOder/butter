@@ -43,8 +43,8 @@ FunctionModel::FunctionModel(bool nested, const QFont &default_font, const QFont
       iconFuncLight(":/img/icons/function_light.svg")
 
 {
-    connect(Core(), &ClutterCore::seekChanged, this, &FunctionModel::seekChanged);
-    connect(Core(), &ClutterCore::functionRenamed, this, &FunctionModel::functionRenamed);
+    connect(Core(), &ButterCore::seekChanged, this, &FunctionModel::seekChanged);
+    connect(Core(), &ButterCore::functionRenamed, this, &FunctionModel::functionRenamed);
 }
 
 QModelIndex FunctionModel::index(int row, int column, const QModelIndex &parent) const
@@ -244,7 +244,7 @@ QVariant FunctionModel::data(const QModelIndex &index, int role) const
             auto seeker = Core()->seekTemp(function.offset);
             auto strings = fromOwnedCharPtr(rz_core_print_disasm_strings(
                     core, RZ_CORE_DISASM_STRINGS_MODE_FUNCTION, 0, nullptr));
-            summary = strings.split('\n', CLUTTER_QT_SKIP_EMPTY_PARTS);
+            summary = strings.split('\n', BUTTER_QT_SKIP_EMPTY_PARTS);
         }
 
         const QFont &fnt = Config()->getFont();
@@ -565,10 +565,10 @@ FunctionsWidget::FunctionsWidget(MainWindow *main)
     connect(this, &QWidget::customContextMenuRequested, this,
             &FunctionsWidget::showTitleContextMenu);
 
-    connect(Core(), &ClutterCore::functionsChanged, this, &FunctionsWidget::refreshTree);
-    connect(Core(), &ClutterCore::codeRebased, this, &FunctionsWidget::refreshTree);
-    connect(Core(), &ClutterCore::refreshAll, this, &FunctionsWidget::refreshTree);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::functionsChanged, this, &FunctionsWidget::refreshTree);
+    connect(Core(), &ButterCore::codeRebased, this, &FunctionsWidget::refreshTree);
+    connect(Core(), &ButterCore::refreshAll, this, &FunctionsWidget::refreshTree);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(functionModel, FunctionModel::CommentColumn); });
 
     // Save the width of function name column so it's preserved when

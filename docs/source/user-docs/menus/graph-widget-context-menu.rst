@@ -54,7 +54,7 @@ Graph Layout Direction
 
 Choose Graph Layout
 ----------------------------------------
-**Description:** Choose the layout to be used by Clutter to display the Graph. Clutter supports the following Graph layout algorithms:
+**Description:** Choose the layout to be used by Butter to display the Graph. Butter supports the following Graph layout algorithms:
 
  - Grid narrow  
  - Grid medium  

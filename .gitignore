@@ -3,10 +3,10 @@
 .AppleDouble
 .LSOverride
 
-# --- Clutter workspace additions -------------------------------------------
+# --- Butter workspace additions -------------------------------------------
 # build & runtime output
-build-clutter/
-clutter-dist/
+build-butter/
+butter-dist/
 .tools/
 # python bytecode
 __pycache__/

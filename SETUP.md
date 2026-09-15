@@ -1,4 +1,4 @@
-# Clutter setup (Windows 11)
+# Butter setup (Windows 11)
 
 Short version first, details below. Also see the root [README.md](README.md) and
 [`mcp/README.md`](mcp/README.md) (the MCP server).
@@ -9,20 +9,20 @@ If you have a built copy, the folder is the whole app: portable Qt, rizin, the G
 decompiler, FLIRT signatures and an embedded Python 3.12. Nothing is installed system-wide.
 
 ```
-clutter-dist\clutter.exe
+butter-dist\butter.exe
 ```
 
 | What | Path |
 |---|---|
-| GUI | `clutter-dist\clutter.exe` |
-| CLI engine | `clutter-dist\rizin.exe` |
-| Decompile from the CLI | `clutter-dist\rizin.exe -A -q -c "s entry0; pdg" target.exe` |
+| GUI | `butter-dist\butter.exe` |
+| CLI engine | `butter-dist\rizin.exe` |
+| Decompile from the CLI | `butter-dist\rizin.exe -A -q -c "s entry0; pdg" target.exe` |
 | The test target | `crackme\crackme.exe` |
-| MCP server | `mcp\clutter_mcp.py` |
+| MCP server | `mcp\butter_mcp.py` |
 
 ```bat
-clutter-dist\clutter.exe crackme\crackme.exe     :: open the crackme in the GUI
-crackme\crackme.exe "ClutterDecompilersGoBrrr_2026"   :: try the password
+butter-dist\butter.exe crackme\crackme.exe     :: open the crackme in the GUI
+crackme\crackme.exe "ButterDecompilersGoBrrr_2026"   :: try the password
 ```
 
 ## Build from source
@@ -38,7 +38,7 @@ python -m venv .tools\venv
 Then, whenever:
 
 ```bat
-tools\build-clutter.bat full                     :: configure + build + install (~15-30 min cold)
+tools\build-butter.bat full                     :: configure + build + install (~15-30 min cold)
 ```
 
 Script modes: `configure` (CMake only) · `reconfigure` (wipe cache) · `build` ·
@@ -50,22 +50,22 @@ To rebuild only the decompiler after a Ghidra upgrade: `tools\build-ghidra.bat`.
 Add to your client's MCP config (Claude Desktop, Cursor, Cline, Continue, Windsurf, …):
 
 ```json
-{ "mcpServers": { "clutter": {
+{ "mcpServers": { "butter": {
     "command": "python",
-    "args": ["C:/path/to/clutter/mcp/clutter_mcp.py"] } } }
+    "args": ["C:/path/to/butter/mcp/butter_mcp.py"] } } }
 ```
 
 Pre-open a file so the agent doesn't waste a call:
 
 ```json
-"args": ["C:/path/to/clutter/mcp/clutter_mcp.py",
+"args": ["C:/path/to/butter/mcp/butter_mcp.py",
          "--file", "C:/path/to/target.exe", "--analysis", "deep"]
 ```
 
 No processes allowed in your client? Use HTTP instead:
 
 ```bat
-python mcp\clutter_mcp.py --http 127.0.0.1:8765  :: POST JSON-RPC to /mcp
+python mcp\butter_mcp.py --http 127.0.0.1:8765  :: POST JSON-RPC to /mcp
 ```
 
 ## Checks
@@ -90,10 +90,10 @@ python tools\analysis-bench.py   :: analysis profile comparison
 
 | Symptom | Fix |
 |---|---|
-| `rizin not found` | Set `CLUTTER_RIZIN` to `clutter-dist\rizin.exe` |
+| `rizin not found` | Set `BUTTER_RIZIN` to `butter-dist\rizin.exe` |
 | A tool times out | Session restarts itself; use `analyze` level=basic, or raise `timeout` |
 | Breakpoint never hits | rizin's Windows module list is incomplete under ASLR — `debug_step` instead |
 | `?e` fails in `run_command` | rizin blocks `?`-commands over a pipe; use `echo` |
 | Calling rizin by hand in Git Bash | `export MSYS_NO_PATHCONV=1` |
-| No Python console in the GUI | Re-run `tools\build-clutter.bat install` (needs `python312*` next to `clutter.exe`) |
+| No Python console in the GUI | Re-run `tools\build-butter.bat install` (needs `python312*` next to `butter.exe`) |
 | Meson symbol-extractor crash (0xC000070A) | `tools\build-rizin.bat 8`, then re-run the build |

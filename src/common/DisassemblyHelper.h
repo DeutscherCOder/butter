@@ -1,7 +1,7 @@
 #ifndef DISASSEMBLYHELPER_H
 #define DISASSEMBLYHELPER_H
 
-#include "core/ClutterDescriptions.h"
+#include "core/ButterDescriptions.h"
 
 #include <QTextBlockUserData>
 

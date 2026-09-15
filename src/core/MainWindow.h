@@ -1,12 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-// #include "core/Clutter.h" // only needed for ut64
+// #include "core/Butter.h" // only needed for ut64
 #include "dialogs/NewFileDialog.h"
 // #include "dialogs/WelcomeDialog.h"
 #include "MemoryDockWidget.h"
 #include "common/Configuration.h"
-#include "common/ClutterLayout.h"
+#include "common/ButterLayout.h"
 #include "common/IOModesController.h"
 #include "common/InitialOptions.h"
 
@@ -15,7 +15,7 @@
 
 #include <memory>
 
-class ClutterCore;
+class ButterCore;
 class Omnibar;
 class ProgressIndicator;
 class PreviewWidget;
@@ -62,9 +62,9 @@ class MainWindow;
 }
 
 /**
- * @brief Clutter main window
+ * @brief Butter main window
  */
-class CLUTTER_EXPORT MainWindow : public QMainWindow
+class BUTTER_EXPORT MainWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -78,8 +78,8 @@ public:
     void displayNewFileDialog();
     /**
      * @brief displays the WelocmeDialog
-     * Upon first execution of Clutter, the WelcomeDialog would be showed to the user.
-     * The Welcome dialog would be showed after a reset of Clutter's preferences by the user.
+     * Upon first execution of Butter, the WelcomeDialog would be showed to the user.
+     * The Welcome dialog would be showed after a reset of Butter's preferences by the user.
      */
     void displayWelcomeDialog();
     void closeNewFileDialog();
@@ -95,19 +95,19 @@ public:
     void saveSettings();
     void setFilename(const QString &fn);
 
-    void addWidget(ClutterDockWidget *widget);
+    void addWidget(ButterDockWidget *widget);
     void addMemoryDockWidget(MemoryDockWidget *widget);
-    void removeWidget(ClutterDockWidget *widget);
-    void addExtraWidget(ClutterDockWidget *extraDock);
+    void removeWidget(ButterDockWidget *widget);
+    void addExtraWidget(ButterDockWidget *extraDock);
     MemoryDockWidget *addNewMemoryWidget(MemoryWidgetType type, RVA address,
                                          bool synchronized = true);
 
-    CLUTTER_DEPRECATED("Action will be ignored. Use addPluginDockWidget(ClutterDockWidget*) instead.")
-    void addPluginDockWidget(ClutterDockWidget *dockWidget, QAction *)
+    BUTTER_DEPRECATED("Action will be ignored. Use addPluginDockWidget(ButterDockWidget*) instead.")
+    void addPluginDockWidget(ButterDockWidget *dockWidget, QAction *)
     {
         addPluginDockWidget(dockWidget);
     }
-    void addPluginDockWidget(ClutterDockWidget *dockWidget);
+    void addPluginDockWidget(ButterDockWidget *dockWidget);
     enum class MenuType : ut8 { File, Edit, View, Windows, Debug, Help, Plugins };
     /**
      * @brief Getter for MainWindow's different menus
@@ -120,7 +120,7 @@ public:
     QString getFilename() const { return filename; }
     /**
      * @brief Show a warning message box.
-     * This API can either be used in Clutter internals, or by Python plugins.
+     * This API can either be used in Butter internals, or by Python plugins.
      */
     void messageBoxWarning(const QString &title, const QString &message);
 
@@ -186,7 +186,7 @@ private slots:
 
     /**
      * @brief MainWindow::on_actionNew_triggered
-     * Open a new Clutter session.
+     * Open a new Butter session.
      */
     void onActionNewTriggered();
 
@@ -240,7 +240,7 @@ private slots:
     void setAvailableIOModeOptions();
 
 private:
-    ClutterCore *core;
+    ButterCore *core;
 
     bool tabsOnTop;
     ut64 hexdumpTopOffset;
@@ -256,8 +256,8 @@ private:
 
     Configuration *configuration;
 
-    QList<ClutterDockWidget *> dockWidgets;
-    QList<ClutterDockWidget *> pluginDocks;
+    QList<ButterDockWidget *> dockWidgets;
+    QList<ButterDockWidget *> pluginDocks;
     OverviewWidget *overviewDock = nullptr;
     QAction *actionOverview = nullptr;
     EntrypointWidget *entrypointDock = nullptr;
@@ -282,24 +282,24 @@ private:
     ClassesWidget *classesDock = nullptr;
     ResourcesWidget *resourcesDock = nullptr;
     VTablesWidget *vTablesDock = nullptr;
-    ClutterDockWidget *stackDock = nullptr;
-    ClutterDockWidget *threadsDock = nullptr;
-    ClutterDockWidget *processesDock = nullptr;
-    ClutterDockWidget *registersDock = nullptr;
-    ClutterDockWidget *backtraceDock = nullptr;
-    ClutterDockWidget *memoryMapDock = nullptr;
+    ButterDockWidget *stackDock = nullptr;
+    ButterDockWidget *threadsDock = nullptr;
+    ButterDockWidget *processesDock = nullptr;
+    ButterDockWidget *registersDock = nullptr;
+    ButterDockWidget *backtraceDock = nullptr;
+    ButterDockWidget *memoryMapDock = nullptr;
     NewFileDialog *newFileDialog = nullptr;
-    ClutterDockWidget *breakpointDock = nullptr;
-    ClutterDockWidget *registerRefsDock = nullptr;
+    ButterDockWidget *breakpointDock = nullptr;
+    ButterDockWidget *registerRefsDock = nullptr;
     RizinGraphWidget *rzGraphDock = nullptr;
     CallGraphWidget *callGraphDock = nullptr;
     CallGraphWidget *globalCallGraphDock = nullptr;
-    ClutterDockWidget *heapDock = nullptr;
+    ButterDockWidget *heapDock = nullptr;
 
     QMenu *disassemblyContextMenuExtensions = nullptr;
     QMenu *addressableContextMenuExtensions = nullptr;
 
-    QMap<QString, Clutter::ClutterLayout> layouts;
+    QMap<QString, Butter::ButterLayout> layouts;
 
     void initUI();
     void initToolBar();
@@ -308,10 +308,10 @@ private:
     void displayInitialOptionsDialog(const InitialOptions &options = InitialOptions(),
                                      bool skipOptionsDialog = false);
 
-    Clutter::ClutterLayout getViewLayout();
-    Clutter::ClutterLayout getViewLayout(const QString &name);
+    Butter::ButterLayout getViewLayout();
+    Butter::ButterLayout getViewLayout(const QString &name);
 
-    void setViewLayout(const Clutter::ClutterLayout &layout);
+    void setViewLayout(const Butter::ButterLayout &layout);
     void loadLayouts(QSettings &settings);
     void saveLayouts(QSettings &settings);
 
@@ -351,7 +351,7 @@ private:
      * @brief Map from a widget type (e.g. DisassemblyWidget::getWidgetType()) to the respective
      * contructor of the widget
      */
-    QMap<QString, std::function<ClutterDockWidget *(MainWindow *)>> widgetTypeToConstructorMap;
+    QMap<QString, std::function<ButterDockWidget *(MainWindow *)>> widgetTypeToConstructorMap;
 
     MemoryDockWidget *lastSyncMemoryWidget = nullptr;
     MemoryDockWidget *lastMemoryWidget = nullptr;

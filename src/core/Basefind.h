@@ -1,14 +1,14 @@
 #ifndef BASEFIND_H
 #define BASEFIND_H
 
-#include "ClutterDescriptions.h"
+#include "ButterDescriptions.h"
 
 #include <QMutex>
 #include <QThread>
 
 #include <rz_basefind.h>
 
-class ClutterCore;
+class ButterCore;
 
 /**
  * @brief Threaded wrapper for Rizin's basefind functionality to identify the base address of a

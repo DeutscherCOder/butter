@@ -113,11 +113,11 @@ void AppearanceOptionsWidget::updateThemeFromConfig(bool interfaceThemeChanged)
     const QSignalBlocker signalBlockerThemeBox(ui->themeComboBox);
 
     ui->themeComboBox->clear();
-    for (auto &it : Configuration::clutterInterfaceThemesList()) {
+    for (auto &it : Configuration::butterInterfaceThemesList()) {
         ui->themeComboBox->addItem(it.name);
     }
     int currInterfaceThemeIndex = Config()->getInterfaceTheme();
-    if (currInterfaceThemeIndex >= Configuration::clutterInterfaceThemesList().size()) {
+    if (currInterfaceThemeIndex >= Configuration::butterInterfaceThemesList().size()) {
         currInterfaceThemeIndex = 0;
         Config()->setInterfaceTheme(currInterfaceThemeIndex);
     }

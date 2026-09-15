@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 The Clutter authors
+Copyright (c) 2026 The Butter authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,6 @@ SOFTWARE.
 ---
 
 Scope: this MIT license covers the files in `mcp/`, `crackme/` and `tools/`.
-The Clutter fork of Cutter in `src/`, `cmake/`, `dist/`, `scripts/`, `docs/`,
+The Butter fork of Butter in `src/`, `cmake/`, `dist/`, `scripts/`, `docs/`,
 `docker/` and `CMakeLists.txt` remains **GPL-3** as published by upstream
-Cutter — see `COPYING`.
+Butter — see `COPYING`.

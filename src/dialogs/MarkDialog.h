@@ -1,7 +1,7 @@
 #ifndef MARKDIALOG_H
 #define MARKDIALOG_H
 
-#include "ClutterCommon.h"
+#include "ButterCommon.h"
 
 #include <QColor>
 #include <QDialog>

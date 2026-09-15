@@ -9,7 +9,7 @@
 #include <QLineEdit>
 
 RegistersWidget::RegistersWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::RegistersWidget),
       addressContextMenu(this, main),
       refreshDeferrer(createRefreshDeferrer([this]() { updateContents(); }))
@@ -21,8 +21,8 @@ RegistersWidget::RegistersWidget(MainWindow *main)
     registerLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     ui->verticalLayout->addLayout(registerLayout);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &RegistersWidget::updateContents);
-    connect(Core(), &ClutterCore::registersChanged, this, &RegistersWidget::updateContents);
+    connect(Core(), &ButterCore::refreshAll, this, &RegistersWidget::updateContents);
+    connect(Core(), &ButterCore::registersChanged, this, &RegistersWidget::updateContents);
     connect(ui->configureProfileBtn, &QPushButton::clicked, this,
             &RegistersWidget::configureRegProfileClicked);
 

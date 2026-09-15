@@ -1,7 +1,7 @@
 #ifndef GRAPHVIEW_H
 #define GRAPHVIEW_H
 
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "widgets/GraphLayout.h"
 
 #include <QAbstractScrollArea>
@@ -20,10 +20,10 @@
 
 #if defined(QT_NO_OPENGL) || QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
 // QOpenGLExtraFunctions were introduced in 5.6
-#    define CLUTTER_NO_OPENGL_GRAPH
+#    define BUTTER_NO_OPENGL_GRAPH
 #endif
 
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
 class QOpenGLWidget;
 #endif
 
@@ -56,7 +56,7 @@ public:
         GridBAB,
         GridBBA,
         GridBBB
-#ifdef CLUTTER_ENABLE_GRAPHVIZ
+#ifdef BUTTER_ENABLE_GRAPHVIZ
         ,
         GraphvizOrtho,
         GraphvizPolyline,
@@ -204,7 +204,7 @@ private:
      */
     QPixmap pixmap;
 
-#ifndef CLUTTER_NO_OPENGL_GRAPH
+#ifndef BUTTER_NO_OPENGL_GRAPH
     uint32_t cacheTexture;
     uint32_t cacheFBO;
     QSize cacheSize;

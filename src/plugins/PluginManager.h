@@ -1,7 +1,7 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include "plugins/ClutterPlugin.h"
+#include "plugins/ButterPlugin.h"
 
 #include <QDir>
 #include <QObject>
@@ -22,9 +22,9 @@ public:
     class PluginTerminator
     {
     public:
-        void operator()(ClutterPlugin *) const;
+        void operator()(ButterPlugin *) const;
     };
-    using PluginPtr = std::unique_ptr<ClutterPlugin, PluginTerminator>;
+    using PluginPtr = std::unique_ptr<ButterPlugin, PluginTerminator>;
 
     PluginManager();
     ~PluginManager();
@@ -51,9 +51,9 @@ private:
     void loadNativePlugins(const QDir &directory);
     void loadPluginsFromDir(const QDir &pluginsDir, bool writable = false);
 
-#ifdef CLUTTER_ENABLE_PYTHON_BINDINGS
+#ifdef BUTTER_ENABLE_PYTHON_BINDINGS
     void loadPythonPlugins(const QDir &directory);
-    ClutterPlugin *loadPythonPlugin(const char *moduleName);
+    ButterPlugin *loadPythonPlugin(const char *moduleName);
 #endif
 };
 

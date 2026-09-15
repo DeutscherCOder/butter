@@ -2,7 +2,7 @@
 #define SEARCHWIDGET_H
 
 #include "AddressableItemList.h"
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
@@ -63,7 +63,7 @@ class SearchWidget;
 /**
  * @brief Widget for searching
  */
-class SearchWidget : public ClutterDockWidget
+class SearchWidget : public ButterDockWidget
 {
     Q_OBJECT
 

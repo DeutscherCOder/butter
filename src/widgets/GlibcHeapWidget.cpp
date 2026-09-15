@@ -29,8 +29,8 @@ GlibcHeapWidget::GlibcHeapWidget(MainWindow *main, QWidget *parent)
     chunkInfoAction = new QAction(tr("Detailed Chunk Info"), this);
     binInfoAction = new QAction(tr("Bins Info"), this);
 
-    connect(Core(), &ClutterCore::refreshAll, this, &GlibcHeapWidget::updateContents);
-    connect(Core(), &ClutterCore::debugTaskStateChanged, this, &GlibcHeapWidget::updateContents);
+    connect(Core(), &ButterCore::refreshAll, this, &GlibcHeapWidget::updateContents);
+    connect(Core(), &ButterCore::debugTaskStateChanged, this, &GlibcHeapWidget::updateContents);
     connect(viewHeap, &QAbstractItemView::doubleClicked, this, &GlibcHeapWidget::onDoubleClicked);
     connect<void (QComboBox::*)(int)>(arenaSelectorView, &QComboBox::currentIndexChanged, this,
                                       &GlibcHeapWidget::onArenaSelected);
@@ -47,7 +47,7 @@ GlibcHeapWidget::GlibcHeapWidget(MainWindow *main, QWidget *parent)
     addressableItemContextMenu.addAction(binInfoAction);
     addActions(addressableItemContextMenu.actions());
 
-    refreshDeferrer = dynamic_cast<ClutterDockWidget *>(parent)->createRefreshDeferrer(
+    refreshDeferrer = dynamic_cast<ButterDockWidget *>(parent)->createRefreshDeferrer(
             [this]() { updateContents(); });
 }
 

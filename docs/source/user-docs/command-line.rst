@@ -4,7 +4,7 @@ Command-line Options
 Synopsis
 --------
 
-**Clutter** [*options*] [<*filename*> | --project <*project*>]
+**Butter** [*options*] [<*filename*> | --project <*project*>]
 
 
 Options
@@ -102,12 +102,12 @@ Options
 
 .. option:: --no-plugins
 
-   Start clutter with all plugins disabled. Implies :option:`--no-clutter-plugins` and :option:`--no-rizin-plugins`.
+   Start butter with all plugins disabled. Implies :option:`--no-butter-plugins` and :option:`--no-rizin-plugins`.
 
-.. option:: --no-clutter-plugins
+.. option:: --no-butter-plugins
 
-   Start clutter with clutter plugins disabled.
+   Start butter with butter plugins disabled.
 
 .. option:: --no-rizin-plugins
 
-   Start clutter with rizin plugins disabled.
+   Start butter with rizin plugins disabled.

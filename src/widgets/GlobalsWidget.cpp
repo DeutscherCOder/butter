@@ -146,7 +146,7 @@ void GlobalsWidget::deleteGlobal()
 }
 
 GlobalsWidget::GlobalsWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::GlobalsWidget),
       globalsModel(new GlobalsModel(this)),
       globalsProxyModel(new GlobalsProxyModel(globalsModel, this))
@@ -196,10 +196,10 @@ GlobalsWidget::GlobalsWidget(MainWindow *main)
     connect(actionEditGlobal, &QAction::triggered, this, [this]() { editGlobal(); });
     connect(actionDeleteGlobal, &QAction::triggered, this, [this]() { deleteGlobal(); });
 
-    connect(Core(), &ClutterCore::globalVarsChanged, this, &GlobalsWidget::refreshGlobals);
-    connect(Core(), &ClutterCore::codeRebased, this, &GlobalsWidget::refreshGlobals);
-    connect(Core(), &ClutterCore::refreshAll, this, &GlobalsWidget::refreshGlobals);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::globalVarsChanged, this, &GlobalsWidget::refreshGlobals);
+    connect(Core(), &ButterCore::codeRebased, this, &GlobalsWidget::refreshGlobals);
+    connect(Core(), &ButterCore::refreshAll, this, &GlobalsWidget::refreshGlobals);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(globalsModel, GlobalsModel::CommentColumn); });
 }
 

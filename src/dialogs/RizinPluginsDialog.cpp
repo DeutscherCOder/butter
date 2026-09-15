@@ -3,7 +3,7 @@
 #include "Configuration.h"
 #include "common/DisassemblyPreview.h"
 #include "common/Helpers.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 #include "ui_RizinPluginsDialog.h"
 
 #include <QString>

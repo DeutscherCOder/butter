@@ -2,7 +2,7 @@
 #ifndef RICHTEXTPAINTER_H
 #define RICHTEXTPAINTER_H
 
-#include "ClutterDescriptions.h" // IWYU pragma: keep
+#include "ButterDescriptions.h" // IWYU pragma: keep
 
 #include <QColor>
 #include <QString>

@@ -3,8 +3,8 @@
 
 #include "AddressableItemList.h"
 #include "AddressableItemModel.h"
-#include "ClutterDescriptions.h"
-#include "ClutterDockWidget.h"
+#include "ButterDescriptions.h"
+#include "ButterDockWidget.h"
 
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
@@ -68,7 +68,7 @@ class FlagsWidget;
 /**
  * @brief Widget for listing and modifying all flags
  */
-class FlagsWidget : public ClutterDockWidget
+class FlagsWidget : public ButterDockWidget
 {
     Q_OBJECT
 

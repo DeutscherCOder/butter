@@ -1,6 +1,6 @@
 #include "RizinConfigOptionsWidget.h"
 
-#include "Clutter.h"
+#include "Butter.h"
 #include "dialogs/IntervalDialog.h"
 #include "dialogs/StringListDialog.h"
 #include "ui_RizinConfigOptionsWidget.h"
@@ -539,11 +539,11 @@ RizinConfigOptionsWidget::RizinConfigOptionsWidget(PreferencesDialog *parent)
             &RizinConfigOptionsWidget::restoreBtnPressed);
 
     // refresh
-    connect(Core(), &ClutterCore::refreshAll, this, &RizinConfigOptionsWidget::refresh);
-    connect(Core(), &ClutterCore::asmOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
-    connect(Core(), &ClutterCore::debugOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
-    connect(Core(), &ClutterCore::analysisOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
-    connect(Core(), &ClutterCore::symbolsOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
+    connect(Core(), &ButterCore::refreshAll, this, &RizinConfigOptionsWidget::refresh);
+    connect(Core(), &ButterCore::asmOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
+    connect(Core(), &ButterCore::debugOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
+    connect(Core(), &ButterCore::analysisOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
+    connect(Core(), &ButterCore::symbolsOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
 
     refreshComboQuickFilter();
     updateItemCount();
@@ -614,29 +614,29 @@ void RizinConfigOptionsWidget::handleConfigOptionChanged(const QModelIndex &topL
 void RizinConfigOptionsWidget::triggerOptionsChanged(int options) const
 {
     if (options & OptionChanged::Asm) {
-        disconnect(Core(), &ClutterCore::asmOptionsChanged, this,
+        disconnect(Core(), &ButterCore::asmOptionsChanged, this,
                    &RizinConfigOptionsWidget::refresh);
         Core()->triggerAsmOptionsChanged();
-        connect(Core(), &ClutterCore::asmOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
+        connect(Core(), &ButterCore::asmOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
     }
     if (options & OptionChanged::Debug) {
-        disconnect(Core(), &ClutterCore::debugOptionsChanged, this,
+        disconnect(Core(), &ButterCore::debugOptionsChanged, this,
                    &RizinConfigOptionsWidget::refresh);
         Core()->triggerDebugOptionsChanged();
-        connect(Core(), &ClutterCore::debugOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
+        connect(Core(), &ButterCore::debugOptionsChanged, this, &RizinConfigOptionsWidget::refresh);
     }
     if (options & OptionChanged::Analysis) {
-        disconnect(Core(), &ClutterCore::analysisOptionsChanged, this,
+        disconnect(Core(), &ButterCore::analysisOptionsChanged, this,
                    &RizinConfigOptionsWidget::refresh);
         Core()->triggerAnalysisOptionsChanged();
-        connect(Core(), &ClutterCore::analysisOptionsChanged, this,
+        connect(Core(), &ButterCore::analysisOptionsChanged, this,
                 &RizinConfigOptionsWidget::refresh);
     }
     if (options & OptionChanged::Symbols) {
-        disconnect(Core(), &ClutterCore::symbolsOptionsChanged, this,
+        disconnect(Core(), &ButterCore::symbolsOptionsChanged, this,
                    &RizinConfigOptionsWidget::refresh);
         Core()->triggerSymbolsOptionsChanged();
-        connect(Core(), &ClutterCore::symbolsOptionsChanged, this,
+        connect(Core(), &ButterCore::symbolsOptionsChanged, this,
                 &RizinConfigOptionsWidget::refresh);
     }
 }

@@ -2,7 +2,7 @@
 #define COLORS_H
 
 #include "common/RichTextPainter.h"
-#include "core/Clutter.h"
+#include "core/Butter.h"
 
 /**
  * @brief Utilities for handling color logic and syntax highlighting for assembly

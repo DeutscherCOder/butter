@@ -1,7 +1,7 @@
 #ifndef FLIRT_WIDGET_H
 #define FLIRT_WIDGET_H
 
-#include "ClutterDockWidget.h"
+#include "ButterDockWidget.h"
 #include "menus/FlirtContextMenu.h"
 
 #include <QAbstractListModel>
@@ -69,7 +69,7 @@ protected:
 /**
  * @brief Widget for browsing and applying FLIRT signatures to identify library functions
  */
-class FlirtWidget : public ClutterDockWidget
+class FlirtWidget : public ButterDockWidget
 {
     Q_OBJECT
 

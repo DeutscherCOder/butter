@@ -1,7 +1,7 @@
 #include "MarkDialog.h"
 
-#include "Clutter.h"
-#include "ClutterCommon.h"
+#include "Butter.h"
+#include "ButterCommon.h"
 #include "ui_MarkDialog.h"
 
 #include <QColorDialog>

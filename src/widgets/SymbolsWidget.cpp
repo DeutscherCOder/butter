@@ -127,9 +127,9 @@ SymbolsWidget::SymbolsWidget(MainWindow *main)
     setModels(symbolsProxyModel);
     ui->treeView->sortByColumn(SymbolsModel::AddressColumn, Qt::AscendingOrder);
 
-    connect(Core(), &ClutterCore::codeRebased, this, &SymbolsWidget::refreshSymbols);
-    connect(Core(), &ClutterCore::refreshAll, this, &SymbolsWidget::refreshSymbols);
-    connect(Core(), &ClutterCore::commentsChanged, this,
+    connect(Core(), &ButterCore::codeRebased, this, &SymbolsWidget::refreshSymbols);
+    connect(Core(), &ButterCore::refreshAll, this, &SymbolsWidget::refreshSymbols);
+    connect(Core(), &ButterCore::commentsChanged, this,
             [this]() { qhelpers::emitColumnChanged(symbolsModel, SymbolsModel::CommentColumn); });
 }
 

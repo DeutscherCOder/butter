@@ -38,7 +38,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="ClutterTreeView" name="vTableTreeView">
+     <widget class="ButterTreeView" name="vTableTreeView">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -50,7 +50,7 @@
       </property>
       <property name="styleSheet">
        <string notr="true">
-ClutterTreeView::item
+ButterTreeView::item
 {
    padding-top: 1px;
    padding-bottom: 1px;
@@ -82,9 +82,9 @@ ClutterTreeView::item
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ClutterTreeView</class>
+   <class>ButterTreeView</class>
    <extends>QTreeView</extends>
-   <header>widgets/ClutterTreeView.h</header>
+   <header>widgets/ButterTreeView.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

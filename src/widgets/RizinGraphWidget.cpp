@@ -9,7 +9,7 @@
 #include <utility>
 
 RizinGraphWidget::RizinGraphWidget(MainWindow *main)
-    : ClutterDockWidget(main),
+    : ButterDockWidget(main),
       ui(new Ui::RizinGraphWidget),
       graphView(new GenericRizinGraphView(this, main))
 {
@@ -100,10 +100,10 @@ void GenericRizinGraphView::loadCurrentGraph()
         return;
     }
 
-    const ClutterJson functionsDoc = Core()->cmdj(QString("%1 json").arg(graphCommand));
+    const ButterJson functionsDoc = Core()->cmdj(QString("%1 json").arg(graphCommand));
     auto nodes = functionsDoc["nodes"];
 
-    for (const ClutterJson block : nodes) {
+    for (const ButterJson block : nodes) {
         const uint64_t id = block["id"].toUt64();
 
         QString content;
