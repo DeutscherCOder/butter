@@ -57,16 +57,22 @@ to silence stderr logging.
   `butter://decompiled/{function}`, `butter://disassembly/{function}`.
 * `ping`, `logging/setLevel`, `completion/complete`, notification handling.
 
-## Tools (84) — v0.5.0
+## Tools (82) — v0.6.0
 
 **Start with `butter`** — the one-tool agent driver: `{"goal": "health offset"}`,
 `{"goal": "decompile main"}`, `{"goal": "list strings"}` … it routes to the right
 pipeline and only pays analysis when the goal needs it. Call **`usage`** once for the
 agent playbook (fast path vs analysis path, recommended flow).
 
+Any `m_*` field name in a goal routes to schema-offset extraction (`{"goal":
+"find schema field offsets for m_iItem"}` works), and known CS2 nicknames
+(health, team, lifestate, …) still resolve. Not CS2-specific: the engine ships
+**65 binary loaders** (PE, ELF, Mach-O, DEX, Java, pyc, WASM, Lua, console
+ROMs, dumps, …).
+
 | Group | Tools |
 |---|---|
-| Agent driver | `butter` (free-form goal router) `usage` (agent playbook) `batch` (up to 64 commands, one round trip) `pointer_refs` (schema/vtable records without analysis) `ui_launch` |
+| Agent driver | `butter` (free-form goal router) `usage` (agent playbook) `batch` (up to 64 commands, one round trip) `pointer_refs` (schema/vtable records without analysis) |
 | Session | `open` `close` `session` `info` `hashes` |
 | Analysis | `analyze` `functions` `function_info` `define_function` `undefine_function` `basic_blocks` `cfg` `callgraph` `callgraph_json` `callpaths` `variables` `library_functions` |
 | Types & symbols | `types_load` `pdb_load` |
@@ -90,7 +96,9 @@ wrapped (`aaa`, `axt`, `/r`, `aar`, `axg`, `afr`, `iSS`, plugin commands, …).
 ## Known engine gaps (handled, not hidden)
 
 * `analyze` applies a tuned discovery profile before `aa`/`aaa`/`aaaa` — measured
-  in `tools/analysis-bench.py` at +45–232% more functions for +0.1–3.4 s.
+  in `tools/analysis-bench.py` at +45–232% more functions for +0.1–3.4 s. The
+  `max` tier additionally runs `aac; aar; aae` (measured: +10 functions for
+  ~0.4 s on the crackme; `aac`/`aar` alone added 0).
 * **Fast path:** binaries > 8 MB never get auto-analysis from incidental calls
   (`strings`, `search`, `read_bytes`, `hexdump` are analysis-free); call `analyze`
   explicitly for huge files. Proof: CS2 `client.dll` (37.6 MB) → `m_iHealth = 0x34C`
@@ -98,13 +106,16 @@ wrapped (`aaa`, `axt`, `/r`, `aar`, `axg`, `afr`, `iSS`, plugin commands, …).
 * **String searches run with `str.encoding=ascii`** (session default) — rizin's
   `guess` encoding warning ("consumes vastly more resources") is gone and searches
   are near-instant.
-* **UI is the agent's choice, per call:** `open(path, ui=true)` or `ui_launch()`
-  open the GUI so a human can watch live. No startup flag needed (`--ui` still
-  forces it for every file if you want that).
+* **Headless only (v0.6):** the MCP has no GUI and launches none. Butter's GUI is
+  a separate app; the agent drives the engine directly.
+* **One-shot fallback (v0.6):** if a format kills the persistent session (observed
+  with pyc), the server keeps the file open in one-shot mode and every tool still
+  works, instead of dead-ending the agent.
 * **Schema-offset parser (v0.5):** validates the record actually names the field,
   reads the offset at +16 with the type tag at +8 (the tag is *not* a name length —
   verified against ground truth `m_iHealth=0x34c` and `m_iTeamNum`), votes across
-  independent records and reports all candidates.
+  independent records and reports every candidate with the name-record address it
+  came from (same field name in different schema classes has different offsets).
 * `mcp/butter-mcp.exe` (built by `tools/build-mcp-exe.bat`): the launcher real MCP
   clients configure by path — it finds Python and runs this server.
 * `callgraph`/`callgraph_json` recover call edges from the instruction stream

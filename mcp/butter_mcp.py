@@ -39,7 +39,8 @@ import threading
 import time
 
 SERVER_NAME = "butter-mcp"
-SERVER_VERSION = "0.5.0"
+SERVER_VERSION = "0.6.0"
+ENGINE_NAME = "butterxrizzin"   # our heavily-extended rizin engine
 
 # Files bigger than this never get auto-analysis from incidental tool calls
 # (strings/search/read on a 37 MB game DLL must not pay a full aaa). Explicit
@@ -280,7 +281,6 @@ STATE = {
     "file": None,            # currently open path
     "file_size": None,       # bytes, for the auto-analysis size gate
     "analysis": None,        # "basic" | "deep" | "max" | "deferred" | None
-    "ui_mode": False,        # --ui: launch butter.exe on every opened file
     "log_level": "info",
 }
 _lock = threading.RLock()
@@ -326,6 +326,11 @@ def ensure_analysis(level="deep", explicit=False):
         s.cmd(evar, timeout=30)
     cmd = {"basic": "aa", "deep": "aaa", "max": "aaaa"}[level or "deep"]
     s.cmd(cmd, timeout=ANALYSIS_TIMEOUT)
+    if (level or "deep") == "max":
+        # Measured (tools/analysis-bench logic, 2026-09-15): on the crackme
+        # aac/aar add 0 functions and aaaa == aaa, but aae (emulated calls)
+        # adds ~10 more for ~0.4s - cheap enough for the max tier.
+        s.cmd("aac; aar; aae", timeout=ANALYSIS_TIMEOUT)
     STATE["analysis"] = level or "deep"
     return STATE["analysis"]
 
@@ -344,12 +349,29 @@ def restart_with_same_file(reason):
 
 
 def run(command, timeout=DEFAULT_TIMEOUT, auto_analyze=True, level="deep", limit=None):
-    """Command against the session, with one automatic restart after a failure."""
-    s = session()
+    """Command against the session, with one automatic restart after a failure.
+
+    If the persistent session cannot run this file at all (some loaders die
+    immediately in interactive mode), fall back to one-shot processes so the
+    agent still gets results instead of a dead session.
+    """
+    s = STATE["session"]
     if auto_analyze:
         ensure_analysis(level)
+    if s is None or not s.running:
+        if STATE.get("file"):
+            return _oneshot(command, timeout=timeout)
+        raise ToolError("no file open. Call `open` first.")
     try:
         return s.cmd(command, timeout=timeout, limit=limit)
+    except ToolError as e:
+        if "exited unexpectedly" in str(e):
+            # Loader crashes the engine in interactive mode; degrade to one-shot.
+            log("persistent session died (%.40s); falling back to one-shot"
+                % command)
+            STATE["analysis"] = None
+            return _oneshot(command, timeout=timeout)
+        raise
     except TimeoutError:
         restart_with_same_file("timeout on: %.60s" % command)
         raise ToolError("command timed out and the session was restarted: %.80s" % command)
@@ -363,6 +385,15 @@ def run_json(command, timeout=DEFAULT_TIMEOUT, auto_analyze=True, default=None):
     try:
         return json.loads(out)
     except json.JSONDecodeError:
+        # Some loaders print error lines before the JSON payload; retry from
+        # the first JSON value in the output.
+        for ch in ("{", "["):
+            idx = out.find(ch)
+            if idx > 0:
+                try:
+                    return json.loads(out[idx:])
+                except json.JSONDecodeError:
+                    pass
         return {"raw": out, "command": command}
 
 
@@ -393,6 +424,8 @@ def t_usage(a):
     """Compact playbook so an agent drives the server efficiently first try."""
     return {
         "server": "%s %s" % (SERVER_NAME, SERVER_VERSION),
+        "engine": "%s (rizin fork, heavily extended) + Ghidra decompiler"
+                  % ENGINE_NAME,
         "fast_path_no_analysis": (
             "Instant even on huge binaries, never trigger analysis: strings, "
             "search, info, hashes, sections, imports, exports, symbols, "
@@ -410,8 +443,7 @@ def t_usage(a):
             "decompile, strings, imports, call paths, analyze",
             "3. analyze(level='deep') - only when decompiling/xrefs needed",
             "4. decompile / xrefs_to / callpaths / disassemble ...",
-            "5. ui_launch() or open(ui=true) - open the GUI so a human can "
-            "watch live (optional, AI chooses)",
+            "5. project_save(path) - persist analysis state for next time",
         ],
         "one_tool_driver": (
             "butter(goal) routes automatically: 'health offset', 'decompile "
@@ -433,16 +465,25 @@ def t_open(a):
     if STATE["rizin"] is None:
         raise ToolError("rizin not found. Set BUTTER_RIZIN or build Butter first.")
     with _lock:
-        STATE["session"] = RizinSession(STATE["rizin"]).start(
-            path, write=bool(a.get("write")), arch=a.get("arch"), bits=a.get("bits"),
-            endian=a.get("endian"), flags=(a.get("flags") or []))
+        session_obj = RizinSession(STATE["rizin"])
+        open_note = None
+        try:
+            session_obj.start(
+                path, write=bool(a.get("write")), arch=a.get("arch"),
+                bits=a.get("bits"), endian=a.get("endian"),
+                flags=(a.get("flags") or []))
+        except ToolError as e:
+            # Some loaders crash the engine in interactive mode (observed with
+            # pyc). Keep the file open in one-shot mode instead of failing.
+            session_obj.stop()
+            session_obj = None
+            open_note = ("persistent session unavailable for this format; "
+                         "one-shot mode active (%s)" % str(e)[:100])
+        STATE["session"] = session_obj
         STATE["file"] = path
         STATE["file_size"] = os.path.getsize(path)
         STATE["analysis"] = None
         STATE["debug"] = None
-    out_ui = None
-    if STATE.get("ui_mode") or a.get("ui"):
-        out_ui = _launch_ui(path)
     with open(path, "rb") as f:
         digest = hashlib.sha256(f.read()).hexdigest()
     info = run_json("ij", auto_analyze=False)
@@ -458,8 +499,8 @@ def t_open(a):
         "size": os.path.getsize(path),
         "sha256": digest,
         "file_info": keep or info,
-        "session": "persistent rizin process (analysis is kept between tool calls)",
-        "ui": out_ui,
+        "session": open_note or
+                   "persistent rizin process (analysis is kept between tool calls)",
         "next": ("instant tools (no analysis): strings, search, info, "
                  "pointer_refs, butter(goal=...). analyze(level='deep') only "
                  "before decompiling/xrefs. Call `usage` once for the playbook."),
@@ -516,6 +557,31 @@ def t_hashes(a):
         except ValueError:
             raise ToolError("unknown hash algorithm: %s" % algo)
     return {"file": path, "size": len(data), "hashes": out}
+
+
+def _oneshot(command, timeout=60.0):
+    """Run one command in a fresh short-lived rizin process on the open file.
+
+    The persistent session dies on some loaders (observed: pyc raises
+    "Undefined type in free_object" and exits on the first command in
+    interactive mode, while the same file works in one-shot `-c` mode).
+    One-shot keeps those formats usable until the engine bug is fixed.
+    """
+    exe = STATE["rizin"]
+    if not exe or not STATE["file"]:
+        raise ToolError("no file open. Call `open` first.")
+    args = [exe, "-e", "scr.color=0", "-e", "scr.utf8=0",
+            "-e", "scr.interactive=false", "-e", "scr.prompt=false",
+            "-e", "scr.html=false", "-e", "scr.null=false",
+            "-e", "str.encoding=ascii", "-e", "cfg.fortunes=false",
+            "-q", "-c", command, STATE["file"]]
+    try:
+        proc = subprocess.run(args, capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        raise ToolError("one-shot rizin timed out after %.0fs: %.60s"
+                        % (timeout, command))
+    raw = b"".join(x for x in (proc.stdout, proc.stderr) if x)
+    return clean(raw.decode("utf-8", "replace"))
 
 
 def t_analyze(a):
@@ -1293,30 +1359,6 @@ def t_emulate(a):
             "note": "esil cannot emulate Windows APIs; treat results as best effort"}
 
 
-def _launch_ui(path):
-    """Start butter.exe on `path` so a human can watch the agent work."""
-    import subprocess as _sp
-    exe = os.path.join(REPO, "build-ui-test", "butter.exe")
-    if not os.path.isfile(exe):
-        exe = os.path.join(REPO, "butter-dist", "butter.exe")
-    if not os.path.isfile(exe):
-        exe = os.path.join(REPO, "butter-dist", "clutter.exe")
-    if not os.path.isfile(exe):
-        return {"launched": False, "note": "no butter.exe found (build it first)"}
-    try:
-        _sp.Popen([exe, path], cwd=os.path.dirname(exe),
-                  stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
-        return {"launched": True, "exe": exe, "file": path,
-                "note": "UI window opened on the file; agent keeps driving rizin"}
-    except OSError as e:
-        return {"launched": False, "error": str(e)}
-
-
-def t_ui_launch(a):
-    require_file()
-    return _launch_ui(a.get("path") or STATE["file"])
-
-
 def t_batch(a):
     """Run several rizin commands in one round trip (one session, one reply)."""
     cmds = a.get("commands")
@@ -1392,17 +1434,26 @@ def t_butter(a):
         return any(w in g for w in words)
 
     # -- intent routing -------------------------------------------------
+    # Any m_* field name in the goal routes to schema-offset extraction -
+    # works for any engine/game that emits schema field names (CS2, other
+    # Source builds, Unity/IL2CPP dumps with m_ naming, custom tooling),
+    # not just a hardcoded CS2 list. Known CS2 nicknames still resolve.
+    m_fields = re.findall(r"\bm_[A-Za-z0-9_]+", goal)
     field_words = ("health", "team", "teamnum", "lifestate", "life state",
                    "origin", "angle", "maxhealth", "max health", "weapon",
-                   "viewoffset", "view offset", "eyea")
+                   "viewoffset", "view offset", "eyea", "item", "ammo",
+                   "velocity", "flags", "collision", "movespeed")
     if (hit("offset", "schema", "netvar", "field") and hit(*field_words)) or \
+            m_fields or \
             (hit(*field_words) and (tgt or hit("offset", "schema", "netvar"))) or \
             (hit("offset") and tgt):
-        fields = [w for w in ("m_iHealth", "m_iTeamNum", "m_lifeState",
-                              "m_iMaxHealth", "m_vecOrigin", "m_angEyeAngles",
-                              "m_hActiveWeapon", "m_vecViewOffset")
-                  if w.lower().lstrip("m_i").lstrip("m_").lstrip("m_h").lstrip("m_vec").rstrip("s")
-                  in g or w in g]
+        fields = list(m_fields)
+        if not fields:
+            fields = [w for w in ("m_iHealth", "m_iTeamNum", "m_lifeState",
+                                  "m_iMaxHealth", "m_vecOrigin", "m_angEyeAngles",
+                                  "m_hActiveWeapon", "m_vecViewOffset")
+                      if w.lower().lstrip("m_i").lstrip("m_").lstrip("m_h").lstrip("m_vec").rstrip("s")
+                      in g or w in g]
         if not fields and tgt:
             fields = [tgt]
         out = {"mode": "schema-offsets", "fields": {}}
@@ -1426,7 +1477,7 @@ def t_butter(a):
                 b = bytes.fromhex(re.sub(r"\s+", "", dump) or "")
                 if b.startswith(want):
                     good.append(sa)
-            votes, tags = {}, set()
+            votes, tags, sources = {}, set(), {}
             for sa in good:
                 le = sa.to_bytes(8, "little").hex()
                 res = run("/x %s" % le, timeout=300, auto_analyze=False)
@@ -1443,14 +1494,21 @@ def t_butter(a):
                     flag = int.from_bytes(b[20:24], "little")
                     if 0 < off < 0x10000 and off != tag and flag <= 1:
                         votes[off] = votes.get(off, 0) + 1
+                        sources.setdefault(hex(off), []).append(hex(sa))
                     tags.add(tag)
             if votes:
                 best = max(votes.items(), key=lambda kv: kv[1])
                 entry = {"offset": hex(best[0]), "decimal": best[0],
-                         "confirmations": best[1]}
+                         "confirmations": best[1],
+                         "name_record_addrs": sources[hex(best[0])]}
                 if len(votes) > 1:
-                    entry["candidates"] = {hex(o): c for o, c
-                                           in sorted(votes.items())}
+                    # Same field name exists in several schema classes; each
+                    # class has its own offset. Report every candidate and
+                    # which name-record it came from so the caller (or a
+                    # human) can pick the right class.
+                    entry["candidates"] = {
+                        hex(o): {"count": c, "name_records": sources[hex(o)]}
+                        for o, c in sorted(votes.items()) if o != best[0]}
                 out["fields"][field] = entry
         out["note"] = ("offsets read from embedded schema records, no analysis "
                        "needed; confirmations = independent records agreeing")
@@ -1715,16 +1773,13 @@ TOOLS = [
          "limit": {"type": "integer", "default": 16},
          "timeout": {"type": "integer", "default": 300}},
       "required": ["value"]}, t_pointer_refs),
-    ("ui_launch", "Open the Butter GUI on the current file so a human can watch the agent work.",
-     {"type": "object", "properties": {}}, t_ui_launch),
-    ("open", "Open a binary for analysis in a persistent rizin session. Call this first. ui=true opens the Butter GUI so a human can watch the agent work live.",
+    ("open", "Open a binary for analysis in a persistent rizin session. Call this first.",
      {"type": "object", "properties": {
          "path": {"type": "string"},
          "arch": {"type": "string", "description": "force architecture"},
          "bits": {"type": "integer"},
          "endian": {"type": "string", "enum": ["little", "big"]},
          "write": {"type": "boolean", "description": "open for writing"},
-         "ui": {"type": "boolean", "description": "also open the Butter GUI on this file (AI decides, per call)"},
          "flags": {"type": "array", "items": {"type": "string"},
                    "description": "extra rizin CLI flags"}},
       "required": ["path"]}, t_open),
@@ -2119,8 +2174,8 @@ def handle(msg):
                 "logging": {},
                 "completions": {},
             },
-            "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION,
-                           "title": "Butter reverse engineering"},
+            "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION,                            "title": "Butter reverse engineering "
+                                     "(%s engine)" % ENGINE_NAME},
             "instructions": (
                 "Butter/rizin for agents. FAST PATH (no analysis, instant even on "
                 "37 MB DLLs): open, strings, search, info, imports, sections, "
@@ -2128,8 +2183,8 @@ def handle(msg):
                 "ANALYSIS PATH: call analyze(level='deep') ONCE, then decompile, "
                 "xrefs_to, callpaths, functions work. Files >8 MB never auto-"
                 "analyze from incidental calls. `batch` = up to 64 rizin "
-                "`usage` = full playbook. AI decides the GUI per call: open(path, "
-                "ui=true) or ui_launch() when a human should watch live."
+                "commands per call. `usage` = full playbook. Headless only - "
+                "there is no GUI."
             ),
         }
 
@@ -2335,9 +2390,6 @@ def main(argv=None):
                         help="run auto-analysis on startup (with --file)")
     parser.add_argument("--http", metavar="HOST:PORT",
                         help="serve streamable HTTP instead of stdio")
-    parser.add_argument("--ui", action="store_true",
-                        help="UI mode: open butter.exe on every opened file (optional; "
-                             "the AI can also choose per call via open(ui=true) / ui_launch)")
     parser.add_argument("--path", default="/mcp", help="HTTP endpoint path")
     parser.add_argument("--no-log", action="store_true", help="silence stderr logging")
     args = parser.parse_args(argv)
@@ -2347,8 +2399,6 @@ def main(argv=None):
         LOG_LEVEL = False
 
     STATE["rizin"] = find_rizin(args.rizin)
-    if args.ui:
-        STATE["ui_mode"] = True
     if args.file:
         t_open({"path": args.file})
         if args.analysis:
