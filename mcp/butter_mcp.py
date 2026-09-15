@@ -39,7 +39,7 @@ import threading
 import time
 
 SERVER_NAME = "butter-mcp"
-SERVER_VERSION = "0.4.0-dev"
+SERVER_VERSION = "0.5.0"
 
 # Files bigger than this never get auto-analysis from incidental tool calls
 # (strings/search/read on a 37 MB game DLL must not pay a full aaa). Explicit
@@ -130,9 +130,13 @@ class RizinSession:
     def start(self, path, debug=False, write=False, arch=None, bits=None,
               endian=None, flags=(), analysis=None):
         self.stop()
+        # str.encoding=ascii: the 'guess' default makes every string search
+        # "consume vastly more resources" (rizin's own warning) - ascii is
+        # both faster and what agents want 99% of the time.
         args = [self.exe, "-e", "scr.color=0", "-e", "scr.utf8=0",
                 "-e", "scr.interactive=false", "-e", "scr.prompt=false",
                 "-e", "scr.html=false", "-e", "scr.null=false",
+                "-e", "str.encoding=ascii",
                 "-e", "cfg.fortunes=false", "-q"]
         if debug:
             args.append("-d")
@@ -385,6 +389,43 @@ def require_file():
 
 # --------------------------------------------------------------- tools
 
+def t_usage(a):
+    """Compact playbook so an agent drives the server efficiently first try."""
+    return {
+        "server": "%s %s" % (SERVER_NAME, SERVER_VERSION),
+        "fast_path_no_analysis": (
+            "Instant even on huge binaries, never trigger analysis: strings, "
+            "search, info, hashes, sections, imports, exports, symbols, "
+            "read_bytes, hexdump, pointer_refs, butter(goal='... offsets')."
+        ),
+        "analysis_path": (
+            "decompile, xrefs_to/from, callgraphs, callpaths, functions need "
+            "`analyze` first. Call analyze(level='deep') explicitly once - it "
+            "is then reused by all tools for the session. Files >8 MB never "
+            "auto-analyze from incidental calls (by design, never blocks)."
+        ),
+        "recommended_flow": [
+            "1. open(path) - persistent session, instant",
+            "2. butter(goal='...') - one-shot driver: schema offsets, "
+            "decompile, strings, imports, call paths, analyze",
+            "3. analyze(level='deep') - only when decompiling/xrefs needed",
+            "4. decompile / xrefs_to / callpaths / disassemble ...",
+            "5. ui_launch() or open(ui=true) - open the GUI so a human can "
+            "watch live (optional, AI chooses)",
+        ],
+        "one_tool_driver": (
+            "butter(goal) routes automatically: 'health offset', 'decompile "
+            "main', 'list strings', 'imports', 'paths from main to foo'. Use "
+            "specific tools only when you need fine control."
+        ),
+        "reliability": (
+            "A hung command auto-restarts the rizin session and reports it. "
+            "Every result carries 'elapsed' timings. `batch` runs up to 64 "
+            "commands per round trip."
+        ),
+    }
+
+
 def t_open(a):
     path = os.path.abspath(os.path.expanduser(a["path"]))
     if not os.path.isfile(path):
@@ -399,8 +440,9 @@ def t_open(a):
         STATE["file_size"] = os.path.getsize(path)
         STATE["analysis"] = None
         STATE["debug"] = None
-    if STATE.get("ui_mode"):
-        _launch_ui(path)
+    out_ui = None
+    if STATE.get("ui_mode") or a.get("ui"):
+        out_ui = _launch_ui(path)
     with open(path, "rb") as f:
         digest = hashlib.sha256(f.read()).hexdigest()
     info = run_json("ij", auto_analyze=False)
@@ -417,7 +459,10 @@ def t_open(a):
         "sha256": digest,
         "file_info": keep or info,
         "session": "persistent rizin process (analysis is kept between tool calls)",
-        "next": "call `analyze` (level=deep) before decompiling",
+        "ui": out_ui,
+        "next": ("instant tools (no analysis): strings, search, info, "
+                 "pointer_refs, butter(goal=...). analyze(level='deep') only "
+                 "before decompiling/xrefs. Call `usage` once for the playbook."),
     }
 
 
@@ -543,8 +588,21 @@ def t_cfg(a):
 
 def t_callgraph(a):
     if a.get("target"):
-        return {"target": a["target"],
-                "callgraph": run("agC @ %s" % target(a))}
+        # `agC` (and `agCj`) render nothing/hang in current rizin builds, so
+        # the per-function graph is recovered from the instruction stream via
+        # _call_edges - the same proven fallback as the whole-binary case.
+        t0 = time.time()
+        _f, edges = _call_edges()
+        t = target(a)
+        lines = ["digraph callgraph_%s {" % re.sub(r"[^A-Za-z0-9_]", "_", t),
+                 "  rankdir=LR;"]
+        for c, e in edges:
+            if c == t or e == t:
+                lines.append('  "%s" -> "%s";' % (c, e))
+        lines.append("}")
+        return {"target": t, "callgraph": "\n".join(lines),
+                "edges_total": len(edges),
+                "elapsed": round(time.time() - t0, 2)}
     out = run("agC")
     if not out.strip():
         # `agC` renders nothing in current rizin builds; fall back to the
@@ -875,11 +933,18 @@ def t_decompile_many(a):
 
 
 def t_decompile_all(a):
-    """Decompile every analysed function (`pdg` with @@f), capped."""
-    limit = int(a.get("limit", 400))
-    out = run("pdg @@f", timeout=DECOMPILE_TIMEOUT * 2)
-    return {"note": "pdg over all functions; use decompile_many for control",
-            "limit": limit, "code": out}
+    """Decompile every analysed function, bounded by `limit` (default 25)."""
+    limit = max(1, min(int(a.get("limit", 25)), 400))
+    funcs = [f.get("offset") for f in (run_json("aflj") or [])[:limit]
+             if isinstance(f, dict) and f.get("offset")]
+    t0 = time.time()
+    out = []
+    for off in funcs:
+        code = run("pdg @ 0x%x" % off, timeout=DECOMPILE_TIMEOUT)
+        out.append({"addr": hex(off), "code": code})
+    return {"note": "decompiled %d functions; use decompile_many for control" % len(out),
+            "limit": limit, "functions": out,
+            "elapsed": round(time.time() - t0, 2)}
 
 
 def t_disassemble(a):
@@ -1327,7 +1392,11 @@ def t_butter(a):
         return any(w in g for w in words)
 
     # -- intent routing -------------------------------------------------
-    if hit("offset", "schema", "netvar", "field") and hit("health", "team", "lifestate", "origin", "angle") or \
+    field_words = ("health", "team", "teamnum", "lifestate", "life state",
+                   "origin", "angle", "maxhealth", "max health", "weapon",
+                   "viewoffset", "view offset", "eyea")
+    if (hit("offset", "schema", "netvar", "field") and hit(*field_words)) or \
+            (hit(*field_words) and (tgt or hit("offset", "schema", "netvar"))) or \
             (hit("offset") and tgt):
         fields = [w for w in ("m_iHealth", "m_iTeamNum", "m_lifeState",
                               "m_iMaxHealth", "m_vecOrigin", "m_angEyeAngles",
@@ -1338,35 +1407,55 @@ def t_butter(a):
             fields = [tgt]
         out = {"mode": "schema-offsets", "fields": {}}
         for field in fields[:8]:
-            # /z string search (fast) -> pointer scan -> schema records.
-            # Record layout: [0..7]=name pointer, [8..11]=name length (incl.
-            # NUL), [16..19]=field offset. Vote across records; the u32 at +8
-            # is the NAME LENGTH, not the offset.
+            # Fast, analysis-free chain: /z string search -> verify the hit is
+            # really the field name -> find pointers to it -> read the record.
+            # Record layout (verified on CS2 client.dll, ground truth
+            # m_iHealth=0x34c): [0..7]=name pointer, [8..11]=type tag (NOT a
+            # name length - m_iTeamNum's tag is 7 for an 11-byte name),
+            # [16..19]=field offset, [20..23]=flag (0 or 1).
+            if not re.fullmatch(r"[A-Za-z0-9_@:.\[\]-]+", field):
+                continue
             hits = run("/z %s" % field, timeout=300, auto_analyze=False)
             addrs = sorted({int(m, 16) for m in
-                            re.findall(r"0x[0-9a-fA-F]{6,}", hits)})[:4]
-            votes = {}
+                            re.findall(r"0x[0-9a-fA-F]{6,}", hits)})[:6]
+            want = (field + "\x00").encode()
+            good = []
             for sa in addrs:
-                le = int(sa).to_bytes(8, "little").hex()
+                dump = run("p8 %d @ 0x%x" % (len(want), sa),
+                           auto_analyze=False)
+                b = bytes.fromhex(re.sub(r"\s+", "", dump) or "")
+                if b.startswith(want):
+                    good.append(sa)
+            votes, tags = {}, set()
+            for sa in good:
+                le = sa.to_bytes(8, "little").hex()
                 res = run("/x %s" % le, timeout=300, auto_analyze=False)
                 for ln in res.splitlines():
                     if not ln.startswith("0x"):
                         continue
                     paddr = int(ln.split()[0], 16)
-                    dump = run("p8 24 @ 0x%x" % paddr, auto_analyze=False)
+                    dump = run("p8 32 @ 0x%x" % paddr, auto_analyze=False)
                     b = bytes.fromhex(re.sub(r"\s+", "", dump) or "")
-                    if len(b) < 20 or int.from_bytes(b[0:8], "little") != sa:
+                    if len(b) < 24 or int.from_bytes(b[0:8], "little") != sa:
                         continue
-                    name_len = int.from_bytes(b[8:12], "little")
+                    tag = int.from_bytes(b[8:12], "little")
                     off = int.from_bytes(b[16:20], "little")
-                    if name_len == len(field) + 1 and 0 < off < 0x8000:
+                    flag = int.from_bytes(b[20:24], "little")
+                    if 0 < off < 0x10000 and off != tag and flag <= 1:
                         votes[off] = votes.get(off, 0) + 1
+                    tags.add(tag)
             if votes:
                 best = max(votes.items(), key=lambda kv: kv[1])
-                out["fields"][field] = {"offset": hex(best[0]),
-                                        "decimal": best[0],
-                                        "confirmations": best[1]}
-        out["note"] = "offsets read from embedded schema records, no analysis needed"
+                entry = {"offset": hex(best[0]), "decimal": best[0],
+                         "confirmations": best[1]}
+                if len(votes) > 1:
+                    entry["candidates"] = {hex(o): c for o, c
+                                           in sorted(votes.items())}
+                out["fields"][field] = entry
+        out["note"] = ("offsets read from embedded schema records, no analysis "
+                       "needed; confirmations = independent records agreeing")
+        out["hint"] = ("verify live with debug_open + debug_memory at "
+                       "module_base + offset")
         out["elapsed"] = round(time.time() - t0, 2)
         return out
 
@@ -1612,6 +1701,8 @@ TOOLS = [
          "target": {"type": "string", "description": "function name / 0x address / field name depending on goal"},
          "limit": {"type": "integer", "default": 20}},
       "required": ["goal"]}, t_butter),
+    ("usage", "Compact playbook for AI agents: fast path vs analysis path, recommended flow, huge-file behavior. Call this once to learn how to drive the server efficiently.",
+     {"type": "object", "properties": {}}, t_usage),
     ("batch", "Run up to 64 raw rizin commands in one round trip (no auto-analysis).",
      {"type": "object", "properties": {
          "commands": {"type": "array", "items": {"type": "string"}},
@@ -1626,13 +1717,14 @@ TOOLS = [
       "required": ["value"]}, t_pointer_refs),
     ("ui_launch", "Open the Butter GUI on the current file so a human can watch the agent work.",
      {"type": "object", "properties": {}}, t_ui_launch),
-    ("open", "Open a binary for analysis in a persistent rizin session. Call this first.",
+    ("open", "Open a binary for analysis in a persistent rizin session. Call this first. ui=true opens the Butter GUI so a human can watch the agent work live.",
      {"type": "object", "properties": {
          "path": {"type": "string"},
          "arch": {"type": "string", "description": "force architecture"},
          "bits": {"type": "integer"},
          "endian": {"type": "string", "enum": ["little", "big"]},
          "write": {"type": "boolean", "description": "open for writing"},
+         "ui": {"type": "boolean", "description": "also open the Butter GUI on this file (AI decides, per call)"},
          "flags": {"type": "array", "items": {"type": "string"},
                    "description": "extra rizin CLI flags"}},
       "required": ["path"]}, t_open),
@@ -1712,8 +1804,7 @@ TOOLS = [
          "targets": {"type": "array", "items": {"type": "string"}},
          "limit": {"type": "integer", "default": 25}}, "required": ["targets"]},
      t_decompile_many),
-    ("decompile_all", "Decompile every analysed function (can be slow).",
-     {"type": "object", "properties": {"limit": {"type": "integer", "default": 400}}},
+    ("decompile_all", "Decompile analysed functions bounded by `limit` (default 25).", {"type": "object", "properties": {"limit": {"type": "integer", "default": 25}}},
      t_decompile_all),
     ("disassemble", "Disassemble a function.",
      {"type": "object", "properties": {"target": {"type": "string"}},
@@ -2031,10 +2122,14 @@ def handle(msg):
             "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION,
                            "title": "Butter reverse engineering"},
             "instructions": (
-                "Drive Butter/rizin: `open` a binary, `analyze` deep, then `decompile`, "
-                "`disassemble`, `xrefs_*`, `strings`, `search`, `read_bytes`. Analysis "
-                "state is kept in a persistent rizin session, so it is paid once. Any "
-                "rizin command is reachable through `run_command`."
+                "Butter/rizin for agents. FAST PATH (no analysis, instant even on "
+                "37 MB DLLs): open, strings, search, info, imports, sections, "
+                "read_bytes, hexdump, pointer_refs, butter(goal='... offset ...'). "
+                "ANALYSIS PATH: call analyze(level='deep') ONCE, then decompile, "
+                "xrefs_to, callpaths, functions work. Files >8 MB never auto-"
+                "analyze from incidental calls. `batch` = up to 64 rizin "
+                "`usage` = full playbook. AI decides the GUI per call: open(path, "
+                "ui=true) or ui_launch() when a human should watch live."
             ),
         }
 
@@ -2241,8 +2336,8 @@ def main(argv=None):
     parser.add_argument("--http", metavar="HOST:PORT",
                         help="serve streamable HTTP instead of stdio")
     parser.add_argument("--ui", action="store_true",
-                        help="UI mode: open butter.exe on every opened file so a "
-                             "human can watch the agent work live")
+                        help="UI mode: open butter.exe on every opened file (optional; "
+                             "the AI can also choose per call via open(ui=true) / ui_launch)")
     parser.add_argument("--path", default="/mcp", help="HTTP endpoint path")
     parser.add_argument("--no-log", action="store_true", help="silence stderr logging")
     args = parser.parse_args(argv)

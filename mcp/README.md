@@ -57,15 +57,16 @@ to silence stderr logging.
   `butter://decompiled/{function}`, `butter://disassembly/{function}`.
 * `ping`, `logging/setLevel`, `completion/complete`, notification handling.
 
-## Tools (82) — v0.4.0-dev
+## Tools (84) — v0.5.0
 
 **Start with `butter`** — the one-tool agent driver: `{"goal": "health offset"}`,
 `{"goal": "decompile main"}`, `{"goal": "list strings"}` … it routes to the right
-pipeline and only pays analysis when the goal needs it.
+pipeline and only pays analysis when the goal needs it. Call **`usage`** once for the
+agent playbook (fast path vs analysis path, recommended flow).
 
 | Group | Tools |
 |---|---|
-| Agent driver | `butter` (free-form goal router) `batch` (up to 64 commands, one round trip) `pointer_refs` (schema/vtable records without analysis) `ui_launch` |
+| Agent driver | `butter` (free-form goal router) `usage` (agent playbook) `batch` (up to 64 commands, one round trip) `pointer_refs` (schema/vtable records without analysis) `ui_launch` |
 | Session | `open` `close` `session` `info` `hashes` |
 | Analysis | `analyze` `functions` `function_info` `define_function` `undefine_function` `basic_blocks` `cfg` `callgraph` `callgraph_json` `callpaths` `variables` `library_functions` |
 | Types & symbols | `types_load` `pdb_load` |
@@ -94,12 +95,22 @@ wrapped (`aaa`, `axt`, `/r`, `aar`, `axg`, `afr`, `iSS`, plugin commands, …).
   (`strings`, `search`, `read_bytes`, `hexdump` are analysis-free); call `analyze`
   explicitly for huge files. Proof: CS2 `client.dll` (37.6 MB) → `m_iHealth = 0x34C`
   read from its embedded schema in **3.3 s** end-to-end, no analysis.
-* `--ui` (or `ui_launch`): opens `butter.exe` on the file so a human can watch the
-  agent work live while the MCP drives the same binary through rizin.
+* **String searches run with `str.encoding=ascii`** (session default) — rizin's
+  `guess` encoding warning ("consumes vastly more resources") is gone and searches
+  are near-instant.
+* **UI is the agent's choice, per call:** `open(path, ui=true)` or `ui_launch()`
+  open the GUI so a human can watch live. No startup flag needed (`--ui` still
+  forces it for every file if you want that).
+* **Schema-offset parser (v0.5):** validates the record actually names the field,
+  reads the offset at +16 with the type tag at +8 (the tag is *not* a name length —
+  verified against ground truth `m_iHealth=0x34c` and `m_iTeamNum`), votes across
+  independent records and reports all candidates.
 * `mcp/butter-mcp.exe` (built by `tools/build-mcp-exe.bat`): the launcher real MCP
   clients configure by path — it finds Python and runs this server.
-* `callgraph_json`/`callgraph` recover call edges from the instruction stream
-  because `agCj`/`agC` return nothing in current rizin builds.
+* `callgraph`/`callgraph_json` recover call edges from the instruction stream
+  because `agCj`/`agC` return nothing or hang in current rizin builds.
+* `decompile_all` is bounded by `limit` (default 25) instead of decompiling
+  everything unbounded.
 * `callpaths` walks call xrefs backwards; unanalysed CRT glue can dead-end —
   `define_function` on the glue address first opens the path.
 * `signatures_scan` reports it when the rizin build lacks the zignature plugin
