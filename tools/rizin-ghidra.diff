@@ -1,0 +1,320 @@
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/context.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/context.hh
+index 79fbe1eff6..48628c6470 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/context.hh
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/context.hh
+@@ -94,6 +94,8 @@ private:
+   ConstructState *base_state;
+   int4 alloc;			// Number of ConstructState's allocated
+   int4 delayslot;		// delayslot depth
++protected:
++  ConstructState **getBaseState(void) { return &base_state; }
+ public:
+   ParserContext(ContextCache *ccache,Translate *trans);
+   ~ParserContext(void) { if (context != (uintm *)0) delete [] context; }
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.cc
+index f85f01854f..b238f8b03f 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.cc
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.cc
+@@ -218,6 +218,15 @@ void EmitMarkup::tagFuncName(const string &name,syntax_highlight hl,const Funcda
+   encoder->closeElement(ELEM_FUNCNAME);
+ }
+ 
++void EmitMarkup::tagNoReturn(void)
++
++{
++  encoder->openElement(ELEM_NORETURN);
++  encoder->writeUnsignedInteger(ATTRIB_COLOR,no_color);
++  encoder->writeString(ATTRIB_CONTENT," noreturn ");
++  encoder->closeElement(ELEM_NORETURN);
++}
++
+ void EmitMarkup::tagType(const string &name,syntax_highlight hl,const Datatype *ct)
+ 
+ {
+@@ -345,7 +354,7 @@ void EmitMarkup::setOutputStream(ostream *t)
+   if (encoder != (Encoder *)0)
+     delete encoder;
+   s = t;
+-  encoder = new PackedEncode(*s);
++  encoder = new XmlEncode(*s);
+ }
+ 
+ void EmitMarkup::setPackedOutput(bool val)
+@@ -420,6 +429,9 @@ void TokenSplit::print(Emit *emit) const
+   case fnam_t:	// tagFuncName
+     emit->tagFuncName(tok,hl,ptr_second.fd,op);
+     break;
++  case noret_t:
++    emit->tagNoReturn();
++    break;
+   case type_t:	// tagType
+     emit->tagType(tok,hl,ptr_second.ct);
+     break;
+@@ -1062,6 +1074,14 @@ void EmitPrettyPrint::tagFuncName(const string &name,syntax_highlight hl,const F
+   scan();
+ }
+ 
++void EmitPrettyPrint::tagNoReturn(void)
++{
++  checkstring();
++  TokenSplit &tok( tokqueue.push() );
++  tok.tagNoReturn();
++  scan();
++}
++
+ void EmitPrettyPrint::tagType(const string &name,syntax_highlight hl,const Datatype *ct)
+ 
+ {
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.hh
+index bd65f4e292..8ea8cee8af 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.hh
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/prettyprint.hh
+@@ -258,6 +258,11 @@ public:
+   /// \param op is the CALL operation associated within the syntax tree or null for a declaration
+   virtual void tagFuncName(const string &name,syntax_highlight hl,const Funcdata *fd,const PcodeOp *op)=0;
+ 
++  /// \brief Emit a function noreturn specifier
++  ///
++  /// An specifier string representing noreturn information of the function is emitted
++  virtual void tagNoReturn(void)=0;
++
+   /// \brief Emit a data-type identifier
+   ///
+   /// A string representing the name of a data-type, as appropriate for the source language
+@@ -536,6 +541,7 @@ public:
+   virtual void tagVariable(const string &name,syntax_highlight hl,const Varnode *vn,const PcodeOp *op);
+   virtual void tagOp(const string &name,syntax_highlight hl,const PcodeOp *op);
+   virtual void tagFuncName(const string &name,syntax_highlight hl,const Funcdata *fd,const PcodeOp *op);
++  virtual void tagNoReturn(void);
+   virtual void tagType(const string &name,syntax_highlight hl,const Datatype *ct);
+   virtual void tagField(const string &name,syntax_highlight hl,const Datatype *ct,int4 off,const PcodeOp *op);
+   virtual void tagBitField(const string &name,syntax_highlight hl,const Datatype *ct,int4 id,const PcodeOp *op);
+@@ -584,6 +590,8 @@ public:
+     *s << name; }
+   virtual void tagFuncName(const string &name,syntax_highlight hl,const Funcdata *fd,const PcodeOp *op) {
+     *s << name; }
++  virtual void tagNoReturn(void) {
++    *s << " noreturn "; }
+   virtual void tagType(const string &name,syntax_highlight hl,const Datatype *ct) {
+     *s << name; }
+   virtual void tagField(const string &name,syntax_highlight hl,const Datatype *ct,int4 off,const PcodeOp *op) {
+@@ -654,6 +662,7 @@ public:
+     vari_t,		///< A variable identifier
+     op_t,		///< An operator
+     fnam_t,		///< A function identifier
++    noret_t,            ///< A function noreturn specifier
+     type_t,		///< A data-type identifier
+     field_t,		///< A field name for a structured data-type
+     bitfield_t,		///< A bitfield name in a structured data-type
+@@ -810,6 +819,10 @@ public:
+     tok = name; size = tok.size();
+     tagtype=fnam_t; delimtype=tokenstring; hl=h; ptr_second.fd=f; op=o; }
+ 
++  /// \brief Create a function noreturn token
++  void tagNoReturn(void) {
++    tagtype=noret_t; delimtype=tokenstring; size=strlen(" noreturn "); }
++
+   /// \brief Create a data-type identifier token
+   ///
+   /// \param name is the character data for the identifier
+@@ -1112,6 +1125,7 @@ public:
+   virtual void tagVariable(const string &name,syntax_highlight hl,const Varnode *vn,const PcodeOp *op);
+   virtual void tagOp(const string &name,syntax_highlight hl,const PcodeOp *op);
+   virtual void tagFuncName(const string &name,syntax_highlight hl,const Funcdata *fd,const PcodeOp *op);
++  virtual void tagNoReturn(void);
+   virtual void tagType(const string &name,syntax_highlight hl,const Datatype *ct);
+   virtual void tagField(const string &name,syntax_highlight hl,const Datatype *ct,int4 off,const PcodeOp *op);
+   virtual void tagBitField(const string &name,syntax_highlight hl,const Datatype *ct,int4 id,const PcodeOp *op);
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/printc.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/printc.cc
+index 00411be63a..a3b72c9a6f 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/printc.cc
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/printc.cc
+@@ -54,7 +54,7 @@ OpToken PrintC::boolean_and = { "&&", "", 2, 22, false, OpToken::binary, 1, 0, (
+ OpToken PrintC::boolean_xor = { "^^", "", 2, 20, false, OpToken::binary, 1, 0, (OpToken *)0 };
+ OpToken PrintC::boolean_or = { "||", "", 2, 18, false, OpToken::binary, 1, 0, (OpToken *)0 };
+ OpToken PrintC::assignment = { "=", "", 2, 14, false, OpToken::binary, 1, 5, (OpToken *)0 };
+-OpToken PrintC::comma = { ",", "", 2, 2, true, OpToken::binary, 0, 0, (OpToken *)0 };
++OpToken PrintC::comma = { ", ", "", 2, 2, true, OpToken::binary, 0, 0, (OpToken *)0 };
+ OpToken PrintC::new_op = { "", "", 2, 62, false, OpToken::space, 1, 0, (OpToken *)0 };
+ 
+ // Inplace assignment operators
+@@ -1654,6 +1654,8 @@ void PrintC::resetDefaultsPrintC(void)
+   option_brace_ifelse = Emit::same_line;
+   option_brace_loop = Emit::same_line;
+   option_brace_switch = Emit::same_line;
++  option_space_after_comma = false;
++  option_newline_before_else = true;
+   setCStyleComments();
+ }
+ 
+@@ -2205,6 +2207,9 @@ void PrintC::emitStructDefinition(const TypeStruct *ct)
+     iter++;
+     if (iter != ct->endField()) {
+       emit->print(COMMA); // Print comma separator
++      if (option_space_after_comma) {
++	emit->spaces(1);
++      }
+       emit->tagLine();
+     }
+   }
+@@ -2295,8 +2300,12 @@ void PrintC::emitPrototypeInputs(const FuncProto *proto)
+   else {
+     bool printComma = false;
+     for(int4 i=0;i<sz;++i) {
+-      if (printComma)
++      if (printComma) {
+ 	emit->print(COMMA);
++	if (option_space_after_comma) {
++	  emit->spaces(1);
++	}
++      }
+       ProtoParameter *param = proto->getParam(i);
+       if (isSet(hide_thisparam) && param->isThisPointer())
+ 	continue;
+@@ -2314,8 +2323,12 @@ void PrintC::emitPrototypeInputs(const FuncProto *proto)
+     }
+   }
+   if (proto->isDotdotdot()) {
+-    if (sz != 0)
++    if (sz != 0) {
+       emit->print(COMMA);
++      if (option_space_after_comma) {
++	emit->spaces(1);
++      }
++    }
+     emit->print(DOTDOTDOT);
+   }
+ }
+@@ -2722,6 +2735,9 @@ void PrintC::emitFunctionDeclaration(const Funcdata *fd)
+   int4 id1 = emit->openGroup();
+   emitSymbolScope(fd->getSymbol());
+   emit->tagFuncName(fd->getDisplayName(),EmitMarkup::funcname_color,fd,(PcodeOp *)0);
++  if (proto->isNoReturn()) {
++    emit->tagNoReturn();
++  }
+ 
+   emit->spaces(function_call.spacing,function_call.bump);
+   int4 id2 = emit->openParen(OPEN_PAREN);
+@@ -3055,7 +3071,11 @@ void PrintC::emitBlockIf(const BlockIf *bl)
+     emit->endBlock(id1);
+     emit->closeBraceIndent(CLOSE_CURLY, id);
+     if (bl->getSize() == 3) {
+-      emit->tagLine();
++      if (option_newline_before_else) {
++	emit->tagLine();
++      } else {
++	emit->spaces(1);
++      }
+       emit->print(KEYWORD_ELSE,EmitMarkup::keyword_color);
+       FlowBlock *elseBlock = bl->getBlock(2);
+       if (elseBlock->getType() == FlowBlock::t_if) {
+@@ -3303,6 +3323,10 @@ void PrintC::emitLabel(const FlowBlock *bl)
+   if (bl == (FlowBlock *)0) return;
+   BlockBasic *bb = (BlockBasic *)bl->subBlock(0);
+   Address addr = bb->getEntryAddr();
++  if (addr.isInvalid()) {
++    emit->print("INVALID_ADDRESS");
++    return;
++  }
+   const AddrSpace *spc = addr.getSpace();
+   uintb off = addr.getOffset();
+   if (!bb->hasSpecialLabel()) {
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/printc.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/printc.hh
+index fb0d2fd0fb..096ae56fb3 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/printc.hh
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/printc.hh
+@@ -153,6 +153,8 @@ protected:
+   Emit::brace_style option_brace_ifelse;	///< How braces for if/else blocks are formatted
+   Emit::brace_style option_brace_loop;		///< How braces for loop blocks are formatted
+   Emit::brace_style option_brace_switch;	///< How braces for switch blocks are formatted
++  bool option_space_after_comma;
++  bool option_newline_before_else;
+   string nullToken;		///< Token to use for 'null'
+   string sizeSuffix;		///< Characters to print to indicate a \e long integer token
+   CommentSorter commsorter;	///< Container/organizer for comments in the current function
+@@ -185,9 +187,9 @@ protected:
+   void emitPrototypeInputs(const FuncProto *proto);	///< Emit the input data-types of a function prototype
+   void emitGlobalVarDeclsRecursive(Scope *symScope);	///< Emit variable declarations for all global symbols under given scope
+   void emitLocalVarDecls(const Funcdata *fd);		///< Emit variable declarations for a function
+-  void emitStatement(const PcodeOp *inst);		///< Emit a statement in the body of a function
++  virtual void emitStatement(const PcodeOp *inst);	///< Emit a statement in the body of a function
+   bool emitInplaceOp(const PcodeOp *op);		///< Attempt to emit an expression rooted at an \e in-place operator
+-  void emitGotoStatement(const FlowBlock *bl,const FlowBlock *exp_bl,uint4 type);
++  virtual void emitGotoStatement(const FlowBlock *bl,const FlowBlock *exp_bl,uint4 type);
+   void emitSwitchCase(int4 casenum,const BlockSwitch *switchbl);	///< Emit labels for a \e case block
+   void emitLabel(const FlowBlock *bl);			///< Emit a formal label for a given control-flow block
+   void emitLabelStatement(const FlowBlock *bl);		///< Emit any required label statement for a given basic block
+@@ -250,6 +252,8 @@ public:
+   void setBraceFormatIfElse(Emit::brace_style style) { option_brace_ifelse = style; }	///< Set how if/else blocks are formatted
+   void setBraceFormatLoop(Emit::brace_style style) { option_brace_loop = style; }	///< Set how loop blocks are formatted
+   void setBraceFormatSwitch(Emit::brace_style style) { option_brace_switch = style; }	///< Set how switch blocks are formatted
++  void setSpaceAfterComma(bool val) { option_space_after_comma = val; }
++  void setNewlineBeforeElse(bool val) { option_newline_before_else = val; }
+   virtual ~PrintC(void) {}
+   virtual void resetDefaults(void);
+   virtual void initializeFromArchitecture(void);
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh.hh
+index 5b82741664..5978439ed3 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh.hh
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh.hh
+@@ -170,6 +170,7 @@ protected:
+   ParserContext *obtainContext(const Address &addr,int4 state) const;
+   void resolve(ParserContext &pos) const;	///< Generate a parse tree suitable for disassembly
+   void resolveHandles(ParserContext &pos) const;	///< Prepare the parse tree for p-code generation
++  ContextCache *getContextCache(void) { return cache; }
+ public:
+   Sleigh(LoadImage *ld,ContextDatabase *c_db);		///< Constructor
+   virtual ~Sleigh(void);				///< Destructor
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.cc
+index cb0848a4de..a75de00d91 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.cc
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.cc
+@@ -626,7 +626,7 @@ const vector<LanguageDescription> &SleighArchitecture::getDescriptions(void)
+ void SleighArchitecture::shutdown(void)
+ 
+ {
+-  // description.clear();  // static vector is destroyed by the normal exit handler
++  description.clear();  // static vector is destroyed by the normal exit handler
+ }
+ 
+ } // End namespace ghidra
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.hh
+index 3ee506bfa6..5f6512ef65 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.hh
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/sleigh_arch.hh
+@@ -116,7 +116,6 @@ class SleighArchitecture : public Architecture {
+ protected:
+   ostream *errorstream;					///< Error stream associated with \b this SleighArchitecture
+   // buildLoader must be filled in by derived class
+-  static void collectSpecFiles(ostream &errs);		///< Gather specification files in normal locations
+   virtual Translate *buildTranslator(DocumentStorage &store);
+   virtual PcodeInjectLibrary *buildPcodeInjectLibrary(void);
+   virtual void buildTypegrp(DocumentStorage &store);
+@@ -139,6 +138,8 @@ public:
+   virtual ~SleighArchitecture(void);
+   virtual string getDescription(void) const;
+ 
++  static void collectSpecFiles(ostream &errs);		///< Gather specification files in normal locations
++  static const vector<LanguageDescription> &getLanguageDescriptions() { return description; }
+   static string normalizeProcessor(const string &nm);		///< Try to recover a \e language \e id processor field
+   static string normalizeEndian(const string &nm);		///< Try to recover a \e language \e id endianness field
+   static string normalizeSize(const string &nm);		///< Try to recover a \e language \e id size field
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/type.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/type.hh
+index a49726b0f4..8b019848e7 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/type.hh
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/type.hh
+@@ -866,12 +866,12 @@ class TypeFactory {
+   void insertWarning(Datatype *dt,string warn);	///< Register a new data-type warning with \b this factory
+   void removeWarning(Datatype *dt);		///< Remove the warning associated with the given data-type
+   void resolveIncompleteTypedefs(void);		///< Redefine incomplete typedefs of data-types that are now complete
+-  void setFields(const vector<TypeField> &fd,const vector<TypeBitField> &bit,TypeStruct *ot,int4 newSize,int4 newAlign,uint4 flags);
+-  void setFields(const vector<TypeField> &fd,TypeUnion *ot,int4 newSize,int4 newAlign,uint4 flags);	///< Set fields on a TypeUnion
+ protected:
+   Architecture *glb;		///< The Architecture object that owns this TypeFactory
+   Datatype *findByIdLocal(const string &nm,uint8 id) const;	///< Search locally by name and id
+   virtual Datatype *findById(const string &n,uint8 id,int4 sz);		///< Search by \e name and/or \e id
++  void setFields(const vector<TypeField> &fd,const vector<TypeBitField> &bit,TypeStruct *ot,int4 newSize,int4 newAlign,uint4 flags);
++  void setFields(const vector<TypeField> &fd,TypeUnion *ot,int4 newSize,int4 newAlign,uint4 flags);	///< Set fields on a TypeUnion
+ public:
+   TypeFactory(Architecture *g);	///< Construct a factory
+   void setupSizes(void);	///< Derive some size information from Architecture

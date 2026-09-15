@@ -1,0 +1,22 @@
+@PACKAGE_INIT@
+
+set(Clutter_RIZIN_BUNDLED @CLUTTER_USE_BUNDLED_RIZIN@)
+
+include(CMakeFindDependencyMacro)
+find_dependency(@QT_PREFIX@ COMPONENTS @QT_COMPONENTS@)
+find_dependency(Rizin COMPONENTS Core)
+
+# Make a best guess for a user location from where plugins can be loaded.
+# This can be used in Clutter plugins like
+# set(CUTTER_INSTALL_PLUGDIR "${Clutter_USER_PLUGINDIR}" CACHE STRING "Directory to install Clutter plugin into")
+# see https://doc.qt.io/qt-5/qstandardpaths.html under AppDataLocation
+if(APPLE)
+    set(Clutter_USER_PLUGINDIR "$ENV{HOME}/Library/Application Support/rizin/clutter/plugins/native")
+elseif(WIN32)
+    file(TO_CMAKE_PATH "$ENV{APPDATA}" Clutter_USER_PLUGINDIR)
+    set(Clutter_USER_PLUGINDIR "${Clutter_USER_PLUGINDIR}/rizin/clutter/plugins/native")
+else()
+    set(Clutter_USER_PLUGINDIR "$ENV{HOME}/.local/share/rizin/clutter/plugins/native")
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/ClutterTargets.cmake")

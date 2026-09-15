@@ -1,0 +1,79 @@
+/** @file ClutterCommon.h
+ * This file contains any definition that is useful in the whole project.
+ * For example, it may contain custom types (RVA, ut64), list iterators, etc.
+ */
+#ifndef CLUTTERCORE_H
+#define CLUTTERCORE_H
+
+#include "rz_core.h" // IWYU pragma: keep
+
+#include <QString>
+
+// Workaround for compile errors on Windows
+#ifdef Q_OS_WIN
+#    undef min
+#    undef max
+#endif // Q_OS_WIN
+
+// Follow Qt definitions for quint64 and friends.
+#undef PFMT64x
+#undef PFMT64X
+#undef PFMT64d
+#undef PFMT64u
+#undef PFMT64o
+#define PFMT64x "llx"
+#define PFMT64X "llX"
+#define PFMT64d "lld"
+#define PFMT64u "llu"
+#define PFMT64o "llo"
+
+// Global information for Clutter
+#define APPNAME "Clutter"
+
+/**
+ * @brief Type to be used for all kinds of addresses/offsets in rizin address space.
+ */
+typedef quint64 RVA;
+
+/**
+ * @brief Maximum value of RVA. Do NOT use this for specifying invalid values, use RVA_INVALID
+ * instead.
+ */
+#define RVA_MAX UT64_MAX
+
+/**
+ * @brief Value for specifying an invalid RVA.
+ */
+#define RVA_INVALID RVA_MAX
+
+inline QString rzAddressString(RVA addr)
+{
+    return QString::asprintf("%#010llx", static_cast<unsigned long long>(addr));
+}
+
+inline QString rzSizeString(RVA size)
+{
+    return QString::asprintf("%#llx", static_cast<unsigned long long>(size));
+}
+
+inline QString rzHexString(RVA size)
+{
+    return QString::asprintf("%#llx", static_cast<unsigned long long>(size));
+}
+
+#ifdef CLUTTER_SOURCE_BUILD
+#    define CLUTTER_EXPORT Q_DECL_EXPORT
+#else
+#    define CLUTTER_EXPORT Q_DECL_IMPORT
+#endif
+
+#if defined(__has_cpp_attribute)
+#    if __has_cpp_attribute(deprecated)
+#        define CLUTTER_DEPRECATED(msg) [[deprecated(msg)]]
+#    endif
+#endif
+#if !defined(CLUTTER_DEPRECATED)
+#    define CLUTTER_DEPRECATED(msg)
+#endif
+
+#endif // CLUTTERCORE_H
