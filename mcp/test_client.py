@@ -100,6 +100,14 @@ def main():
         show("xrefs_to(main)", c.call("xrefs_to", {"target": funcs[0]["name"]}), limit=600)
         show("xrefs_from(main)", c.call("xrefs_from", {"target": funcs[0]["name"]}), limit=600)
 
+    show("callgraph_json", c.call("callgraph_json", {"max_funcs": 300}), limit=600)
+    show("callpaths(main -> fcn.140001000)",
+         c.call("callpaths", {"from": "main", "to": "fcn.140001000", "limit": 2}),
+         limit=600)
+    show("types_load(inline)", c.call("types_load", {
+        "content": "typedef unsigned int ButterBenchBool;\n"}))
+    show("pdb_load(no sidecar)", c.call("pdb_load", {}))
+    show("signatures_scan", c.call("signatures_scan", {}), limit=600)
     show("entrypoints", c.call("entrypoints", {}))
     show("imports(filter=Debugger)", c.call("imports", {"filter": "Debugger"}))
     show("sections", c.call("sections", {}), limit=800)

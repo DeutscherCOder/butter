@@ -20,7 +20,7 @@ line (public release notes).
 | Strength | Why it beats IDA |
 |---|---|
 | **Price & licensing** | GPL-3 + MIT, zero cost, zero license servers, zero dongles |
-| **Agent-native (MCP)** | 74 tools over a persistent session, stdio+HTTP — an AI agent drives the *whole* tool. IDA added MCP via third-party plugins; it is not a design center |
+| **Agent-native (MCP)** | 79 tools over a persistent session, stdio+HTTP — an AI agent drives the *whole* tool. IDA added MCP via third-party plugins; it is not a design center |
 | **Open pipeline end-to-end** | every byte from disassembly to decompiled C is inspectable and patchable (we literally patch the decompiler at install time — try that with Hex-Rays) |
 | **Portable by construction** | one folder, no installer, no registry, runs from a USB stick |
 | **Fresh engine** | rizin dev tip + Ghidra 12.1.3 (newest release) + Sleigh specs for ~150 processors |

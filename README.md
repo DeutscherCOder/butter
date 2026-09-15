@@ -121,6 +121,9 @@ python tools\ghidra-delta.py         :: how far upstream Ghidra has moved
   builds the bundled rizin with bounded parallelism and retries; produced binaries are fine.
 * rizin's Windows debugger cannot always place absolute breakpoints under ASLR; stepping,
   registers, memory and backtraces work.
+* The bundled rizin is built without the zignature plugin: the FLIRT sigdb ships in
+  `butter-dist/share/sigdb`, but matching needs a rizin configured with signatures
+  enabled. `signatures_scan` in the MCP server reports this instead of failing silently.
 * The decompiler tracks the newest Ghidra **release** (12.1.3), not master.
 * `MSYS_NO_PATHCONV=1` needed when calling rizin by hand from Git Bash.
 * Translations are off by default (`-DBUTTER_ENABLE_TRANSLATIONS=ON` to re-enable) — the

@@ -44,9 +44,11 @@ PROFILES = {
     "profile + aaa +aav+aap": PROFILE + ["aaa", "aav", "aap"],
 }
 
-# Fixed data addresses used as xref anchors, per target.
+# Fixed data addresses used as xref anchors, per target. These are the
+# "Correct password!" / "Wrong password!" strings in the current crackme
+# build (found with `iz~password`); refresh them if the crackme is rebuilt.
 ANCHORS = {
-    "crackme.exe": ["0x140018320", "0x1400184b0"],
+    "crackme.exe": ["0x140018610", "0x1400185c8"],
 }
 
 ESIL_NOISE = re.compile(r"Cannot peek memory without specifying an address")

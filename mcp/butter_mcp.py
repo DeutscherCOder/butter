@@ -25,8 +25,11 @@ Design notes
 Transports: stdio (default) and streamable HTTP (`--http 127.0.0.1:8765`).
 """
 import argparse
+import bisect
 import hashlib
 import json
+import tempfile
+from collections import deque
 import os
 import re
 import shutil
@@ -36,7 +39,23 @@ import threading
 import time
 
 SERVER_NAME = "butter-mcp"
-SERVER_VERSION = "0.2.0"
+SERVER_VERSION = "0.3.0"
+
+# Tuned discovery profile, measured in tools/analysis-bench.py: +45..232% more
+# functions discovered for +0.1..3.4s on our three targets. Applied once per
+# session before the aa/aaa/aaaa pass (and again after a session restart).
+ANALYSIS_PROFILE = (
+    "e analysis.hasnext=true",
+    "e analysis.jmp.indir=true",
+    "e analysis.jmp.above=true",
+    "e analysis.jmp.cref=true",
+    "e analysis.jmp.ref=true",
+    "e analysis.jmp.tblmax=2048",
+    "e analysis.types.constraint=true",
+    "e analysis.refstr=true",
+    "e analysis.brokenrefs=true",
+    "e analysis.ptrdepth=4",
+)
 
 # Protocol revisions this server knows how to speak; the client's choice wins when
 # it is in this list, otherwise the newest is offered.
@@ -136,6 +155,8 @@ class RizinSession:
 
         # Probe, so a broken spawn surfaces immediately rather than as a later timeout.
         self.cmd("echo __butter_ready__", timeout=30)
+        for evar in ANALYSIS_PROFILE:
+            self.cmd(evar, timeout=30)
         if analysis:
             self.cmd({"basic": "aa", "deep": "aaa", "max": "aaaa"}[analysis],
                      timeout=ANALYSIS_TIMEOUT)
@@ -277,8 +298,11 @@ def ensure_analysis(level="deep"):
         order = {None: 0, "basic": 1, "deep": 2, "max": 3}
         if order.get(cur, 0) >= order.get(level or "deep", 2):
             return cur
+    s = session()
+    for evar in ANALYSIS_PROFILE:
+        s.cmd(evar, timeout=30)
     cmd = {"basic": "aa", "deep": "aaa", "max": "aaaa"}[level or "deep"]
-    session().cmd(cmd, timeout=ANALYSIS_TIMEOUT)
+    s.cmd(cmd, timeout=ANALYSIS_TIMEOUT)
     STATE["analysis"] = level or "deep"
     return STATE["analysis"]
 
@@ -499,11 +523,302 @@ def t_callgraph(a):
     if a.get("target"):
         return {"target": a["target"],
                 "callgraph": run("agC @ %s" % target(a))}
-    return {"callgraph": run("agC")}
+    out = run("agC")
+    if not out.strip():
+        # `agC` renders nothing in current rizin builds; fall back to the
+        # edge graph recovered from per-function refs.
+        _f, edges = _call_edges()
+        lines = ["digraph callgraph {", "  rankdir=LR;"]
+        lines += ['  "%s" -> "%s";' % (c, e) for c, e in edges]
+        lines.append("}")
+        out = "\n".join(lines)
+    return {"callgraph": out}
+
+
+def _cmd_path(path):
+    """Quote a path for use inside a rizin command when it contains spaces."""
+    return '"%s"' % path if any(c.isspace() for c in path) else path
+
+
+def _call_edges(max_funcs=1000):
+    """(caller, callee) call edges recovered from function disassembly.
+
+    `agCj` returns nothing in current rizin builds and `axfj` stays empty
+    without a call-xref pass, but call targets are visible in the instruction
+    stream (`pdfj`), which is how t_xrefs_from already works. Only the
+    max_funcs largest functions are swept to bound the cost.
+    """
+    funcs = run_json("aflj")
+    if not isinstance(funcs, list):
+        return [], []
+    funcs = sorted((f for f in funcs if isinstance(f, dict)
+                    and isinstance(f.get("offset"), int)),
+                   key=lambda f: -int(f.get("size", 0) or 0))[:max_funcs]
+    known = {f["offset"]: f.get("name") or ("0x%x" % f["offset"]) for f in funcs}
+    call_types = ("call", "rcall", "ucall", "rjmp", "ujmp")  # calls + tail calls
+    edges = set()
+    for f in funcs:
+        insns = run_json("pdj @ 0x%x" % f["offset"])
+        if not isinstance(insns, list):
+            continue
+        caller = known[f["offset"]]
+        for ins in insns:
+            if not isinstance(ins, dict) or ins.get("type") not in call_types:
+                continue
+            to = ins.get("jump")
+            if not isinstance(to, int):
+                continue
+            edges.add((caller, known.get(to) or ("0x%x" % to)))
+    return funcs, sorted(edges)
 
 
 def t_callgraph_json(a):
-    return {"callgraph": run_json("agCj")}
+    """Whole-binary call graph. `agCj` is empty in current rizin builds, so the
+    graph is built from `aflj` + per-function `axfj` instead."""
+    max_funcs = max(10, min(int(a.get("max_funcs", 400)), 2000))
+    funcs, edges = _call_edges(max_funcs)
+    nodes = [{"name": f.get("name"), "addr": hex(f.get("offset", 0)),
+              "size": f.get("size")} for f in funcs]
+    return {"nodes": nodes, "edges": [{"from": c, "to": e} for c, e in edges],
+            "edge_count": len(edges), "swept_functions": len(funcs)}
+
+
+def t_callpaths(a):
+    """Backward BFS over on-demand `axtj` call refs: which call chains reach
+    `to` starting at `from`?
+
+    This build has no working `agCj` and callers of `main` are often not even
+    analysed functions, so the search walks *backwards* from the callee with
+    per-address `axtj` (the one xref query that always answers here) and maps
+    each caller instruction back to its containing function via `aflj`.
+    """
+    require_file()
+    src_s, dst_s = target(a, "from"), target(a, "to")
+    max_len = max(1, min(int(a.get("max_length", 6)), 10))
+    limit = max(1, min(int(a.get("limit", 10)), 50))
+    max_queries = max(50, min(int(a.get("max_queries", 1500)), 6000))
+
+    funcs = run_json("aflj")
+    by_name, starts = {}, []
+    if isinstance(funcs, list):
+        for f in funcs:
+            if isinstance(f, dict) and isinstance(f.get("offset"), int):
+                name = f.get("name") or ("0x%x" % f["offset"])
+                by_name[name] = f["offset"]
+                starts.append((f["offset"], int(f.get("size", 0) or 0), name))
+    starts.sort()
+    start_addrs = [s[0] for s in starts]
+
+    def func_of(addr):
+        """(name, start) of the analysed function containing addr, else (None, None)."""
+        i = bisect.bisect_right(start_addrs, addr) - 1
+        if i >= 0:
+            off, size, name = starts[i]
+            if addr < off + size:
+                return name, off
+        return None, None
+
+    def addr_of(t):
+        if t in by_name:
+            return by_name[t]
+        try:
+            return int(t, 16) if t.lower().startswith("0x") else int(t)
+        except ValueError:
+            return None
+
+    dst, src = addr_of(dst_s), addr_of(src_s)
+    if dst is None:
+        return {"from": src_s, "to": dst_s, "count": 0, "paths": [],
+                "error": "unknown target %r; use a function name (see `functions`) "
+                         "or a 0x address" % dst_s}
+    if src is None:
+        return {"from": src_s, "to": dst_s, "count": 0, "paths": [],
+                "error": "unknown source %r; use a function name (see `functions`) "
+                         "or a 0x address" % src_s}
+
+    labels = {}
+    start_names = {off: name for off, _size, name in starts}
+
+    def label(off):
+        """Best name for a node: the function name when it is an analysed
+        function start, then an exact-address flag, else the raw address
+        (fd happily reports a section name for an address that merely sits
+        inside it, which reads as a wrong hop)."""
+        if off not in labels:
+            if off in start_names:
+                labels[off] = start_names[off]
+            else:
+                info = run_json("fdj @ 0x%x" % off, auto_analyze=False,
+                                default=None)
+                name, addr = None, None
+                if isinstance(info, dict):
+                    name = info.get("name")
+                    addr = info.get("address") or info.get("offset")
+                try:
+                    exact = int(str(addr), 0) == off
+                except (TypeError, ValueError):
+                    exact = False
+                labels[off] = name if (exact and name) else ("0x%x" % off)
+        return labels[off]
+
+    if src == dst:
+        return {"from": label(src), "to": label(dst), "count": 1,
+                "paths": [label(src)]}
+
+    # queue holds (node_addr, backward_chain). Nodes are function starts when
+    # the caller is analysed, otherwise the raw caller instruction address.
+    paths, queries = [], 0
+    seen = {dst}
+    q = deque([(dst, [dst])])
+    while q and len(paths) < limit and queries < max_queries:
+        callee, chain = q.popleft()
+        if len(chain) >= max_len:
+            continue
+        refs = run_json("axtj @ 0x%x" % callee)
+        queries += 1
+        if not isinstance(refs, list):
+            continue
+        callers = sorted({r["from"] for r in refs
+                          if isinstance(r, dict) and isinstance(r.get("from"), int)
+                          and str(r.get("type", "")).lower() == "call"})
+        for caddr in callers:
+            cname, cstart = func_of(caddr)
+            node = cstart if cstart is not None else caddr
+            if node in chain or node in seen:
+                continue
+            new_chain = [node] + chain
+            if node == src:
+                paths.append(new_chain)
+                if len(paths) >= limit:
+                    break
+                continue
+            seen.add(node)
+            q.append((node, new_chain))
+
+    out = [" -> ".join(label(n) for n in chain) for chain in paths]
+    return {"from": label(src), "to": label(dst), "count": len(out),
+            "paths": out, "axtj_queries": queries}
+
+
+def _sigdb_candidates(a):
+    """Candidate .sig files: an explicit `sig` path, or the bundled sigdb
+    subset matching this binary's format/arch/bits."""
+    explicit = (a.get("sig") or "").strip()
+    if explicit:
+        p = os.path.abspath(os.path.expanduser(explicit))
+        if os.path.isfile(p):
+            return [p]
+        if os.path.isdir(p):
+            found = []
+            for root, _dirs, files in os.walk(p):
+                found += [os.path.join(root, f) for f in files if f.endswith(".sig")]
+            return sorted(found)
+        raise ToolError("no such sig file or directory: %s" % p)
+    exe = STATE.get("rizin") or ""
+    root = None
+    for rel in (os.path.join("share", "sigdb"),
+                os.path.join("..", "share", "sigdb")):
+        cand = os.path.normpath(os.path.join(os.path.dirname(exe), rel))
+        if os.path.isdir(cand):
+            root = cand
+            break
+    if not root:
+        return []
+    info = run_json("ij", auto_analyze=False) or {}
+    core = info.get("core", {}) if isinstance(info, dict) else {}
+    bin_ = info.get("bin", {}) if isinstance(info, dict) else {}
+    fmt = (core.get("format") or "").lower()
+    arch = (bin_.get("arch") or core.get("arch") or "").lower()
+    bits = bin_.get("bits") or core.get("bits")
+    keys = {k for k in (fmt, fmt[:3], arch, str(bits) if bits else None) if k}
+    out = []
+    for dpath, _dirs, files in os.walk(root):
+        parts = {p.lower() for p in dpath[len(root):].split(os.sep) if p}
+        if keys and keys.isdisjoint(parts):
+            continue
+        out += [os.path.join(dpath, f) for f in files if f.endswith(".sig")]
+    return sorted(out)
+
+
+def t_signatures_scan(a):
+    """Match FLIRT signatures against the binary. Requires a rizin build with
+    the zignature plugin; the bundled build currently lacks it, so the tool
+    reports that condition instead of failing silently."""
+    require_file()
+    cands = _sigdb_candidates(a)
+    if not cands:
+        return {"matches": [], "count": 0,
+                "note": "no matching sigdb files found for this binary"}
+    probe = run("z?", timeout=20)
+    if "does not exist" in probe or "Error while executing" in probe:
+        return {"matches": [], "count": 0,
+                "sig_files_considered": len(cands),
+                "sig_files": [os.path.basename(c) for c in cands[:20]],
+                "blocked": "this rizin build lacks the zignature plugin (`z` "
+                           "commands unavailable); FLIRT matching needs rizin "
+                           "built with signatures enabled"}
+    per = int(a.get("timeout_per_sig", 60))
+    matches = []
+    for path in cands[:40]:
+        out = run("z /f %s" % _cmd_path(path), timeout=per)
+        if out and "does not exist" not in out:
+            matches.append({"sig": os.path.basename(path), "output": out.strip()[:400]})
+    return {"count": len(matches), "matches": matches,
+            "sig_files_considered": len(cands)}
+
+
+def t_types_load(a):
+    """Load types from a C header file (or inline `content`) with `to`.
+    Types are what actually change decompiled output: struct/typedef names
+    instead of undefined8."""
+    require_file()
+    src = (a.get("path") or a.get("header") or "").strip()
+    content = a.get("content")
+    timeout = int(a.get("timeout", 120))
+    if src and content:
+        raise ToolError("pass either `path`/`header` or `content`, not both")
+    if not src and not content:
+        raise ToolError("`path`/`header` or `content` is required")
+    tmp_path = None
+    if content:
+        fd, tmp_path = tempfile.mkstemp(suffix=".h", prefix="butter-types-")
+        with os.fdopen(fd, "w", encoding="utf-8", errors="replace") as fh:
+            fh.write(content)
+        src = tmp_path
+    src = os.path.abspath(os.path.expanduser(src))
+    if not os.path.isfile(src):
+        raise ToolError("no such header file: %s" % src)
+    try:
+        out = run("to %s" % _cmd_path(src), timeout=timeout)
+        types = run_json("tj", auto_analyze=False)
+        count = len(types) if isinstance(types, list) else None
+        return {"loaded": src, "types_now": count,
+                "output": (out or "").strip() or None}
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
+
+def t_pdb_load(a):
+    """Load Microsoft PDB symbols (`idp`): from `path`, or the sidecar sitting
+    next to the opened binary."""
+    require_file()
+    pdb = (a.get("path") or "").strip()
+    if not pdb:
+        base = os.path.splitext(STATE["file"])[0]
+        cand = base + ".pdb"
+        if os.path.isfile(cand):
+            pdb = cand
+        else:
+            return {"loaded": False,
+                    "note": "no .pdb given and no sidecar next to the binary (%s)" % cand}
+    pdb = os.path.abspath(os.path.expanduser(pdb))
+    if not os.path.isfile(pdb):
+        raise ToolError("no such pdb: %s" % pdb)
+    out = run("idp %s" % _cmd_path(pdb), timeout=int(a.get("timeout", 120)))
+    syms = run_json("isj", auto_analyze=False)
+    count = len(syms) if isinstance(syms, list) else None
+    return {"loaded": pdb, "symbols_now": count, "output": (out or "").strip() or None}
 
 
 def t_variables(a):
@@ -1072,7 +1387,7 @@ TOOLS = [
     ("hashes", "Hash the opened file (md5/sha1/sha256/sha512).",
      {"type": "object", "properties": {"algorithm": {"type": "string"}}}, t_hashes),
 
-    ("analyze", "Run auto-analysis. Level basic=aa, deep=aaa, max=aaaa. Other tools reuse it.",
+    ("analyze", "Run auto-analysis (applies the tuned discovery profile first, see tools/analysis-bench.py). Level basic=aa, deep=aaa, max=aaaa. Other tools reuse it.",
      {"type": "object", "properties": {
          "level": {"type": "string", "enum": ["basic", "deep", "max"], "default": "deep"},
          "extra": {"type": "array", "items": {"type": "string"},
@@ -1100,8 +1415,30 @@ TOOLS = [
       "required": ["target"]}, t_cfg),
     ("callgraph", "Call graph for a function or the whole binary (DOT).",
      {"type": "object", "properties": {"target": {"type": "string"}}}, t_callgraph),
-    ("callgraph_json", "Whole-binary call graph as JSON.",
-     {"type": "object", "properties": {}}, t_callgraph_json),
+    ("callgraph_json", "Whole-binary call graph as JSON (nodes + call edges).",
+     {"type": "object", "properties": {
+         "max_funcs": {"type": "integer", "default": 1000}}}, t_callgraph_json),
+    ("callpaths", "Find call paths between two functions (backward BFS over call xrefs; unanalysed CRT glue can dead-end - use define_function on it first).",
+     {"type": "object", "properties": {
+         "from": {"type": "string", "description": "start function name or 0x address"},
+         "to": {"type": "string", "description": "end function name or 0x address"},
+         "max_length": {"type": "integer", "default": 6},
+         "limit": {"type": "integer", "default": 10},
+         "max_queries": {"type": "integer", "default": 1500}},
+      "required": ["from", "to"]}, t_callpaths),
+    ("types_load", "Load types from a C header file (`path`) or inline (`content`). Types are what improve decompiled C output.",
+     {"type": "object", "properties": {
+         "path": {"type": "string"}, "content": {"type": "string"},
+         "timeout": {"type": "integer", "default": 120}}}, t_types_load),
+    ("pdb_load", "Load Microsoft PDB symbols from `path`, or the sidecar next to the opened binary.",
+     {"type": "object", "properties": {
+         "path": {"type": "string"}, "timeout": {"type": "integer", "default": 120}}},
+     t_pdb_load),
+    ("signatures_scan", "Match FLIRT signatures from the bundled sigdb against the binary.",
+     {"type": "object", "properties": {
+         "sig": {"type": "string", "description": "explicit .sig file or directory"},
+         "timeout_per_sig": {"type": "integer", "default": 60}}},
+     t_signatures_scan),
     ("variables", "Local variables and arguments detected in a function.",
      {"type": "object", "properties": {"target": {"type": "string"}},
       "required": ["target"]}, t_variables),

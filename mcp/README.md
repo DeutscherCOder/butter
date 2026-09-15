@@ -57,17 +57,19 @@ to silence stderr logging.
   `butter://decompiled/{function}`, `butter://disassembly/{function}`.
 * `ping`, `logging/setLevel`, `completion/complete`, notification handling.
 
-## Tools (74)
+## Tools (79)
 
 | Group | Tools |
 |---|---|
 | Session | `open` `close` `session` `info` `hashes` |
-| Analysis | `analyze` `functions` `function_info` `define_function` `undefine_function` `basic_blocks` `cfg` `callgraph` `callgraph_json` `variables` `library_functions` |
+| Analysis | `analyze` `functions` `function_info` `define_function` `undefine_function` `basic_blocks` `cfg` `callgraph` `callgraph_json` `callpaths` `variables` `library_functions` |
+| Types & symbols | `types_load` `pdb_load` |
 | Decompilation | `decompile` `decompile_json` `decompile_many` `decompile_all` |
 | Disassembly | `disassemble` `disassemble_range` `disassemble_json` |
 | Xrefs | `xrefs_to` `xrefs_from` `emulate` (experimental) |
 | Structure | `entrypoints` `sections` `segments` `imports` `exports` `symbols` `relocations` `libraries` `resources` `strings` |
 | Types & naming | `types_list` `type_apply` `flags` `add_flag` `remove_flag` `rename` `rename_flag` `comment` |
+| Signatures (FLIRT) | `signatures_scan` |
 | Search | `search` `rop` |
 | Memory | `read_bytes` `write_bytes` `write_asm` `hexdump` |
 | Signatures | `library_functions` `yara_scan` `yara_folder` `yara_matches` |
@@ -77,7 +79,19 @@ to silence stderr logging.
 | Escape hatches | `run_command` `run_commands` |
 
 `run_command` is the safety net: anything rizin can do is reachable even if it is not
-wrapped (`aaa`, `axt`, `/r`, `aar`, `axg`, `afr`, `iSS`, `z`, plugin commands, …).
+wrapped (`aaa`, `axt`, `/r`, `aar`, `axg`, `afr`, `iSS`, plugin commands, …).
+
+## Known engine gaps (handled, not hidden)
+
+* `analyze` applies a tuned discovery profile before `aa`/`aaa`/`aaaa` — measured
+  in `tools/analysis-bench.py` at +45–232% more functions for +0.1–3.4 s.
+* `callgraph_json`/`callgraph` recover call edges from the instruction stream
+  because `agCj`/`agC` return nothing in current rizin builds.
+* `callpaths` walks call xrefs backwards; unanalysed CRT glue can dead-end —
+  `define_function` on the glue address first opens the path.
+* `signatures_scan` reports it when the rizin build lacks the zignature plugin
+  (the current bundled build does — FLIRT sigdb ships but needs a
+  signatures-enabled rizin; see the main README).
 
 ## Verify
 
