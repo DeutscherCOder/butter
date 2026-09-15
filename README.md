@@ -38,7 +38,7 @@ butter/                       (this repo)
 ## Quick start (Windows 11, ~30 min cold build)
 
 ```bat
-git clone --recurse-submodules https://github.com/DeutscherCOder/clutter.git
+git clone --recurse-submodules https://github.com/DeutscherCOder/butter.git
 cd butter
 
 bash scripts/fetch_deps.sh              :: portable Qt 6.11 + PySide6 into .\cutter-deps
