@@ -39,7 +39,12 @@ import threading
 import time
 
 SERVER_NAME = "butter-mcp"
-SERVER_VERSION = "0.3.0"
+SERVER_VERSION = "0.4.0-dev"
+
+# Files bigger than this never get auto-analysis from incidental tool calls
+# (strings/search/read on a 37 MB game DLL must not pay a full aaa). Explicit
+# `analyze` calls always run.
+AUTO_ANALYZE_MAX_BYTES = 8 * 1024 * 1024
 
 # Tuned discovery profile, measured in tools/analysis-bench.py: +45..232% more
 # functions discovered for +0.1..3.4s on our three targets. Applied once per
@@ -269,7 +274,9 @@ STATE = {
     "session": None,         # RizinSession for static analysis
     "debug": None,           # RizinSession for debugging
     "file": None,            # currently open path
-    "analysis": None,        # "basic" | "deep" | "max" | None
+    "file_size": None,       # bytes, for the auto-analysis size gate
+    "analysis": None,        # "basic" | "deep" | "max" | "deferred" | None
+    "ui_mode": False,        # --ui: launch butter.exe on every opened file
     "log_level": "info",
 }
 _lock = threading.RLock()
@@ -289,8 +296,14 @@ def debug_session():
     return s
 
 
-def ensure_analysis(level="deep"):
-    """Run auto-analysis once per open file; reuse it afterwards."""
+def ensure_analysis(level="deep", explicit=False):
+    """Run auto-analysis once per open file; reuse it afterwards.
+
+    With explicit=False (incidental tool calls) files larger than
+    AUTO_ANALYZE_MAX_BYTES are *deferred* instead: the caller gets its raw
+    output, and the agent should issue an explicit `analyze` when it wants
+    full analysis of a huge binary.
+    """
     cur = STATE["analysis"]
     if cur is None and level:
         pass
@@ -298,6 +311,12 @@ def ensure_analysis(level="deep"):
         order = {None: 0, "basic": 1, "deep": 2, "max": 3}
         if order.get(cur, 0) >= order.get(level or "deep", 2):
             return cur
+    if (not explicit and STATE.get("file_size")
+            and STATE["file_size"] > AUTO_ANALYZE_MAX_BYTES):
+        log("auto-analysis deferred for %.1f MB file; call analyze explicitly"
+            % (STATE["file_size"] / 1e6))
+        STATE["analysis"] = "deferred"
+        return "deferred"
     s = session()
     for evar in ANALYSIS_PROFILE:
         s.cmd(evar, timeout=30)
@@ -377,8 +396,11 @@ def t_open(a):
             path, write=bool(a.get("write")), arch=a.get("arch"), bits=a.get("bits"),
             endian=a.get("endian"), flags=(a.get("flags") or []))
         STATE["file"] = path
+        STATE["file_size"] = os.path.getsize(path)
         STATE["analysis"] = None
         STATE["debug"] = None
+    if STATE.get("ui_mode"):
+        _launch_ui(path)
     with open(path, "rb") as f:
         digest = hashlib.sha256(f.read()).hexdigest()
     info = run_json("ij", auto_analyze=False)
@@ -456,7 +478,7 @@ def t_analyze(a):
     if level not in ("basic", "deep", "max"):
         raise ToolError("level must be one of: basic, deep, max")
     t0 = time.perf_counter()
-    ensure_analysis(level)
+    ensure_analysis(level, explicit=True)
     n = run("afl~?", auto_analyze=False)
     extra = a.get("extra") or []
     for cmd in extra:
@@ -1012,9 +1034,11 @@ def t_remove_flag(a):
 
 
 def t_strings(a):
+    t0 = time.time()
     min_len = int(a.get("min_len", 5))
     pattern = (a.get("filter") or "").lower()
-    out = run_json("izzj")
+    out = run_json("izzj", auto_analyze=False)
+    elapsed = round(time.time() - t0, 2)
     if not isinstance(out, list):
         return {"strings": out}
     rows = []
@@ -1026,7 +1050,7 @@ def t_strings(a):
                      "type": s.get("type"), "string": text})
     limit = int(a.get("limit", 200))
     return {"count": len(rows), "strings": rows[:limit],
-            "truncated": len(rows) > limit}
+            "truncated": len(rows) > limit, "elapsed": elapsed}
 
 
 SEARCH_KINDS = {"bytes": "/x", "string": "/z", "asm": "/a", "value": "/v",
@@ -1048,23 +1072,29 @@ def t_search(a):
         cmd = "%s %s" % (prefix, pattern)
     else:
         cmd = "%s %s" % (prefix, pattern.replace('"', ""))
-    hits = run(cmd)
+    t0 = time.time()
+    hits = run(cmd, auto_analyze=False)
     addresses = re.findall(r"0x[0-9a-fA-F]{4,}", hits)
     return {"pattern": pattern, "kind": kind, "command": cmd,
-            "hit_count": len(addresses), "hits": hits or "no hits"}
+            "hit_count": len(addresses), "hits": hits or "no hits",
+            "elapsed": round(time.time() - t0, 2)}
 
 
 def t_read_bytes(a):
     addr = a["addr"]
     size = int(a.get("size", 64))
-    data = run("p8 %d @ %s" % (size, addr))
+    t0 = time.time()
+    data = run("p8 %d @ %s" % (size, addr), auto_analyze=False)
     raw = re.sub(r"\s+", "", data)
+    elapsed = round(time.time() - t0, 2)
     try:
         blob = bytes.fromhex(raw)
     except (ValueError, TypeError):
-        return {"addr": addr, "size": size, "hex": raw, "note": "not hex output"}
+        return {"addr": addr, "size": size, "hex": raw, "note": "not hex output",
+                "elapsed": elapsed}
     return {"addr": addr, "size": len(blob), "hex": raw,
-            "ascii": "".join(chr(b) if 32 <= b < 127 else "." for b in blob)}
+            "ascii": "".join(chr(b) if 32 <= b < 127 else "." for b in blob),
+            "elapsed": elapsed}
 
 
 def t_write_bytes(a):
@@ -1091,8 +1121,10 @@ def t_hexdump(a):
     mode = a.get("mode") or "hex"
     cmd = {"hex": "px", "words": "pxw", "quadwords": "pxq",
            "disasm": "pdi", "string": "ps"}.get(mode, "px")
-    return {"addr": addr, "size": size, "mode": mode,
-            "dump": run("%s %d @ %s" % (cmd, size, addr))}
+    t0 = time.time()
+    dump = run("%s %d @ %s" % (cmd, size, addr), auto_analyze=False)
+    return {"addr": addr, "size": size, "mode": mode, "dump": dump,
+            "elapsed": round(time.time() - t0, 2)}
 
 
 def t_config_list(a):
@@ -1196,9 +1228,215 @@ def t_emulate(a):
             "note": "esil cannot emulate Windows APIs; treat results as best effort"}
 
 
+def _launch_ui(path):
+    """Start butter.exe on `path` so a human can watch the agent work."""
+    import subprocess as _sp
+    exe = os.path.join(REPO, "build-ui-test", "butter.exe")
+    if not os.path.isfile(exe):
+        exe = os.path.join(REPO, "butter-dist", "butter.exe")
+    if not os.path.isfile(exe):
+        exe = os.path.join(REPO, "butter-dist", "clutter.exe")
+    if not os.path.isfile(exe):
+        return {"launched": False, "note": "no butter.exe found (build it first)"}
+    try:
+        _sp.Popen([exe, path], cwd=os.path.dirname(exe),
+                  stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+        return {"launched": True, "exe": exe, "file": path,
+                "note": "UI window opened on the file; agent keeps driving rizin"}
+    except OSError as e:
+        return {"launched": False, "error": str(e)}
+
+
+def t_ui_launch(a):
+    require_file()
+    return _launch_ui(a.get("path") or STATE["file"])
+
+
+def t_batch(a):
+    """Run several rizin commands in one round trip (one session, one reply)."""
+    cmds = a.get("commands")
+    if isinstance(cmds, str):
+        cmds = [c for c in cmds.splitlines() if c.strip()]
+    if not isinstance(cmds, list) or not cmds:
+        raise ToolError("`commands` must be a list (or multiline string)")
+    if len(cmds) > 64:
+        raise ToolError("max 64 commands per batch")
+    analyze = bool(a.get("analyze", False))
+    if analyze:
+        ensure_analysis("deep")
+    results, t0 = [], time.time()
+    for c in cmds[:64]:
+        if re.search(r"[\n\r]", c):
+            results.append({"command": c, "error": "no newlines in commands"})
+            continue
+        try:
+            out = run(c, timeout=float(a.get("timeout_per", 120)),
+                      auto_analyze=False)
+            results.append({"command": c, "output": (out or "")[:MAX_OUTPUT // 8]})
+        except Exception as e:  # noqa: BLE001
+            results.append({"command": c, "error": str(e)[:200]})
+    return {"count": len(results), "results": results,
+            "elapsed": round(time.time() - t0, 2)}
+
+
+def t_pointer_refs(a):
+    """Find every 8-byte little-endian pointer in the file that points at the
+    given string/value address - the fast route to schema/vtable structures
+    without any analysis. Returns record dumps around each hit."""
+    require_file()
+    val = a.get("value") or a.get("addr")
+    if not val:
+        raise ToolError("`value` (0x address) is required")
+    v = int(str(val), 16) if str(val).lower().startswith("0x") else int(val)
+    little = v.to_bytes(8, "little").hex()
+    t0 = time.time()
+    res = run("/x %s" % little, timeout=float(a.get("timeout", 300)),
+              auto_analyze=False)
+    ptrs = [ln.split()[0] for ln in res.splitlines() if ln.startswith("0x")]
+    ctx = int(a.get("context", 32))
+    records = []
+    for ph in ptrs[:int(a.get("limit", 16))]:
+        paddr = int(ph, 16)
+        dump = run("p8 %d @ 0x%x" % (ctx, paddr), auto_analyze=False)
+        blob = bytes.fromhex(re.sub(r"\s+", "", dump) or "")
+        records.append({"record": hex(paddr),
+                        "hex": blob[:ctx].hex(" "),
+                        "words": [hex(int.from_bytes(blob[i:i + 8], "little"))
+                                  for i in range(0, min(len(blob), ctx), 8)]})
+    return {"value": hex(v), "pointer_hits": len(ptrs), "records": records,
+            "elapsed": round(time.time() - t0, 2)}
+
+
+def t_butter(a):
+    """The one-tool agent driver: describe what you want, get it done.
+
+    goal is a free-form instruction ("health offset in this game dll",
+    "decompile main", "list interesting strings", "what imports does it use",
+    "find paths to this function", ...). The server interprets it and runs a
+    purpose-built pipeline, analysis only where it pays.
+    """
+    import difflib
+    goal = (a.get("goal") or "").strip()
+    if not goal:
+        raise ToolError("`goal` is required")
+    g = goal.lower()
+    tgt = a.get("target")
+    t0 = time.time()
+
+    def hit(*words):
+        return any(w in g for w in words)
+
+    # -- intent routing -------------------------------------------------
+    if hit("offset", "schema", "netvar", "field") and hit("health", "team", "lifestate", "origin", "angle") or \
+            (hit("offset") and tgt):
+        fields = [w for w in ("m_iHealth", "m_iTeamNum", "m_lifeState",
+                              "m_iMaxHealth", "m_vecOrigin", "m_angEyeAngles",
+                              "m_hActiveWeapon", "m_vecViewOffset")
+                  if w.lower().lstrip("m_i").lstrip("m_").lstrip("m_h").lstrip("m_vec").rstrip("s")
+                  in g or w in g]
+        if not fields and tgt:
+            fields = [tgt]
+        out = {"mode": "schema-offsets", "fields": {}}
+        for field in fields[:8]:
+            # /z string search (fast) -> pointer scan -> schema records.
+            # Record layout: [0..7]=name pointer, [8..11]=name length (incl.
+            # NUL), [16..19]=field offset. Vote across records; the u32 at +8
+            # is the NAME LENGTH, not the offset.
+            hits = run("/z %s" % field, timeout=300, auto_analyze=False)
+            addrs = sorted({int(m, 16) for m in
+                            re.findall(r"0x[0-9a-fA-F]{6,}", hits)})[:4]
+            votes = {}
+            for sa in addrs:
+                le = int(sa).to_bytes(8, "little").hex()
+                res = run("/x %s" % le, timeout=300, auto_analyze=False)
+                for ln in res.splitlines():
+                    if not ln.startswith("0x"):
+                        continue
+                    paddr = int(ln.split()[0], 16)
+                    dump = run("p8 24 @ 0x%x" % paddr, auto_analyze=False)
+                    b = bytes.fromhex(re.sub(r"\s+", "", dump) or "")
+                    if len(b) < 20 or int.from_bytes(b[0:8], "little") != sa:
+                        continue
+                    name_len = int.from_bytes(b[8:12], "little")
+                    off = int.from_bytes(b[16:20], "little")
+                    if name_len == len(field) + 1 and 0 < off < 0x8000:
+                        votes[off] = votes.get(off, 0) + 1
+            if votes:
+                best = max(votes.items(), key=lambda kv: kv[1])
+                out["fields"][field] = {"offset": hex(best[0]),
+                                        "decimal": best[0],
+                                        "confirmations": best[1]}
+        out["note"] = "offsets read from embedded schema records, no analysis needed"
+        out["elapsed"] = round(time.time() - t0, 2)
+        return out
+
+    if hit("decompil", "pseudo"):
+        level = "max" if hit("all", "every") else "deep"
+        ensure_analysis(level)
+        if tgt:
+            code = run("pdg @ %s" % tgt, timeout=DECOMPILE_TIMEOUT)
+            return {"mode": "decompile", "target": tgt, "code": code,
+                    "elapsed": round(time.time() - t0, 2)}
+        funcs = run_json("aflj") or []
+        names = [f.get("name") for f in funcs[:int(a.get("limit", 20))]
+                 if isinstance(f, dict)]
+        return {"mode": "decompile-many", "functions": names,
+                "elapsed": round(time.time() - t0, 2)}
+
+    if hit("string", "password", "flag", "secret"):
+        rows = run_json("izzj", auto_analyze=False) or []
+        pat = tgt or (g.split("string")[-1].strip(" :") or None)
+        out_rows = []
+        for s in rows:
+            if isinstance(s, dict) and len(s.get("string") or "") >= int(a.get("min_len", 6)):
+                if not pat or pat.lower() in (s.get("string") or "").lower():
+                    out_rows.append({"addr": hex(s.get("vaddr", 0)),
+                                     "string": s.get("string")})
+            if len(out_rows) >= int(a.get("limit", 100)):
+                break
+        return {"mode": "strings", "count": len(out_rows),
+                "strings": out_rows, "elapsed": round(time.time() - t0, 2)}
+
+    if hit("import", "export", "section", "entrypoint", "header"):
+        cmd = {"import": "iij", "export": "iEj", "section": "iSj",
+               "entrypoint": "iej", "header": "ij"}.get(
+                   next((w for w in ("import", "export", "section",
+                                     "entrypoint", "header") if w in g)), "ij")
+        return {"mode": "binary-info", "data": run_json(cmd, auto_analyze=False),
+                "elapsed": round(time.time() - t0, 2)}
+
+    if hit("path", "reach", "callgraph", "call graph") and tgt:
+        parts = [p.strip() for p in re.split(r"->|to|from", tgt) if p.strip()]
+        if len(parts) >= 2:
+            return t_callpaths({"from": parts[0], "to": parts[1],
+                                "max_length": int(a.get("max_length", 6))})
+        return t_callgraph_json({"max_funcs": int(a.get("max_funcs", 600))})
+
+    if hit("analy", "scan"):  # analyze / analysis last: it is the expensive one
+        lvl = "max" if hit("max", "deep", "full") else "deep"
+        lvl = ensure_analysis(lvl, explicit=True)
+        funcs = run_json("aflj") or []
+        return {"mode": "analyze", "level": lvl, "function_count": len(funcs),
+                "elapsed": round(time.time() - t0, 2)}
+
+    # -- fallback: closest known intent -------------------------------
+    known = ["schema offsets", "decompile", "strings", "imports", "exports",
+             "sections", "call paths", "analyze"]
+    guess = difflib.get_close_matches(g, known, n=1)
+    return {"mode": "unparsed", "goal": goal,
+            "suggestion": ("did you mean: %s? e.g. butter {\"goal\": \"%s ...\"}"
+                           % (guess[0], guess[0])) if guess else
+                          "try: schema offsets / decompile / strings / imports "
+                          "/ call paths / analyze", "elapsed": round(time.time() - t0, 2)}
+
+
 def t_run_command(a):
     cmd = a["command"]
-    return {"command": cmd, "output": run(cmd, timeout=float(a.get("timeout") or DEFAULT_TIMEOUT))}
+    # analyze=false is the fast lane for huge binaries: raw string scans and
+    # byte reads work on a freshly opened file without paying for full aaa.
+    return {"command": cmd,
+            "output": run(cmd, timeout=float(a.get("timeout") or DEFAULT_TIMEOUT),
+                          auto_analyze=bool(a.get("analyze", True)))}
 
 
 def t_run_commands(a):
@@ -1368,6 +1606,26 @@ def t_debug_detach(a):
 
 TOOLS = [
     # name, description, input schema, function
+    ("butter", "One-tool agent driver: describe the goal (schema offsets, decompile, strings, imports, call paths, analyze, ...) and the server runs the right pipeline, analysis only where it pays. This is usually the only tool you need.",
+     {"type": "object", "properties": {
+         "goal": {"type": "string", "description": "free-form, e.g. 'health offset', 'decompile main', 'find paths to main', 'list strings'"},
+         "target": {"type": "string", "description": "function name / 0x address / field name depending on goal"},
+         "limit": {"type": "integer", "default": 20}},
+      "required": ["goal"]}, t_butter),
+    ("batch", "Run up to 64 raw rizin commands in one round trip (no auto-analysis).",
+     {"type": "object", "properties": {
+         "commands": {"type": "array", "items": {"type": "string"}},
+         "analyze": {"type": "boolean", "default": False},
+         "timeout_per": {"type": "integer", "default": 120}}}, t_batch),
+    ("pointer_refs", "Find 8-byte LE pointers to a 0x address anywhere in the file (schema/vtable records without analysis) and dump each record.",
+     {"type": "object", "properties": {
+         "value": {"type": "string", "description": "0x address the pointers must contain"},
+         "context": {"type": "integer", "default": 32},
+         "limit": {"type": "integer", "default": 16},
+         "timeout": {"type": "integer", "default": 300}},
+      "required": ["value"]}, t_pointer_refs),
+    ("ui_launch", "Open the Butter GUI on the current file so a human can watch the agent work.",
+     {"type": "object", "properties": {}}, t_ui_launch),
     ("open", "Open a binary for analysis in a persistent rizin session. Call this first.",
      {"type": "object", "properties": {
          "path": {"type": "string"},
@@ -1617,7 +1875,7 @@ TOOLS = [
      {"type": "object", "properties": {"keep_alive": {"type": "boolean"},
                                        "kill": {"type": "boolean"}}}, t_debug_detach),
 
-    ("run_command", "Escape hatch: run any single rizin command.",
+    ("run_command", "Escape hatch: run any single rizin command (analyze=false skips auto-analysis for huge binaries).",
      {"type": "object", "properties": {"command": {"type": "string"},
                                        "timeout": {"type": "number"}},
       "required": ["command"]}, t_run_command),
@@ -1982,6 +2240,9 @@ def main(argv=None):
                         help="run auto-analysis on startup (with --file)")
     parser.add_argument("--http", metavar="HOST:PORT",
                         help="serve streamable HTTP instead of stdio")
+    parser.add_argument("--ui", action="store_true",
+                        help="UI mode: open butter.exe on every opened file so a "
+                             "human can watch the agent work live")
     parser.add_argument("--path", default="/mcp", help="HTTP endpoint path")
     parser.add_argument("--no-log", action="store_true", help="silence stderr logging")
     args = parser.parse_args(argv)
@@ -1991,6 +2252,8 @@ def main(argv=None):
         LOG_LEVEL = False
 
     STATE["rizin"] = find_rizin(args.rizin)
+    if args.ui:
+        STATE["ui_mode"] = True
     if args.file:
         t_open({"path": args.file})
         if args.analysis:

@@ -57,10 +57,15 @@ to silence stderr logging.
   `butter://decompiled/{function}`, `butter://disassembly/{function}`.
 * `ping`, `logging/setLevel`, `completion/complete`, notification handling.
 
-## Tools (79)
+## Tools (82) — v0.4.0-dev
+
+**Start with `butter`** — the one-tool agent driver: `{"goal": "health offset"}`,
+`{"goal": "decompile main"}`, `{"goal": "list strings"}` … it routes to the right
+pipeline and only pays analysis when the goal needs it.
 
 | Group | Tools |
 |---|---|
+| Agent driver | `butter` (free-form goal router) `batch` (up to 64 commands, one round trip) `pointer_refs` (schema/vtable records without analysis) `ui_launch` |
 | Session | `open` `close` `session` `info` `hashes` |
 | Analysis | `analyze` `functions` `function_info` `define_function` `undefine_function` `basic_blocks` `cfg` `callgraph` `callgraph_json` `callpaths` `variables` `library_functions` |
 | Types & symbols | `types_load` `pdb_load` |
@@ -85,6 +90,14 @@ wrapped (`aaa`, `axt`, `/r`, `aar`, `axg`, `afr`, `iSS`, plugin commands, …).
 
 * `analyze` applies a tuned discovery profile before `aa`/`aaa`/`aaaa` — measured
   in `tools/analysis-bench.py` at +45–232% more functions for +0.1–3.4 s.
+* **Fast path:** binaries > 8 MB never get auto-analysis from incidental calls
+  (`strings`, `search`, `read_bytes`, `hexdump` are analysis-free); call `analyze`
+  explicitly for huge files. Proof: CS2 `client.dll` (37.6 MB) → `m_iHealth = 0x34C`
+  read from its embedded schema in **3.3 s** end-to-end, no analysis.
+* `--ui` (or `ui_launch`): opens `butter.exe` on the file so a human can watch the
+  agent work live while the MCP drives the same binary through rizin.
+* `mcp/butter-mcp.exe` (built by `tools/build-mcp-exe.bat`): the launcher real MCP
+  clients configure by path — it finds Python and runs this server.
 * `callgraph_json`/`callgraph` recover call edges from the instruction stream
   because `agCj`/`agC` return nothing in current rizin builds.
 * `callpaths` walks call xrefs backwards; unanalysed CRT glue can dead-end —
