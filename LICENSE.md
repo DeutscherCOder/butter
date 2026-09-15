@@ -23,6 +23,6 @@ SOFTWARE.
 ---
 
 Scope: this MIT license covers the files in `mcp/`, `crackme/` and `tools/`.
-The Butter fork of Butter in `src/`, `cmake/`, `dist/`, `scripts/`, `docs/`,
+The Butter fork of Cutter in `src/`, `cmake/`, `dist/`, `scripts/`, `docs/`,
 `docker/` and `CMakeLists.txt` remains **GPL-3** as published by upstream
 Butter — see `COPYING`.
